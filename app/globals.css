@@ -1,0 +1,198 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* OneTrust Brand Colors - Primary Palette */
+  /* Black and White carry the majority of the system */
+  /* Mint is used sparingly as a purposeful accent */
+  --ot-black: #000000;
+  --ot-white: #FFFFFF;
+  --ot-mint: #6CEEAD; /* RGB: 108, 238, 173 - Primary brand accent */
+  
+  /* OneTrust Secondary Palette */
+  --ot-yellow: #FFEF3C;
+  --ot-leaf: #00B935;
+  --ot-jade: #008665; /* For accessibility when Mint lacks contrast */
+  --ot-sky: #0788F7;
+  --ot-indigo: #3B40D8;
+  --ot-purple: #976FE6;
+  --ot-beige: #D9D9CC;
+  
+  /* Application Design Tokens */
+  --background: #0f1117;
+  --foreground: #e5e7eb;
+  --card: #13151f;
+  --card-foreground: #e5e7eb;
+  --popover: #13151f;
+  --popover-foreground: #e5e7eb;
+  --primary: #6CEEAD;
+  --primary-foreground: #000000;
+  --secondary: #1e2130;
+  --secondary-foreground: #e5e7eb;
+  --muted: #1e2130;
+  --muted-foreground: #9ca3af;
+  --accent: #6CEEAD;
+  --accent-foreground: #000000;
+  --destructive: #ef4444;
+  --destructive-foreground: #fef2f2;
+  --border: #1e2130;
+  --input: #1e2130;
+  --ring: #6CEEAD;
+  
+  /* Data Visualization - OneTrust Chart Colors */
+  --chart-1: #6CEEAD; /* Mint */
+  --chart-2: #0788F7; /* Sky */
+  --chart-3: #FFEF3C; /* Yellow */
+  --chart-4: #00B935; /* Leaf */
+  --chart-5: #976FE6; /* Purple */
+  --chart-6: #3B40D8; /* Indigo */
+  --chart-7: #008665; /* Jade */
+  --chart-8: #D9D9CC; /* Beige */
+  
+  --radius: 0.5rem;
+  
+  /* Sidebar tokens */
+  --sidebar: #13151f;
+  --sidebar-foreground: #e5e7eb;
+  --sidebar-primary: #6CEEAD;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #1e2130;
+  --sidebar-accent-foreground: #e5e7eb;
+  --sidebar-border: #1e2130;
+  --sidebar-ring: #6CEEAD;
+  
+  /* Surface tokens */
+  --surface: #13151f;
+  --surface-hover: #1a1d2a;
+  --surface-elevated: #1e2130;
+  
+  /* Status colors */
+  --status-success: #00B935;
+  --status-warning: #FFEF3C;
+  --status-error: #ef4444;
+  --status-info: #0788F7;
+}
+
+@theme inline {
+  --font-sans: 'DM Sans', 'Geist', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  /* OneTrust Typography Guidelines - Antique Legacy typeface specs */
+  /* H1: Medium weight, 90% line-height, -3% letter-spacing */
+  h1, .h1 {
+    @apply text-3xl font-medium leading-[0.9] tracking-[-0.03em];
+  }
+  
+  /* H2: Light weight, 90% line-height, -3% letter-spacing */
+  h2, .h2 {
+    @apply text-2xl font-light leading-[0.9] tracking-[-0.03em];
+  }
+  
+  /* H3: Regular/Light weight, 110% line-height, -1% letter-spacing */
+  h3, .h3 {
+    @apply text-xl font-normal leading-[1.1] tracking-[-0.01em];
+  }
+  
+  /* Body: Regular weight, 120% line-height, 0% letter-spacing */
+  p, .body {
+    @apply text-base font-normal leading-[1.2];
+  }
+  
+  /* Stats/Large numbers: Book weight, 100% line-height, -1% letter-spacing */
+  .stat {
+    @apply text-5xl font-normal leading-none tracking-[-0.01em];
+  }
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f1117;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e2130;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2a2d3a;
+}
+
+/* OneTrust brand-specific utilities */
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* Mint accent - use sparingly for key actions and emphasis */
+.accent-mint {
+  color: var(--ot-mint);
+}
+
+.bg-accent-mint {
+  background-color: var(--ot-mint);
+}
+
+/* Jade for accessibility - when Mint lacks contrast */
+.accent-jade {
+  color: var(--ot-jade);
+}
+
+.bg-accent-jade {
+  background-color: var(--ot-jade);
+}
