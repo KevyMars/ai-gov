@@ -39,14 +39,14 @@ const tabs: { id: PrivacyTab; label: string }[] = [
   { id: 'policies', label: 'Policies' },
 ]
 
-const recordItems: { id: PrivacyRecordItem; label: string; icon: React.ReactNode }[] = [
+const recordItems: { id: PrivacyRecordItem; label: string; icon: React.ReactNode; alertColor?: string }[] = [
   { id: 'pia-dpia',          label: 'PIA & DPIA',          icon: <FileSearch   className="w-4 h-4 shrink-0" /> },
-  { id: 'incidents',         label: 'Incident Management', icon: <AlertOctagon className="w-4 h-4 shrink-0" /> },
-  { id: 'privacy-rights',    label: 'Privacy Rights',      icon: <UserCheck    className="w-4 h-4 shrink-0" /> },
+  { id: 'incidents',         label: 'Incident Management', icon: <AlertOctagon className="w-4 h-4 shrink-0" />, alertColor: '#ef4444'  },
+  { id: 'privacy-rights',    label: 'Privacy Rights',      icon: <UserCheck    className="w-4 h-4 shrink-0" />, alertColor: '#E4982E'  },
   { id: 'data-mapping',      label: 'Data Mapping',        icon: <Map          className="w-4 h-4 shrink-0" /> },
   { id: 'privacy-notices',   label: 'Privacy Notices',     icon: <FileText     className="w-4 h-4 shrink-0" /> },
   { id: 'benchmarking',      label: 'Benchmarking',        icon: <BarChart2    className="w-4 h-4 shrink-0" /> },
-  { id: 'maturity-planning', label: 'Maturity & Planning', icon: <TrendingUp   className="w-4 h-4 shrink-0" /> },
+  { id: 'maturity-planning', label: 'Maturity & Planning', icon: <TrendingUp   className="w-4 h-4 shrink-0" />, alertColor: '#E4982E'  },
 ]
 
 // ── PIA & DPIA dashboard data ─────────────────────────────────────────────────
@@ -1191,6 +1191,471 @@ function PrivacyNoticesDashboard() {
   )
 }
 
+// ── Benchmarking dashboard data ───────────────────────────────────────────────
+
+const benchmarkingStats = [
+  { label: 'Maturity Score',       value: '3.4',  sub: '↑0.2 vs. last quarter',     accent: '#976FE6' },
+  { label: 'Industry Percentile',  value: '68th', sub: 'top tier threshold: 80th',   accent: '#0788F7' },
+  { label: 'Regulation Coverage',  value: '84%',  sub: '↑6% from Q1 2026',          accent: '#00B935' },
+  { label: 'Critical Gaps',        value: '7',    sub: '↓3 resolved this quarter',   accent: '#f59e0b' },
+]
+
+const moduleScores = [
+  { name: 'Data Mapping & RoPA',  score: 4.1, barColor: '#00B935', indAvg: 3.8, gap: '+0.3', gapColor: '#00B935', trend: '↑', trendColor: '#00B935', highlight: false },
+  { name: 'Privacy Notices',      score: 3.8, barColor: '#00B935', indAvg: 3.5, gap: '+0.3', gapColor: '#00B935', trend: '↑', trendColor: '#00B935', highlight: false },
+  { name: 'Consent Management',   score: 3.6, barColor: '#00B935', indAvg: 3.6, gap: '0.0',  gapColor: '#4b5563', trend: '→', trendColor: '#4b5563', highlight: false },
+  { name: 'Privacy Rights DSAR',  score: 3.5, barColor: '#f59e0b', indAvg: 3.7, gap: '–0.2', gapColor: '#f59e0b', trend: '→', trendColor: '#4b5563', highlight: false },
+  { name: 'PIA & DPIA',           score: 3.2, barColor: '#f59e0b', indAvg: 3.4, gap: '–0.2', gapColor: '#f59e0b', trend: '↓', trendColor: '#ef4444', highlight: true  },
+  { name: 'Incident Response',    score: 3.0, barColor: '#ef4444', indAvg: 3.6, gap: '–0.6', gapColor: '#ef4444', trend: '→', trendColor: '#4b5563', highlight: false },
+]
+
+const industryComparison = [
+  { label: 'Process Maturity', yourScore: 3.8, indAvg: 3.7 },
+  { label: 'Tech Coverage',    yourScore: 3.2, indAvg: 3.5 },
+  { label: 'Risk Integration', yourScore: 3.5, indAvg: 3.4 },
+  { label: 'Automation Level', yourScore: 2.8, indAvg: 3.1 },
+]
+
+const regulationCoverage = [
+  { label: 'GDPR (EU)',        pct: 92, color: '#00B935' },
+  { label: 'CCPA (US/CA)',     pct: 86, color: '#00B935' },
+  { label: 'LGPD (Brazil)',    pct: 71, color: '#f59e0b' },
+  { label: 'PIPEDA (Canada)',  pct: 68, color: '#f59e0b' },
+  { label: 'India DPDP',       pct: 24, color: '#ef4444' },
+]
+
+const benchmarkingActions = [
+  { label: 'Run Full Assessment',       cls: 'bg-[#976FE6] text-white'           },
+  { label: 'Export Benchmark Report',   cls: 'bg-[#1e2130] text-[#9ca3af]'       },
+  { label: 'Schedule Quarterly Review', cls: 'bg-[#1e2130] text-[#9ca3af]'       },
+  { label: 'Compare with Peers',        cls: 'bg-[#976FE6]/10 text-[#976FE6]'   },
+  { label: 'View Gap Analysis',         cls: 'bg-[#1e2130] text-[#9ca3af]'       },
+  { label: 'Download Exec Summary',     cls: 'bg-[#1e2130] text-[#9ca3af]'       },
+]
+
+// ── Benchmarking Overview ─────────────────────────────────────────────────────
+
+function BenchmarkingDashboard() {
+  return (
+    <div className="p-6 space-y-4">
+
+      {/* Header */}
+      <div>
+        <h2 className="text-lg font-medium text-white">Program Benchmarking</h2>
+        <p className="text-xs text-[#9ca3af] mt-0.5">Benchmarking  ·  6 modules assessed  ·  Q2 2026  ·  last updated 3 days ago</p>
+      </div>
+
+      {/* Stat cards */}
+      <div className="grid grid-cols-4 gap-3">
+        {benchmarkingStats.map((s) => (
+          <div key={s.label} className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+            <div className="h-[3px]" style={{ background: s.accent }} />
+            <div className="p-4">
+              <p className="text-2xl font-bold text-white">{s.value}</p>
+              <p className="text-[11px] font-semibold text-[#9ca3af] mt-2">{s.label}</p>
+              <p className="text-[10px] text-[#4b5563] mt-0.5">{s.sub}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Middle row: module scores + industry comparison */}
+      <div className="grid grid-cols-3 gap-3">
+
+        {/* Module Benchmark Scores */}
+        <div className="col-span-2 bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 bg-[#0f1117] border-b border-[#1e2130]">
+            <p className="text-sm font-semibold text-white">Module Benchmark Scores</p>
+            <div className="flex items-center gap-3">
+              <button className="text-[11px] text-[#9ca3af] hover:text-white transition-colors">Filter ▾</button>
+              <button className="text-[11px] text-[#976FE6] hover:underline">Export →</button>
+            </div>
+          </div>
+          <div className="px-4">
+            {/* Column headers */}
+            <div className="grid gap-2 py-2.5 border-b border-[#1e2130]"
+              style={{ gridTemplateColumns: '1fr 100px 72px 64px 48px' }}>
+              {['Module', 'Score', 'Ind. Avg', 'Gap', 'Trend'].map((h) => (
+                <p key={h} className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">{h}</p>
+              ))}
+            </div>
+            {/* Rows */}
+            {moduleScores.map((row, i) => (
+              <div key={i}
+                className={cn(
+                  "grid gap-2 py-2.5 border-b border-[#1e2130] last:border-0 cursor-pointer transition-colors -mx-4 px-4 items-center",
+                  row.highlight ? "bg-[#976FE6]/6 hover:bg-[#976FE6]/8" : "hover:bg-[#1a1d2a]"
+                )}
+                style={{ gridTemplateColumns: '1fr 100px 72px 64px 48px' }}>
+                <p className={cn("text-xs font-medium truncate", row.highlight ? "text-[#976FE6] font-semibold" : "text-white")}>
+                  {row.name}
+                </p>
+                <div>
+                  <p className="text-xs font-semibold text-white mb-1">{row.score.toFixed(1)}</p>
+                  <div className="h-1.5 bg-[#1e2130] rounded-full overflow-hidden w-14">
+                    <div className="h-full rounded-full" style={{ width: `${(row.score / 5) * 100}%`, background: row.barColor }} />
+                  </div>
+                </div>
+                <p className="text-[11px] text-[#4b5563]">{row.indAvg.toFixed(1)}</p>
+                <p className="text-[11px] font-semibold" style={{ color: row.gapColor }}>{row.gap}</p>
+                <p className="text-base font-bold" style={{ color: row.trendColor }}>{row.trend}</p>
+              </div>
+            ))}
+            <div className="flex items-center justify-between py-2.5">
+              <p className="text-[10px] text-[#976FE6]">← Prev &nbsp; <span className="font-semibold">1</span> &nbsp; 2 &nbsp; Next →</p>
+              <p className="text-[10px] text-[#4b5563]">Showing 6 of 8 assessed modules</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Industry Comparison */}
+        <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden flex flex-col">
+          <div className="px-4 pt-4 pb-3 border-b border-[#1e2130]">
+            <p className="text-sm font-semibold text-white">Industry Comparison</p>
+            <p className="text-[10px] text-[#9ca3af] mt-0.5">your score vs. industry average</p>
+          </div>
+          {/* Legend */}
+          <div className="flex items-center gap-4 px-4 pt-3 pb-2">
+            <div className="flex items-center gap-1.5">
+              <div className="w-2.5 h-2.5 rounded-sm bg-[#976FE6]" />
+              <p className="text-[10px] text-[#9ca3af]">Your Score</p>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-5 h-0.5 bg-[#4b5563]" />
+              <p className="text-[10px] text-[#9ca3af]">Industry Avg</p>
+            </div>
+          </div>
+          <div className="px-4 pb-4 flex-1 space-y-5">
+            {industryComparison.map((row) => {
+              const yourPct = (row.yourScore / 5) * 100
+              const avgPct  = (row.indAvg   / 5) * 100
+              return (
+                <div key={row.label}>
+                  <p className="text-[11px] text-white mb-2">{row.label}</p>
+                  <div className="relative h-2 bg-[#1e2130] rounded-full overflow-visible">
+                    <div className="absolute h-full bg-[#976FE6] rounded-full"
+                      style={{ width: `${yourPct}%` }} />
+                    {/* industry avg marker */}
+                    <div className="absolute top-1/2 -translate-y-1/2 w-0.5 h-4 bg-[#4b5563] rounded-sm"
+                      style={{ left: `${avgPct}%` }} />
+                  </div>
+                  <div className="flex items-center justify-between mt-1.5">
+                    <p className="text-[10px] font-semibold text-[#976FE6]">{row.yourScore.toFixed(1)}</p>
+                    <p className="text-[10px] text-[#4b5563]">{row.indAvg.toFixed(1)}</p>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom row: regulation coverage + quick actions */}
+      <div className="grid grid-cols-3 gap-3">
+
+        {/* Regulation Coverage */}
+        <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+          <div className="px-4 pt-4 pb-3 border-b border-[#1e2130]">
+            <p className="text-sm font-semibold text-white">Regulation Coverage</p>
+          </div>
+          <div className="p-4 space-y-4">
+            {regulationCoverage.map((r) => (
+              <div key={r.label}>
+                <div className="flex items-center justify-between mb-1.5">
+                  <p className="text-[11px] text-white">{r.label}</p>
+                  <p className="text-[11px] font-semibold" style={{ color: r.color }}>{r.pct}%</p>
+                </div>
+                <div className="h-1.5 bg-[#1e2130] rounded-full overflow-hidden">
+                  <div className="h-full rounded-full" style={{ width: `${r.pct}%`, background: r.color }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="col-span-2 bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden flex flex-col">
+          <div className="px-4 pt-4 pb-3 border-b border-[#1e2130]">
+            <p className="text-sm font-semibold text-white">Quick Actions</p>
+          </div>
+          <div className="p-4 flex-1">
+            <div className="grid grid-cols-3 gap-2">
+              {benchmarkingActions.map((a) => (
+                <button key={a.label}
+                  className={cn('w-full text-left px-3 py-3 rounded-md text-xs font-semibold transition-opacity hover:opacity-80', a.cls)}>
+                  {a.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          {/* Modules benchmarked footer */}
+          <div className="px-4 py-3 border-t border-[#1e2130] flex items-center gap-3">
+            <p className="text-[10px] text-[#9ca3af] whitespace-nowrap shrink-0">Modules Benchmarked:</p>
+            <div className="flex-1 h-1.5 bg-[#1e2130] rounded-full overflow-hidden">
+              <div className="h-full bg-[#976FE6] rounded-full" style={{ width: '75%' }} />
+            </div>
+            <p className="text-[10px] font-semibold text-[#976FE6] whitespace-nowrap shrink-0">75% — 6 of 8</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Maturity & Planning dashboard data ───────────────────────────────────────
+
+const maturityStats = [
+  { label: 'Maturity Score',       value: '3.4',  sub: 'of 5.0  ·  Level 3 — Defined',  accent: '#f59e0b' },
+  { label: 'Regulations Covered',  value: '14',   sub: 'of 18 identified (78%)',          accent: '#00B935' },
+  { label: 'Open Gaps',            value: '23',   sub: '7 critical · 10 high · 6 med',   accent: '#ef4444' },
+  { label: 'Q2 Milestones',        value: '8/12', sub: '67% complete  ·  4 remaining',   accent: '#0788F7' },
+]
+
+const maturityModules = [
+  { name: 'PIA & DPIA',            score: 4.1, barColor: '#5b9baa', targetPct: 90 },
+  { name: 'Data Mapping',          score: 3.8, barColor: '#5b9baa', targetPct: 80 },
+  { name: 'Incident Management',   score: 2.9, barColor: '#f59e0b', targetPct: 80 },
+  { name: 'Privacy Rights / DSAR', score: 3.6, barColor: '#5b9baa', targetPct: 90 },
+  { name: 'Privacy Notices',       score: 4.2, barColor: '#5b9baa', targetPct: 90 },
+  { name: 'Program Benchmarking',  score: 2.4, barColor: '#f97316', targetPct: 70 },
+  { name: 'Maturity & Planning',   score: 3.1, barColor: '#f59e0b', targetPct: 80 },
+  { name: 'Training',              score: 3.7, barColor: '#5b9baa', targetPct: 90 },
+]
+
+const maturityRegulations = [
+  { label: 'GDPR (EU)',           pct: 92, color: '#00B935' },
+  { label: 'CCPA / CPRA (CA)',    pct: 87, color: '#00B935' },
+  { label: 'LGPD (Brazil)',       pct: 71, color: '#f59e0b' },
+  { label: 'PIPEDA (Canada)',     pct: 65, color: '#f59e0b' },
+  { label: 'PDPA (Thailand)',     pct: 48, color: '#ef4444'  },
+  { label: 'POPIA (South Africa)',pct: 42, color: '#ef4444'  },
+  { label: 'China PIPL',         pct: 28, color: '#ef4444'  },
+  { label: 'India DPDP',         pct: 15, color: '#ef4444'  },
+]
+
+const GAP_C = 2 * Math.PI * 32
+const gapSegments = [
+  { label: 'Critical', count: 7,  color: '#ef4444', pct: 7  / 23, offset: 0       },
+  { label: 'High',     count: 10, color: '#f59e0b', pct: 10 / 23, offset: 7  / 23 },
+  { label: 'Medium',   count: 6,  color: '#f97316', pct: 6  / 23, offset: 17 / 23 },
+]
+
+const roadmilestones = [
+  { dot: '#5b9baa', name: 'Complete DPIA Process Documentation', initials: 'KM', due: 'Due Jun 15', pct: 45,  barColor: '#f59e0b', status: 'In Progress', stColor: '#f59e0b' },
+  { dot: '#0788F7', name: 'CCPA Opt-Out Flow Implementation',    initials: 'PS', due: 'Due Jun 30', pct: 70,  barColor: '#0788F7', status: 'In Progress', stColor: '#0788F7' },
+  { dot: '#00B935', name: 'Incident Response Playbook v2',       initials: 'TC', due: 'Due May 30', pct: 100, barColor: '#00B935', status: 'Complete',    stColor: '#00B935' },
+  { dot: '#ef4444', name: 'China PIPL Gap Assessment',           initials: 'KM', due: 'Due Jul 1',  pct: 0,   barColor: '#1e2130', status: 'Not Started', stColor: '#ef4444' },
+]
+
+// ── Maturity & Planning Overview ──────────────────────────────────────────────
+
+function MaturityPlanningDashboard() {
+  return (
+    <div className="p-6 space-y-4">
+
+      {/* Status banner */}
+      <div className="flex items-center justify-between px-4 py-2.5 bg-[#f59e0b]/8 border border-[#f59e0b]/20 rounded-lg">
+        <div className="flex items-center gap-2">
+          <div className="w-1 h-5 rounded-sm bg-[#f59e0b] shrink-0" />
+          <p className="text-[11px] text-[#f59e0b] font-medium">
+            Program is at Level 3 (Defined)  ·  Target: Level 4 (Managed) by Q4 2026  ·  Gap: 7 critical items require remediation
+          </p>
+        </div>
+      </div>
+
+      {/* Header */}
+      <div>
+        <h2 className="text-lg font-medium text-white">Program Maturity Overview</h2>
+        <p className="text-xs text-[#9ca3af] mt-0.5">Maturity &amp; Planning  ·  NIST Privacy Framework  ·  Q2 2026 Assessment</p>
+      </div>
+
+      {/* Stat cards */}
+      <div className="grid grid-cols-4 gap-3">
+        {maturityStats.map((s) => (
+          <div key={s.label} className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+            <div className="h-[3px]" style={{ background: s.accent }} />
+            <div className="p-4">
+              <p className="text-2xl font-bold text-white">{s.value}</p>
+              <p className="text-[11px] font-semibold text-[#9ca3af] mt-2">{s.label}</p>
+              <p className="text-[10px] text-[#4b5563] mt-0.5">{s.sub}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Middle row: maturity by module + regulation coverage */}
+      <div className="grid grid-cols-3 gap-3">
+
+        {/* Maturity by Module horizontal bars */}
+        <div className="col-span-2 bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 bg-[#0f1117] border-b border-[#1e2130]">
+            <p className="text-sm font-semibold text-white">Maturity by Module</p>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-sm bg-[#f59e0b]" />
+                <p className="text-[10px] text-[#9ca3af]">Current</p>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-sm bg-[#1e2130]" />
+                <p className="text-[10px] text-[#9ca3af]">Target</p>
+              </div>
+            </div>
+          </div>
+          <div className="px-4 pt-3 pb-1">
+            <div className="space-y-2.5">
+              {maturityModules.map((m) => {
+                const barPct = (m.score / 5) * 100
+                return (
+                  <div key={m.name} className="flex items-center gap-3">
+                    <p className="text-[10px] text-white w-36 shrink-0 truncate">{m.name}</p>
+                    <p className="text-[10px] font-bold w-6 shrink-0" style={{ color: m.barColor }}>{m.score.toFixed(1)}</p>
+                    <div className="relative flex-1 h-2.5 bg-[#1e2130] rounded-full overflow-visible">
+                      <div className="absolute h-full rounded-full" style={{ width: `${barPct}%`, background: m.barColor }} />
+                      {/* Target marker */}
+                      <div className="absolute top-1/2 -translate-y-1/2 w-0.5 h-4 bg-[#4b5563] rounded-sm"
+                        style={{ left: `${m.targetPct}%` }} />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+            {/* X-axis */}
+            <div className="mt-3 ml-[168px] flex justify-between pb-1">
+              {['0', '1', '2', '3', '4', '5'].map((n) => (
+                <p key={n} className="text-[9px] text-[#4b5563]">{n}</p>
+              ))}
+            </div>
+            <div className="ml-[168px] flex justify-between pb-2 -mt-0.5">
+              {['L1 Initial', 'L2 Developing', 'L3 Defined', 'L4 Managed', 'L5 Optimized'].map((l) => (
+                <p key={l} className="text-[8px] text-[#4b5563]">{l}</p>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Regulation Coverage */}
+        <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden flex flex-col">
+          <div className="px-4 pt-4 pb-3 border-b border-[#1e2130]">
+            <p className="text-sm font-semibold text-white">Regulation Coverage</p>
+            <p className="text-[10px] text-[#9ca3af] mt-0.5">Compliance readiness by framework</p>
+          </div>
+          <div className="p-4 space-y-3 flex-1 overflow-auto">
+            {maturityRegulations.map((r) => (
+              <div key={r.label}>
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-[10px] text-white">{r.label}</p>
+                  <p className="text-[10px] font-bold" style={{ color: r.color }}>{r.pct}%</p>
+                </div>
+                <div className="h-1 bg-[#1e2130] rounded-full overflow-hidden">
+                  <div className="h-full rounded-full" style={{ width: `${r.pct}%`, background: r.color }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom row: gap analysis + roadmap milestones */}
+      <div className="grid grid-cols-3 gap-3">
+
+        {/* Gap Analysis */}
+        <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden flex flex-col">
+          <div className="px-4 pt-4 pb-3 border-b border-[#1e2130]">
+            <p className="text-sm font-semibold text-white">Gap Analysis</p>
+            <p className="text-[10px] text-[#9ca3af] mt-0.5">23 open gaps across platform</p>
+          </div>
+          {/* Donut */}
+          <div className="flex items-center justify-center py-4">
+            <div className="relative w-24 h-24">
+              <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
+                <circle cx="50" cy="50" r="32" fill="none" stroke="#1e2130" strokeWidth="10" />
+                {gapSegments.map((seg) => (
+                  <circle key={seg.label} cx="50" cy="50" r="32" fill="none"
+                    stroke={seg.color} strokeWidth="10"
+                    strokeDasharray={`${seg.pct * GAP_C} ${GAP_C}`}
+                    strokeDashoffset={`${-seg.offset * GAP_C}`}
+                    strokeLinecap="butt" />
+                ))}
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <p className="text-xl font-bold text-white">23</p>
+                <p className="text-[10px] text-[#9ca3af]">gaps</p>
+              </div>
+            </div>
+          </div>
+          {/* Legend */}
+          <div className="px-4 pb-3">
+            <div className="grid grid-cols-3 gap-2 text-center">
+              {gapSegments.map((seg) => (
+                <div key={seg.label}>
+                  <p className="text-[9px] text-[#9ca3af]">{seg.label}</p>
+                  <p className="text-sm font-bold mt-0.5" style={{ color: seg.color }}>{seg.count}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="px-4 py-2.5 border-t border-[#1e2130]">
+            <p className="text-[9px] text-[#ef4444]">Top gap: DPIA documentation incomplete</p>
+          </div>
+        </div>
+
+        {/* Roadmap Milestones */}
+        <div className="col-span-2 bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden flex flex-col">
+          <div className="flex items-center justify-between px-4 py-3 bg-[#0f1117] border-b border-[#1e2130]">
+            <p className="text-sm font-semibold text-white">Roadmap Milestones</p>
+            <div className="flex items-center gap-1.5">
+              {[
+                { label: 'Q2 2026 (Current)', active: true  },
+                { label: 'Q3 2026',           active: false },
+                { label: 'Q4 2026',           active: false },
+              ].map((q) => (
+                <button key={q.label}
+                  className={cn(
+                    'text-[9px] font-medium px-2 py-0.5 rounded-full transition-colors',
+                    q.active
+                      ? 'bg-[#f59e0b]/15 text-[#f59e0b]'
+                      : 'bg-[#1e2130] text-[#4b5563] hover:text-white'
+                  )}>
+                  {q.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex-1 divide-y divide-[#1e2130]">
+            {roadmilestones.map((m) => (
+              <div key={m.name} className="flex items-center gap-3 px-4 py-3 hover:bg-[#1a1d2a] transition-colors cursor-pointer">
+                {/* Status dot */}
+                <div className="w-2 h-2 rounded-full shrink-0" style={{ background: m.dot }} />
+                {/* Name + assignee + due */}
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium text-white truncate">{m.name}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className="px-1.5 py-0.5 rounded bg-[#5b9baa]/15">
+                      <span className="text-[8px] font-bold text-[#5b9baa]">{m.initials}</span>
+                    </div>
+                    <p className="text-[9px] text-[#4b5563]">{m.due}</p>
+                  </div>
+                </div>
+                {/* Progress bar + % + status */}
+                <div className="flex items-center gap-2 shrink-0">
+                  <div className="w-28">
+                    <div className="h-1.5 bg-[#1e2130] rounded-full overflow-hidden">
+                      <div className="h-full rounded-full" style={{ width: `${m.pct}%`, background: m.barColor }} />
+                    </div>
+                    <p className="text-[9px] text-[#4b5563] mt-0.5">{m.pct}%</p>
+                  </div>
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full whitespace-nowrap"
+                    style={{ color: m.stColor, background: `${m.stColor}20` }}>{m.status}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ── Overview dispatcher ───────────────────────────────────────────────────────
 
 function OverviewContent({ item }: { item: PrivacyRecordItem }) {
@@ -1200,6 +1665,8 @@ function OverviewContent({ item }: { item: PrivacyRecordItem }) {
     case 'privacy-rights':   return <PrivacyRightsDashboard />
     case 'data-mapping':     return <DataMappingDashboard />
     case 'privacy-notices':  return <PrivacyNoticesDashboard />
+    case 'benchmarking':      return <BenchmarkingDashboard />
+    case 'maturity-planning': return <MaturityPlanningDashboard />
     default:
       return (
         <div className="flex flex-col items-center justify-center h-64 text-center px-6">
@@ -1615,7 +2082,10 @@ export function PrivacyManagementModule() {
                       : "text-[#9ca3af] hover:bg-[#1e2130] hover:text-white"
                   )}>
                   {item.icon}
-                  {!navCollapsed && <span className="truncate">{item.label}</span>}
+                  {!navCollapsed && <span className="truncate flex-1">{item.label}</span>}
+                  {!navCollapsed && item.alertColor && (
+                    <AlertTriangle className="w-3.5 h-3.5 shrink-0" style={{ color: item.alertColor }} />
+                  )}
                 </button>
               </li>
             ))}
