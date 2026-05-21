@@ -37,7 +37,7 @@ const inventoryItems: { id: AIGovInventoryItem; label: string; icon: React.React
   { id: 'models', label: 'Models', icon: <Cpu className="w-4 h-4" /> },
   { id: 'ai-agents', label: 'AI Agents', icon: <Bot className="w-4 h-4" /> },
   { id: 'datasets', label: 'Datasets', icon: <Database className="w-4 h-4" /> },
-  { id: 'vendors', label: 'Vendors', icon: <Building2 className="w-4 h-4" /> },
+  { id: 'vendors', label: 'Model Providers', icon: <Building2 className="w-4 h-4" /> },
 ]
 
 export function AIGovernanceModule() {

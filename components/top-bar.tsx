@@ -62,7 +62,7 @@ export function TopBar({ onSubscriptionClick }: TopBarProps) {
       'models': 'Models',
       'ai-agents': 'AI Agents',
       'datasets': 'Datasets',
-      'vendors': 'Vendors'
+      'vendors': 'Model Providers'
     }
     breadcrumbs.push({ 
       label: inventoryLabels[aiGovInventoryItem],
