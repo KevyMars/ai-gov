@@ -13,7 +13,7 @@ const viewLabels: Record<NavigationView, string> = {
   assets: 'Assets',
   policies: 'Policies',
   'ai-governance': 'AI Governance',
-  privacy: 'Privacy',
+  privacy: 'Privacy Management',
   tprm: 'TPRM',
   grc: 'GRC',
   'data-discovery': 'Data Discovery',
@@ -27,7 +27,16 @@ interface TopBarProps {
 
 export function TopBar({ onSubscriptionClick }: TopBarProps) {
   const { tier } = useSubscription()
-  const { currentView, aiGovTab, aiGovInventoryItem, selectedRecordId, setCurrentView, setSelectedRecordId } = useNavigation()
+  const {
+    currentView,
+    aiGovTab,
+    aiGovInventoryItem,
+    privacyTab,
+    privacyRecordItem,
+    selectedRecordId,
+    setCurrentView,
+    setSelectedRecordId,
+  } = useNavigation()
 
   const breadcrumbs: { label: string; onClick?: () => void }[] = [
     { 
@@ -59,6 +68,36 @@ export function TopBar({ onSubscriptionClick }: TopBarProps) {
       label: inventoryLabels[aiGovInventoryItem],
       onClick: () => setSelectedRecordId(null)
     })
+  }
+
+  if (currentView === 'privacy') {
+    const privacyTabLabels: Record<string, string> = {
+      overview: 'Overview',
+      records: 'Records',
+      objects: 'Objects',
+      policies: 'Policies',
+    }
+    const privacyRecordLabels: Record<string, string> = {
+      'pia-dpia': 'PIA & DPIA',
+      'incidents': 'Incident Management',
+      'privacy-rights': 'Privacy Rights',
+      'data-mapping': 'Data Mapping',
+      'privacy-notices': 'Privacy Notices',
+      'benchmarking': 'Benchmarking',
+      'maturity-planning': 'Maturity & Planning',
+    }
+
+    if (privacyTab === 'records') {
+      breadcrumbs.push({
+        label: privacyRecordLabels[privacyRecordItem] ?? 'Records',
+        onClick: () => setSelectedRecordId(null),
+      })
+    } else if (privacyTab !== 'overview') {
+      breadcrumbs.push({
+        label: privacyTabLabels[privacyTab],
+        onClick: () => setSelectedRecordId(null),
+      })
+    }
   }
 
   if (selectedRecordId) {
