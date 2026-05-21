@@ -24,7 +24,7 @@ export type NavigationView =
 export type AIGovTab = 'inventory' | 'objects' | 'ai-policies'
 export type AIGovInventoryItem = 'projects' | 'ai-systems' | 'models' | 'ai-agents' | 'datasets' | 'vendors'
 
-export type PrivacyTab = 'records' | 'objects' | 'policies'
+export type PrivacyTab = 'overview' | 'records' | 'objects' | 'policies'
 export type PrivacyRecordItem = 'pia-dpia' | 'incidents' | 'privacy-rights' | 'data-mapping' | 'privacy-notices' | 'benchmarking' | 'maturity-planning'
 
 export interface NavigationContextType {
@@ -50,7 +50,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const [currentView, setCurrentView] = useState<NavigationView>('home')
   const [aiGovTab, setAIGovTab] = useState<AIGovTab>('inventory')
   const [aiGovInventoryItem, setAIGovInventoryItem] = useState<AIGovInventoryItem>('ai-systems')
-  const [privacyTab, setPrivacyTab] = useState<PrivacyTab>('records')
+  const [privacyTab, setPrivacyTab] = useState<PrivacyTab>('overview')
   const [privacyRecordItem, setPrivacyRecordItem] = useState<PrivacyRecordItem>('pia-dpia')
   const [selectedRecordId, setSelectedRecordId] = useState<string | null>(null)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
