@@ -87,17 +87,14 @@ export function TopBar({ onSubscriptionClick }: TopBarProps) {
       'maturity-planning': 'Maturity & Planning',
     }
 
-    if (privacyTab === 'records') {
-      breadcrumbs.push({
-        label: privacyRecordLabels[privacyRecordItem] ?? 'Records',
-        onClick: () => setSelectedRecordId(null),
-      })
-    } else if (privacyTab !== 'overview') {
-      breadcrumbs.push({
-        label: privacyTabLabels[privacyTab],
-        onClick: () => setSelectedRecordId(null),
-      })
-    }
+    breadcrumbs.push({
+      label: privacyRecordLabels[privacyRecordItem] ?? 'PIA & DPIA',
+      onClick: () => setSelectedRecordId(null),
+    })
+    breadcrumbs.push({
+      label: privacyTabLabels[privacyTab] ?? 'Overview',
+      onClick: () => setSelectedRecordId(null),
+    })
   }
 
   if (selectedRecordId) {
