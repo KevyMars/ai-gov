@@ -862,7 +862,14 @@ export function AIGovernanceModule() {
               )}
 
               {aiGovAcceptableUseItem === 'accepted-use-policies' && (
-                <div className="flex flex-1 overflow-hidden">
+                <div className="flex flex-col flex-1 overflow-hidden">
+                  {/* Header */}
+                  <div className="px-6 pt-6 pb-4">
+                    <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-1">Acceptable Use Policies</h2>
+                    <p className="text-[#9ca3af] text-sm">Define and manage acceptable use policies for AI systems across your organization.</p>
+                  </div>
+
+                  <div className="flex flex-1 overflow-hidden">
                   {/* Left Sidebar - Policy Types Filter */}
                   <div className="w-56 border-r border-[#1e2130] bg-[#0f1117] py-4 overflow-y-auto">
                     {/* Search */}
@@ -942,12 +949,6 @@ export function AIGovernanceModule() {
 
                   {/* Main Content */}
                   <div className="flex-1 overflow-y-auto p-6">
-                    {/* Header */}
-                    <div className="mb-4">
-                      <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-1">Acceptable Use Policies</h2>
-                      <p className="text-[#9ca3af] text-sm">Define and manage acceptable use policies for AI systems across your organization.</p>
-                    </div>
-
                     {/* Filter Tabs */}
                     <div className="flex items-center gap-2 mb-6">
                       {[
@@ -1146,6 +1147,7 @@ export function AIGovernanceModule() {
                       ))}
                     </div>
                   </div>
+                </div>
                 </div>
               )}
             </div>
