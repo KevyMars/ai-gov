@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from 'react'
 import { useNavigation, AIGovTab, AIGovInventoryItem, AIGovAcceptableUseItem } from '@/lib/navigation-context'
 import { 
   aiSystems, 
@@ -420,7 +421,7 @@ export function AIGovernanceModule() {
     setSelectedRecordId 
   } = useNavigation()
 
-  const [acceptedInventoryFilter, setAcceptedInventoryFilter] = React.useState<'all' | 'Approved' | 'Needs review' | 'Denied'>('all')
+  const [acceptedInventoryFilter, setAcceptedInventoryFilter] = useState<'all' | 'Approved' | 'Needs review' | 'Denied'>('all')
 
   // OneTrust Brand Color System - use Mint sparingly for key emphasis
   // Secondary palette: Sky (#0788F7), Yellow (#FFEF3C), Leaf (#00B935)
