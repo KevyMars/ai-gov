@@ -2116,7 +2116,11 @@ export function AIGovernanceModule() {
                                 <span className="text-sm text-[#9ca3af]">is</span>
                                 <span className="text-sm text-[#9ca3af]">&quot;{condition.value}&quot;</span>
                                 {index < (policy.conditionsList?.length || 0) - 1 && (
-                                  <span className="px-3 py-1.5 border border-[#1e2130] rounded text-xs text-white font-medium">
+                                  <span className={`px-3 py-1.5 border rounded text-xs font-medium ${
+                                    condition.operator === 'AND' 
+                                      ? 'border-[#6CEEAD]/30 text-[#6CEEAD] bg-[#6CEEAD]/10' 
+                                      : 'border-[#f59e0b]/30 text-[#f59e0b] bg-[#f59e0b]/10'
+                                  }`}>
                                     {condition.operator}
                                   </span>
                                 )}
