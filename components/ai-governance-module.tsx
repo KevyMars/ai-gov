@@ -1785,7 +1785,7 @@ export function AIGovernanceModule() {
                         </button>
                       </div>
                     </div>
-                  ) : (
+                  ) : selectedPolicy === null ? (
                   <div className="flex flex-1 overflow-hidden">
                   {/* Left Sidebar - Policy Types Filter */}
                   <div className="w-56 border-r border-[#1e2130] bg-[#0f1117] py-4 overflow-y-auto">
@@ -1920,39 +1920,40 @@ export function AIGovernanceModule() {
                           onClick={() => setSelectedPolicy(policy.id)}
                           className="bg-[#13151f] border border-[#1e2130] rounded-lg p-4 hover:border-[#2a2d3a] transition-colors cursor-pointer"
                         >
-                          <h3 className="text-base font-semibold text-white mb-3">{policy.title}</h3>
-                          
-                          {/* Badges */}
+                          {/* Card Header */}
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex-1 min-w-0 pr-2">
+                              <h3 className="text-sm font-medium text-white mb-1 truncate">{policy.title}</h3>
+                              <p className="text-xs text-[#9ca3af] line-clamp-2">{policy.description}</p>
+                            </div>
+                            <div className="flex flex-col items-end gap-1 shrink-0">
+                              <span className={cn(
+                                "text-[10px] px-2 py-0.5 rounded",
+                                policy.outcome === 'Auto-approved' ? "bg-[#00B935]/10 text-[#00B935]" :
+                                policy.outcome === 'Requires review' ? "bg-[#ffa500]/10 text-[#ffa500]" :
+                                "bg-[#ef4444]/10 text-[#ef4444]"
+                              )}>
+                                {policy.outcome}
+                              </span>
+                              <span className="text-[10px] text-[#9ca3af]">{policy.activeRecords} active records</span>
+                            </div>
+                          </div>
+
+                          {/* Use Type */}
+                          <div className="mb-3">
+                            <span className="text-[10px] text-[#4b5563]">Use type:</span>
+                            <span className="text-[10px] text-white ml-1">{policy.useType}</span>
+                          </div>
+
+                          {/* Conditions Badge */}
                           <div className="flex items-center gap-2 mb-3">
-                            <span className="text-[10px] px-2 py-0.5 rounded border border-[#1e2130] text-[#9ca3af]">
-                              {policy.activeRecords} active records
-                            </span>
-                            <span className="text-[10px] px-2 py-0.5 rounded border border-[#1e2130] text-[#9ca3af]">
+                            <span className="text-[10px] px-2 py-0.5 rounded bg-[#1e2130] text-[#9ca3af]">
                               {policy.conditions} condition{policy.conditions !== 1 ? 's' : ''}
                             </span>
                           </div>
 
-                          {/* Description */}
-                          <p className="text-xs text-[#9ca3af] mb-4">{policy.description}</p>
-
-                          {/* Details */}
-                          <div className="space-y-2">
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs text-[#9ca3af]">Outcome:</span>
-                              <span className={`text-[10px] font-medium px-2 py-0.5 rounded border ${
-                                policy.outcome === 'Auto-approved' 
-                                  ? 'border-[#00B935]/30 text-[#00B935]' 
-                                  : policy.outcome === 'Denied'
-                                  ? 'border-[#ef4444]/30 text-[#ef4444]'
-                                  : 'border-[#1e2130] text-[#9ca3af]'
-                              }`}>{policy.outcome === 'Auto-approved' ? 'Approved' : policy.outcome}</span>
-                            </div>
-                            
-                            <div className="flex items-start gap-2">
-                              <span className="text-xs text-[#9ca3af] shrink-0">Use type:</span>
-                              <span className="text-xs text-white">{policy.useType}</span>
-                            </div>
-
+                          {/* Model/Vendor Info */}
+                          <div className="space-y-1.5">
                             {policy.model && (
                               <div className="flex items-center gap-2">
                                 <span className="text-xs text-[#9ca3af]">Model:</span>
@@ -1980,8 +1981,6 @@ export function AIGovernanceModule() {
                     </div>
                   </div>
                 </div>
-                )}
-                
                 {/* Policy Detail View */}
                 {selectedPolicy !== null && (() => {
                   const policy = policies.find(p => p.id === selectedPolicy)
