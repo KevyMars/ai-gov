@@ -426,6 +426,14 @@ export function AIGovernanceModule() {
   const [policyOutcomeFilter, setPolicyOutcomeFilter] = useState<'all' | 'Auto-approved' | 'Requires review' | 'Denied'>('all')
   const [policyTypeFilter, setPolicyTypeFilter] = useState<'all' | 'model-providers' | 'vendors'>('all')
   const [policySearchQuery, setPolicySearchQuery] = useState('')
+  const [showAddAcceptedUseForm, setShowAddAcceptedUseForm] = useState(false)
+  
+  // Add Accepted Use Form State
+  const [formRecordType, setFormRecordType] = useState('')
+  const [formName, setFormName] = useState('')
+  const [formDescription, setFormDescription] = useState('')
+  const [formOutcome, setFormOutcome] = useState<'Approved' | 'Needs additional review' | 'Denied'>('Approved')
+  const [formApplyOutcome, setFormApplyOutcome] = useState<'auto-apply' | 'flag-admin'>('auto-apply')
 
   // OneTrust Brand Color System - use Mint sparingly for key emphasis
   // Secondary palette: Sky (#0788F7), Yellow (#FFEF3C), Leaf (#00B935)
@@ -869,12 +877,159 @@ export function AIGovernanceModule() {
                       <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-1">Acceptable Use Policies</h2>
                       <p className="text-[#9ca3af] text-sm">Define and manage acceptable use policies for AI systems across your organization.</p>
                     </div>
-                    <button className="flex items-center gap-2 px-3 py-1.5 bg-[#6CEEAD] text-[#0f1117] rounded-md text-xs font-medium hover:bg-[#5dd99c] transition-colors">
+                    <button 
+                      onClick={() => setShowAddAcceptedUseForm(true)}
+                      className="flex items-center gap-2 px-3 py-1.5 bg-[#6CEEAD] text-[#0f1117] rounded-md text-xs font-medium hover:bg-[#5dd99c] transition-colors"
+                    >
                       <Plus className="w-3 h-3" />
                       Add accepted use
                     </button>
                   </div>
 
+                  {showAddAcceptedUseForm ? (
+                    /* Add Accepted Use Form */
+                    <div className="flex-1 overflow-y-auto p-6">
+                      <div className="max-w-2xl">
+                        <h3 className="text-lg font-medium text-white mb-6">Define condition details</h3>
+
+                        {/* Record types to evaluate */}
+                        <div className="mb-6">
+                          <label className="block text-sm font-medium text-[#9ca3af] mb-1">Record types to evaluate</label>
+                          <p className="text-xs text-[#4b5563] mb-2">Define which record type this condition evaluates. Logic conditions can reference attributes on the selected record or on any directly linked record type.</p>
+                          <select
+                            value={formRecordType}
+                            onChange={(e) => setFormRecordType(e.target.value)}
+                            className="w-64 px-3 py-2 bg-white text-[#0f1117] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#6CEEAD]"
+                          >
+                            <option value="">Select record types</option>
+                            <option value="model">Model</option>
+                            <option value="ai-system">AI System</option>
+                            <option value="agent">Agent</option>
+                            <option value="project">Project</option>
+                            <option value="dataset">Dataset</option>
+                            <option value="vendor">Vendor</option>
+                          </select>
+                        </div>
+
+                        {/* Name of accepted use */}
+                        <div className="mb-6">
+                          <label className="block text-sm font-medium text-[#9ca3af] mb-2">Name of accepted use</label>
+                          <input
+                            type="text"
+                            value={formName}
+                            onChange={(e) => setFormName(e.target.value)}
+                            placeholder="e.g., Anthropic use for internal use"
+                            className="w-full max-w-lg px-3 py-2 bg-white text-[#0f1117] rounded-md text-sm placeholder:text-[#9ca3af] focus:outline-none focus:ring-2 focus:ring-[#6CEEAD]"
+                          />
+                        </div>
+
+                        {/* Description */}
+                        <div className="mb-6">
+                          <label className="block text-sm font-medium text-[#9ca3af] mb-2">Description</label>
+                          <textarea
+                            value={formDescription}
+                            onChange={(e) => setFormDescription(e.target.value)}
+                            placeholder="e.g, Approved for internal use only"
+                            rows={4}
+                            className="w-full max-w-lg px-3 py-2 bg-white text-[#0f1117] rounded-md text-sm placeholder:text-[#9ca3af] focus:outline-none focus:ring-2 focus:ring-[#6CEEAD] resize-y"
+                          />
+                        </div>
+
+                        {/* Outcome when condition is met */}
+                        <div className="mb-6">
+                          <label className="block text-sm font-medium text-[#9ca3af] mb-1">What is the outcome when the condition is met?</label>
+                          <p className="text-xs text-[#4b5563] mb-3">Apply this status when all conditions are met. If all conditions are not met, the intake will continue through normal workflow.</p>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => setFormOutcome('Approved')}
+                              className={cn(
+                                "px-4 py-2 rounded-md text-sm font-medium transition-colors",
+                                formOutcome === 'Approved'
+                                  ? "bg-[#3a3a3a] text-white"
+                                  : "text-[#9ca3af] hover:text-white"
+                              )}
+                            >
+                              Approved
+                            </button>
+                            <button
+                              onClick={() => setFormOutcome('Needs additional review')}
+                              className={cn(
+                                "px-4 py-2 rounded-md text-sm font-medium transition-colors",
+                                formOutcome === 'Needs additional review'
+                                  ? "bg-[#3a3a3a] text-white"
+                                  : "text-[#9ca3af] hover:text-white"
+                              )}
+                            >
+                              Needs additional review
+                            </button>
+                            <button
+                              onClick={() => setFormOutcome('Denied')}
+                              className={cn(
+                                "px-4 py-2 rounded-md text-sm font-medium transition-colors",
+                                formOutcome === 'Denied'
+                                  ? "bg-[#3a3a3a] text-white"
+                                  : "text-[#9ca3af] hover:text-white"
+                              )}
+                            >
+                              Denied
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* When to apply the outcome */}
+                        <div className="mb-8">
+                          <label className="block text-sm font-medium text-[#9ca3af] mb-3">When to apply the outcome</label>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => setFormApplyOutcome('auto-apply')}
+                              className={cn(
+                                "px-4 py-2 rounded-md text-sm font-medium transition-colors",
+                                formApplyOutcome === 'auto-apply'
+                                  ? "bg-[#3a3a3a] text-white"
+                                  : "text-[#9ca3af] hover:text-white"
+                              )}
+                            >
+                              Auto-apply outcome
+                            </button>
+                            <button
+                              onClick={() => setFormApplyOutcome('flag-admin')}
+                              className={cn(
+                                "px-4 py-2 rounded-md text-sm font-medium transition-colors",
+                                formApplyOutcome === 'flag-admin'
+                                  ? "bg-[#3a3a3a] text-white"
+                                  : "text-[#9ca3af] hover:text-white"
+                              )}
+                            >
+                              Flag for admin confirmation
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Form Actions */}
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => setShowAddAcceptedUseForm(false)}
+                            className="px-4 py-2 bg-[#6CEEAD] text-[#0f1117] rounded-md text-sm font-medium hover:bg-[#5dd99c] transition-colors"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={() => {
+                              setShowAddAcceptedUseForm(false)
+                              setFormRecordType('')
+                              setFormName('')
+                              setFormDescription('')
+                              setFormOutcome('Approved')
+                              setFormApplyOutcome('auto-apply')
+                            }}
+                            className="px-4 py-2 text-[#9ca3af] hover:text-white rounded-md text-sm font-medium transition-colors"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
                   <div className="flex flex-1 overflow-hidden">
                   {/* Left Sidebar - Policy Types Filter */}
                   <div className="w-56 border-r border-[#1e2130] bg-[#0f1117] py-4 overflow-y-auto">
@@ -1154,6 +1309,7 @@ export function AIGovernanceModule() {
                     </div>
                   </div>
                 </div>
+                )}
                 </div>
               )}
             </div>
