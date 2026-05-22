@@ -894,8 +894,8 @@ export function AIGovernanceModule() {
                     </button>
                   </div>
 
-                  {showAddAcceptedUseForm ? (
-                    /* Add Accepted Use Form */
+                  {showAddAcceptedUseForm && acceptedUseFormStep === 1 ? (
+                    /* Add Accepted Use Form - Step 1 */
                     <div className="flex-1 overflow-y-auto p-6">
                       <div className="max-w-2xl">
                         <h3 className="text-lg font-medium text-white mb-6">Define condition details</h3>
@@ -1038,7 +1038,7 @@ export function AIGovernanceModule() {
                         </div>
                       </div>
                     </div>
-                  ) : acceptedUseFormStep === 2 ? (
+                  ) : showAddAcceptedUseForm && acceptedUseFormStep === 2 ? (
                     /* Step 2: Define Condition */
                     <div className="flex-1 overflow-y-auto p-6">
                       {/* Header */}
