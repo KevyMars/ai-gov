@@ -405,8 +405,8 @@ const inventoryItems: { id: AIGovInventoryItem; label: string; icon: React.React
 ]
 
 const acceptableUseItems: { id: AIGovAcceptableUseItem; label: string; icon: React.ReactNode }[] = [
-  { id: 'accepted-inventory', label: 'Accepted Inventory', icon: <Layers className="w-4 h-4" /> },
-  { id: 'accepted-use-policies', label: 'Accepted Use Policies', icon: <ScrollText className="w-4 h-4" /> },
+  { id: 'accepted-inventory', label: 'Inventory', icon: <Layers className="w-4 h-4" /> },
+  { id: 'accepted-use-policies', label: 'Policies', icon: <ScrollText className="w-4 h-4" /> },
 ]
 
 export function AIGovernanceModule() {

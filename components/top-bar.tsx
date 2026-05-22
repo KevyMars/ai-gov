@@ -81,8 +81,8 @@ export function TopBar({ onSubscriptionClick }: TopBarProps) {
       })
     } else if (aiGovTab === 'acceptable-use') {
       const acceptableUseLabels: Record<string, string> = {
-        'accepted-inventory': 'Accepted Inventory',
-        'accepted-use-policies': 'Accepted Use Policies'
+        'accepted-inventory': 'Inventory',
+        'accepted-use-policies': 'Policies'
       }
       breadcrumbs.push({ 
         label: acceptableUseLabels[aiGovAcceptableUseItem],
