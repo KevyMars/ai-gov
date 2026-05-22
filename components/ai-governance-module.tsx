@@ -1981,6 +1981,8 @@ export function AIGovernanceModule() {
                     </div>
                   </div>
                 </div>
+                ) : null}
+                
                 {/* Policy Detail View */}
                 {selectedPolicy !== null && (() => {
                   const policy = policies.find(p => p.id === selectedPolicy)
