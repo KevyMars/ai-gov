@@ -422,6 +422,7 @@ export function AIGovernanceModule() {
   } = useNavigation()
 
   const [acceptedInventoryFilter, setAcceptedInventoryFilter] = useState<'all' | 'Approved' | 'Needs review' | 'Denied'>('all')
+  const [inventoryTypeFilter, setInventoryTypeFilter] = useState<'all' | 'Model' | 'AI System' | 'Agent' | 'Project'>('all')
 
   // OneTrust Brand Color System - use Mint sparingly for key emphasis
   // Secondary palette: Sky (#0788F7), Yellow (#FFEF3C), Leaf (#00B935)
@@ -768,11 +769,16 @@ export function AIGovernanceModule() {
                       <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-1">Inventory</h2>
                       <p className="text-[#9ca3af] text-sm">AI systems and tools that have been approved for use within your organization.</p>
                     </div>
-                    <select className="px-3 py-1.5 bg-[#13151f] border border-[#1e2130] rounded-md text-xs text-white">
-                      <option>My models</option>
-                      <option>All models</option>
-                      <option>AI Systems</option>
-                      <option>Agents</option>
+                    <select 
+                      value={inventoryTypeFilter}
+                      onChange={(e) => setInventoryTypeFilter(e.target.value as 'all' | 'Model' | 'AI System' | 'Agent' | 'Project')}
+                      className="px-3 py-1.5 bg-[#13151f] border border-[#1e2130] rounded-md text-xs text-white"
+                    >
+                      <option value="all">All types</option>
+                      <option value="Model">Models</option>
+                      <option value="AI System">AI Systems</option>
+                      <option value="Agent">Agents</option>
+                      <option value="Project">Projects</option>
                     </select>
                   </div>
 
@@ -829,6 +835,7 @@ export function AIGovernanceModule() {
                         { name: 'Record name', approval: 'Approved', type: 'Model', desc: 'Description', approvedWith: 'AI System', scope: 'External' },
                       ]
                         .filter((row) => acceptedInventoryFilter === 'all' || row.approval === acceptedInventoryFilter)
+                        .filter((row) => inventoryTypeFilter === 'all' || row.type === inventoryTypeFilter)
                         .map((row, i) => (
                         <div key={i} className="grid gap-4 py-3 border-b border-[#1e2130] last:border-0 hover:bg-[#1a1d2a] cursor-pointer transition-colors -mx-4 px-4 items-center"
                           style={{ gridTemplateColumns: '1fr 110px 100px 1fr 140px 110px' }}>
