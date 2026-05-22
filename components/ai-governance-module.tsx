@@ -1190,14 +1190,16 @@ export function AIGovernanceModule() {
                                   <ChevronDown className="w-4 h-4 text-[#9ca3af]" />
                                 </div>
                                 
-                                <button 
-                                  onClick={() => {
-                                    setConditionPairings(conditionPairings.filter(p => p.id !== pairing.id))
-                                  }}
-                                  className="text-sm text-[#9ca3af] hover:text-[#ef4444] transition-colors"
-                                >
-                                  Remove
-                                </button>
+                                {index > 0 && (
+                                  <button 
+                                    onClick={() => {
+                                      setConditionPairings(conditionPairings.filter(p => p.id !== pairing.id))
+                                    }}
+                                    className="text-sm text-[#9ca3af] hover:text-[#ef4444] transition-colors"
+                                  >
+                                    Remove
+                                  </button>
+                                )}
                                 
                                 {index === conditionPairings.length - 1 && (
                                   <button
