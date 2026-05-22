@@ -942,6 +942,12 @@ export function AIGovernanceModule() {
 
                   {/* Main Content */}
                   <div className="flex-1 overflow-y-auto p-6">
+                    {/* Header */}
+                    <div className="mb-4">
+                      <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-1">Acceptable Use Policies</h2>
+                      <p className="text-[#9ca3af] text-sm">Define and manage acceptable use policies for AI systems across your organization.</p>
+                    </div>
+
                     {/* Filter Tabs */}
                     <div className="flex items-center gap-2 mb-6">
                       {[
