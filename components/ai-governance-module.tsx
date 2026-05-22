@@ -37,7 +37,8 @@ import {
   X,
   MoreHorizontal,
   RefreshCw,
-  GripVertical
+  GripVertical,
+  ArrowLeft
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -450,6 +451,7 @@ export function AIGovernanceModule() {
   // Policies State
   const [policies, setPolicies] = useState([
     {
+      id: 1,
       title: 'Anthropic models on Databricks',
       activeRecords: 2,
       conditions: 2,
@@ -459,18 +461,37 @@ export function AIGovernanceModule() {
       model: 'Claude Sonnet 3.5',
       modelIcon: '✦',
       modelProvider: 'Anthropic',
-      useCondition: "applies when model's risk level is low risk if all linked models' vendor..."
+      useCondition: "applies when model's risk level is low risk if all linked models' vendor...",
+      isActive: true,
+      conditionsList: [
+        { id: 1, field: 'Risk', operand: 'is equal to', value: 'Low Risk', operator: 'AND' as 'AND' | 'OR' },
+        { id: 2, field: 'Vendor', operand: 'is equal to', value: 'Anthropic', operator: 'AND' as 'AND' | 'OR' },
+      ],
+      linkedRecords: [
+        { name: 'Claude Sonnet 3.5', approval: 'Approved', type: 'Model', description: 'Language model for text generation', approvedWith: 'DataBricks', internal: 'Internal' },
+        { name: 'AI Assistant System', approval: 'Approved', type: 'AI System', description: 'Internal chatbot system', approvedWith: 'Anthropic, OpenAI', internal: 'Internal' },
+      ]
     },
     {
+      id: 2,
       title: 'External-facing AI systems require review',
       activeRecords: 2,
       conditions: 1,
       description: 'All AI systems marked as external-facing are not automatically approved and require manual review',
       outcome: 'Requires review',
       useType: 'AI System',
-      useCondition: 'applies when AI system is marked external-facing'
+      useCondition: 'applies when AI system is marked external-facing',
+      isActive: true,
+      conditionsList: [
+        { id: 1, field: 'Use type', operand: 'is equal to', value: 'External Use', operator: 'AND' as 'AND' | 'OR' },
+      ],
+      linkedRecords: [
+        { name: 'Customer Support Bot', approval: 'Approved', type: 'AI System', description: 'External customer chatbot', approvedWith: 'Anthropic, OpenAI', internal: 'External' },
+        { name: 'Sales Assistant', approval: 'Denied', type: 'AI System', description: 'External sales automation', approvedWith: 'Anthropic, OpenAI', internal: 'External' },
+      ]
     },
     {
+      id: 3,
       title: 'Google Cloud AI for internal use',
       activeRecords: 4,
       conditions: 3,
@@ -481,18 +502,40 @@ export function AIGovernanceModule() {
       modelIcon: '✦',
       modelProvider: 'Google',
       vendor: 'All',
-      useCondition: "applies when models' vendor name (via model-source) is Google and is marked Internal facing"
+      useCondition: "applies when models' vendor name (via model-source) is Google and is marked Internal facing",
+      isActive: true,
+      conditionsList: [
+        { id: 1, field: 'Model Provider', operand: 'is equal to', value: 'Google', operator: 'AND' as 'AND' | 'OR' },
+        { id: 2, field: 'Use type', operand: 'is equal to', value: 'Internal Use', operator: 'AND' as 'AND' | 'OR' },
+        { id: 3, field: 'Risk level', operand: 'is equal to', value: 'Low', operator: 'AND' as 'AND' | 'OR' },
+      ],
+      linkedRecords: [
+        { name: 'Gemini Pro', approval: 'Approved', type: 'Model', description: 'Multimodal AI model', approvedWith: 'Google Cloud', internal: 'Internal' },
+        { name: 'Vertex AI Pipeline', approval: 'Approved', type: 'AI System', description: 'ML pipeline system', approvedWith: 'Google', internal: 'Internal' },
+        { name: 'Document AI', approval: 'Approved', type: 'Model', description: 'Document processing', approvedWith: 'Google', internal: 'Internal' },
+        { name: 'Translation API', approval: 'Approved', type: 'AI System', description: 'Language translation', approvedWith: 'Google', internal: 'Internal' },
+      ]
     },
     {
+      id: 4,
       title: 'Restricted data processing',
       activeRecords: 1,
       conditions: 2,
       description: 'AI systems processing restricted-sensitivity data are not automatically approved',
       outcome: 'Requires review',
       useType: 'AI Systems, Datasets',
-      useCondition: "applies when models' vendor name (via model-source) is Google and is marked Internal facing"
+      useCondition: "applies when data classification is restricted",
+      isActive: false,
+      conditionsList: [
+        { id: 1, field: 'Data classification', operand: 'is equal to', value: 'Restricted', operator: 'AND' as 'AND' | 'OR' },
+        { id: 2, field: 'Risk level', operand: 'is equal to', value: 'High', operator: 'AND' as 'AND' | 'OR' },
+      ],
+      linkedRecords: [
+        { name: 'PII Processing System', approval: 'Denied', type: 'AI System', description: 'Handles sensitive PII', approvedWith: 'Internal', internal: 'Internal' },
+      ]
     },
     {
+      id: 5,
       title: 'OpenAI GPT-4 Enterprise Policy',
       activeRecords: 5,
       conditions: 2,
@@ -502,9 +545,22 @@ export function AIGovernanceModule() {
       model: 'GPT-4',
       modelIcon: '✦',
       modelProvider: 'OpenAI',
-      useCondition: "applies when model provider is OpenAI and use case is approved"
+      useCondition: "applies when model provider is OpenAI and use case is approved",
+      isActive: true,
+      conditionsList: [
+        { id: 1, field: 'Model Provider', operand: 'is equal to', value: 'OpenAI', operator: 'AND' as 'AND' | 'OR' },
+        { id: 2, field: 'Use type', operand: 'is equal to', value: 'Internal Use', operator: 'AND' as 'AND' | 'OR' },
+      ],
+      linkedRecords: [
+        { name: 'GPT-4 Turbo', approval: 'Approved', type: 'Model', description: 'Advanced language model', approvedWith: 'Azure', internal: 'Internal' },
+        { name: 'Code Assistant', approval: 'Approved', type: 'AI System', description: 'Developer tooling', approvedWith: 'OpenAI', internal: 'Internal' },
+        { name: 'Content Generator', approval: 'Approved', type: 'AI System', description: 'Marketing content', approvedWith: 'OpenAI', internal: 'Internal' },
+        { name: 'Data Analyzer', approval: 'Approved', type: 'Model', description: 'Analytics model', approvedWith: 'OpenAI', internal: 'Internal' },
+        { name: 'Summary Bot', approval: 'Approved', type: 'AI System', description: 'Document summarization', approvedWith: 'OpenAI', internal: 'Internal' },
+      ]
     },
     {
+      id: 6,
       title: 'Microsoft Azure AI Services',
       activeRecords: 3,
       conditions: 1,
@@ -515,9 +571,19 @@ export function AIGovernanceModule() {
       modelIcon: '✦',
       modelProvider: 'Microsoft',
       vendor: 'Microsoft',
-      useCondition: "applies when vendor is Microsoft and deployment is Azure"
+      useCondition: "applies when vendor is Microsoft and deployment is Azure",
+      isActive: true,
+      conditionsList: [
+        { id: 1, field: 'Model Provider', operand: 'is equal to', value: 'Microsoft', operator: 'AND' as 'AND' | 'OR' },
+      ],
+      linkedRecords: [
+        { name: 'Azure OpenAI Service', approval: 'Approved', type: 'Model', description: 'Enterprise AI service', approvedWith: 'Microsoft', internal: 'Internal' },
+        { name: 'Cognitive Services', approval: 'Approved', type: 'AI System', description: 'Vision and speech APIs', approvedWith: 'Microsoft', internal: 'Internal' },
+        { name: 'Bot Framework', approval: 'Approved', type: 'AI System', description: 'Chatbot platform', approvedWith: 'Microsoft', internal: 'External' },
+      ]
     },
     {
+      id: 7,
       title: 'Figma AI Features Policy',
       activeRecords: 2,
       conditions: 1,
@@ -525,9 +591,18 @@ export function AIGovernanceModule() {
       outcome: 'Auto-approved',
       useType: 'Vendors',
       vendor: 'Figma',
-      useCondition: "applies when using Figma AI features for design work"
+      useCondition: "applies when using Figma AI features for design work",
+      isActive: true,
+      conditionsList: [
+        { id: 1, field: 'Deployment', operand: 'is equal to', value: 'Production', operator: 'AND' as 'AND' | 'OR' },
+      ],
+      linkedRecords: [
+        { name: 'Figma AI Assist', approval: 'Approved', type: 'Vendors', description: 'Design assistance', approvedWith: 'Figma', internal: 'Internal' },
+        { name: 'Auto Layout AI', approval: 'Approved', type: 'Vendors', description: 'Layout generation', approvedWith: 'Figma', internal: 'Internal' },
+      ]
     },
     {
+      id: 8,
       title: 'Salesforce Einstein Restrictions',
       activeRecords: 1,
       conditions: 3,
@@ -535,9 +610,20 @@ export function AIGovernanceModule() {
       outcome: 'Denied',
       useType: 'Vendors, Datasets',
       vendor: 'Salesforce',
-      useCondition: "applies when processing PII data through Einstein"
+      useCondition: "applies when processing PII data through Einstein",
+      isActive: false,
+      conditionsList: [
+        { id: 1, field: 'Data classification', operand: 'is equal to', value: 'Restricted', operator: 'AND' as 'AND' | 'OR' },
+        { id: 2, field: 'Use type', operand: 'is equal to', value: 'Customer Facing', operator: 'AND' as 'AND' | 'OR' },
+        { id: 3, field: 'Risk level', operand: 'is equal to', value: 'High', operator: 'AND' as 'AND' | 'OR' },
+      ],
+      linkedRecords: [
+        { name: 'Einstein Analytics', approval: 'Denied', type: 'Vendors', description: 'CRM AI features', approvedWith: 'Salesforce', internal: 'External' },
+      ]
     },
   ])
+  
+  const [selectedPolicy, setSelectedPolicy] = useState<number | null>(null)
 
   // OneTrust Brand Color System - use Mint sparingly for key emphasis
   // Secondary palette: Sky (#0788F7), Yellow (#FFEF3C), Leaf (#00B935)
@@ -1024,12 +1110,31 @@ export function AIGovernanceModule() {
                   {/* Header */}
                   <div className="px-6 pt-6 pb-4 flex items-start justify-between">
                     <div>
-                      <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-1">
-                        {showAddAcceptedUseForm ? 'Add Accepted Use Policy' : 'Acceptable Use Policies'}
-                      </h2>
-                      <p className="text-[#9ca3af] text-sm">Define and manage acceptable use policies for AI systems across your organization.</p>
+                      {selectedPolicy !== null ? (
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => setSelectedPolicy(null)}
+                            className="p-1 text-[#9ca3af] hover:text-white transition-colors"
+                          >
+                            <ArrowLeft className="w-5 h-5" />
+                          </button>
+                          <div>
+                            <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-1">
+                              {policies.find(p => p.id === selectedPolicy)?.title}
+                            </h2>
+                            <p className="text-[#9ca3af] text-sm">{policies.find(p => p.id === selectedPolicy)?.description}</p>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-1">
+                            {showAddAcceptedUseForm ? 'Add Accepted Use Policy' : 'Acceptable Use Policies'}
+                          </h2>
+                          <p className="text-[#9ca3af] text-sm">Define and manage acceptable use policies for AI systems across your organization.</p>
+                        </>
+                      )}
                     </div>
-                    {!showAddAcceptedUseForm && (
+                    {!showAddAcceptedUseForm && selectedPolicy === null && (
                       <button 
                         onClick={() => setShowAddAcceptedUseForm(true)}
                         className="flex items-center gap-2 px-3 py-1.5 bg-[#6CEEAD] text-[#0f1117] rounded-md text-xs font-medium hover:bg-[#5dd99c] transition-colors"
@@ -1810,7 +1915,11 @@ export function AIGovernanceModule() {
                           )
                         })
                         .map((policy, i) => (
-                        <div key={i} className="bg-[#13151f] border border-[#1e2130] rounded-lg p-4 hover:border-[#2a2d3a] transition-colors cursor-pointer">
+                        <div 
+                          key={policy.id || i} 
+                          onClick={() => setSelectedPolicy(policy.id)}
+                          className="bg-[#13151f] border border-[#1e2130] rounded-lg p-4 hover:border-[#2a2d3a] transition-colors cursor-pointer"
+                        >
                           <h3 className="text-base font-semibold text-white mb-3">{policy.title}</h3>
                           
                           {/* Badges */}
@@ -1872,6 +1981,228 @@ export function AIGovernanceModule() {
                   </div>
                 </div>
                 )}
+                
+                {/* Policy Detail View */}
+                {selectedPolicy !== null && (() => {
+                  const policy = policies.find(p => p.id === selectedPolicy)
+                  if (!policy) return null
+                  return (
+                    <div className="flex-1 overflow-auto px-6 pt-4 pb-6">
+                      {/* Policy Details Section */}
+                      <h3 className="text-base font-medium text-[#6CEEAD] mb-4">Policy details</h3>
+                      
+                      {/* Policy Card */}
+                      <div className="bg-[#13151f] border border-[#1e2130] rounded-lg mb-6">
+                        {/* Card Header */}
+                        <div className="p-4 border-b border-[#1e2130]">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <h4 className="text-base font-semibold text-white">{policy.title}</h4>
+                              <p className="text-sm text-[#9ca3af] mt-0.5">{policy.description}</p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-[10px] px-2 py-0.5 rounded border border-[#1e2130] text-[#9ca3af]">
+                                {policy.conditions} condition{policy.conditions !== 1 ? 's' : ''}
+                              </span>
+                              <span className={`text-[10px] px-2 py-0.5 rounded border ${
+                                policy.outcome === 'Auto-approved' 
+                                  ? 'border-[#00B935]/30 text-[#00B935]' 
+                                  : policy.outcome === 'Denied'
+                                  ? 'border-[#ef4444]/30 text-[#ef4444]'
+                                  : 'border-[#1e2130] text-[#9ca3af]'
+                              }`}>
+                                {policy.outcome === 'Auto-approved' ? 'Approved' : policy.outcome}
+                              </span>
+                              <div className="flex items-center gap-1">
+                                <span className={`w-2 h-2 rounded-full ${policy.isActive ? 'bg-[#00B935]' : 'bg-[#4b5563]'}`}></span>
+                                <span className="text-xs text-[#9ca3af]">Active</span>
+                                <button 
+                                  onClick={() => {
+                                    setPolicies(policies.map(p => 
+                                      p.id === selectedPolicy ? {...p, isActive: !p.isActive} : p
+                                    ))
+                                  }}
+                                  className={`w-8 h-4 rounded-full relative transition-colors ${policy.isActive ? 'bg-[#6CEEAD]' : 'bg-[#1e2130]'}`}
+                                >
+                                  <span className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-transform ${policy.isActive ? 'left-4' : 'left-0.5'}`}></span>
+                                </button>
+                              </div>
+                              <button className="p-1 text-[#9ca3af] hover:text-white transition-colors">
+                                <MoreHorizontal className="w-5 h-5" />
+                              </button>
+                              <button className="p-1 text-[#9ca3af] hover:text-white transition-colors">
+                                <ChevronDown className="w-5 h-5" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Metadata Row */}
+                        <div className="px-4 py-3 flex items-center gap-6 text-sm border-b border-[#1e2130]">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[#9ca3af]">Record type:</span>
+                            <span className="text-white">{policy.useType}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[#9ca3af]">Outcome:</span>
+                            <span className="px-2 py-0.5 rounded border border-[#1e2130] text-white text-xs">
+                              {policy.outcome === 'Auto-approved' ? 'Approved' : policy.outcome}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[#9ca3af]">Auto-apply outcome:</span>
+                            <span className="text-white">True</span>
+                          </div>
+                        </div>
+
+                        {/* Rule Summary */}
+                        <div className="p-4 border-b border-[#1e2130]">
+                          <h4 className="text-sm font-medium text-white mb-1">Rule summary</h4>
+                          <p className="text-xs text-[#9ca3af] mb-3">Plain language preview</p>
+                          <div className="bg-[#0f1117] border border-[#1e2130] rounded-md p-3 flex flex-wrap items-center gap-2">
+                            <span className="px-2 py-1 border border-[#1e2130] rounded text-xs text-white font-medium">
+                              {policy.outcome === 'Auto-approved' ? 'APPROVE' : policy.outcome === 'Denied' ? 'DENY' : 'REVIEW'}
+                            </span>
+                            <span className="text-sm text-[#9ca3af]">as acceptable use</span>
+                            <span className="px-2 py-1 border border-[#1e2130] rounded text-xs text-white font-medium">IF</span>
+                            {policy.conditionsList?.map((condition, index) => (
+                              <span key={condition.id} className="flex items-center gap-2">
+                                <span className="text-sm text-white">{condition.field}</span>
+                                <span className="text-sm text-[#9ca3af]">is</span>
+                                <span className="text-sm text-[#9ca3af]">&quot;{condition.value}&quot;</span>
+                                {index < (policy.conditionsList?.length || 0) - 1 && (
+                                  <span className="px-2 py-1 border border-[#1e2130] rounded text-xs text-white font-medium">
+                                    {condition.operator}
+                                  </span>
+                                )}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Conditions Section */}
+                        <div className="p-4">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h4 className="text-sm font-medium text-white">Conditions</h4>
+                            <div className="w-4 h-4 rounded-full border border-[#4b5563] flex items-center justify-center">
+                              <span className="text-[10px] text-[#4b5563]">?</span>
+                            </div>
+                          </div>
+                          <p className="text-xs text-[#9ca3af] mb-4">Conditions that surround this rule</p>
+
+                          {/* Condition Rows */}
+                          <div className="space-y-0">
+                            {policy.conditionsList?.map((condition, index) => (
+                              <div key={condition.id}>
+                                <div className="flex items-center gap-3 py-2">
+                                  {/* Row Number */}
+                                  <div className="w-6 h-6 rounded-full border border-[#1e2130] flex items-center justify-center text-xs text-[#9ca3af]">
+                                    {index + 1}
+                                  </div>
+                                  
+                                  {/* Drag Handle */}
+                                  <div className="text-[#4b5563]">
+                                    <GripVertical className="w-4 h-4" />
+                                  </div>
+
+                                  {/* Variable */}
+                                  <div className="w-40 px-3 py-2 bg-[#0f1117] text-white rounded-md text-sm border border-[#1e2130]">
+                                    {condition.field}
+                                  </div>
+
+                                  {/* Operand */}
+                                  <div className="w-32 px-3 py-2 bg-[#0f1117] text-[#9ca3af] rounded-md text-sm border border-[#1e2130]">
+                                    {condition.operand}
+                                  </div>
+
+                                  {/* Value */}
+                                  <div className="w-40 px-3 py-2 bg-[#0f1117] text-white rounded-md text-sm border border-[#1e2130]">
+                                    {condition.value}
+                                  </div>
+                                </div>
+
+                                {/* AND/OR Connector */}
+                                {index < (policy.conditionsList?.length || 0) - 1 && (
+                                  <div className="flex items-center gap-3 py-2 pl-9">
+                                    <div className="w-px h-4 bg-[#1e2130] ml-3"></div>
+                                    <span className="px-2 py-1 border border-[#1e2130] rounded text-xs text-white font-medium">
+                                      {condition.operator}
+                                    </span>
+                                    <span className="text-xs text-[#9ca3af]">
+                                      {condition.operator === 'AND' ? 'and also match this' : 'or match this instead'}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Active Records Section */}
+                      <h3 className="text-base font-medium text-[#6CEEAD] mb-4">Active records linked to rule</h3>
+                      
+                      {/* Filter Row */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                          <select className="px-3 py-1.5 bg-[#0f1117] text-white rounded-md text-sm border border-[#1e2130] focus:outline-none focus:border-[#6CEEAD]">
+                            <option>OneTrust</option>
+                          </select>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9ca3af]" />
+                            <input
+                              type="text"
+                              placeholder="Search..."
+                              className="pl-9 pr-3 py-1.5 bg-[#0f1117] text-white rounded-md text-sm border border-[#1e2130] focus:outline-none focus:border-[#6CEEAD] w-48"
+                            />
+                          </div>
+                          <button className="p-1.5 text-[#9ca3af] hover:text-white transition-colors">
+                            <Filter className="w-4 h-4" />
+                          </button>
+                          <button className="p-1.5 text-[#9ca3af] hover:text-white transition-colors">
+                            <RefreshCw className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Records Table */}
+                      <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+                        <table className="w-full">
+                          <thead>
+                            <tr className="border-b border-[#1e2130]">
+                              <th className="text-left px-4 py-3 text-xs font-medium text-[#9ca3af]">Name</th>
+                              <th className="text-left px-4 py-3 text-xs font-medium text-[#9ca3af]">Policy approval</th>
+                              <th className="text-left px-4 py-3 text-xs font-medium text-[#9ca3af]">Inventory type</th>
+                              <th className="text-left px-4 py-3 text-xs font-medium text-[#9ca3af]">Description</th>
+                              <th className="text-left px-4 py-3 text-xs font-medium text-[#9ca3af]">Approved for use with</th>
+                              <th className="text-left px-4 py-3 text-xs font-medium text-[#9ca3af]">Internal or External</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {policy.linkedRecords?.map((record, i) => (
+                              <tr key={i} className="border-b border-[#1e2130] last:border-b-0 hover:bg-[#1e2130]/50">
+                                <td className="px-4 py-3 text-sm text-white">{record.name}</td>
+                                <td className="px-4 py-3">
+                                  <span className={`text-[10px] px-2 py-0.5 rounded border ${
+                                    record.approval === 'Approved' 
+                                      ? 'border-[#00B935]/30 text-[#00B935]' 
+                                      : 'border-[#ef4444]/30 text-[#ef4444]'
+                                  }`}>{record.approval}</span>
+                                </td>
+                                <td className="px-4 py-3 text-sm text-[#9ca3af]">{record.type}</td>
+                                <td className="px-4 py-3 text-sm text-[#9ca3af]">{record.description}</td>
+                                <td className="px-4 py-3 text-sm text-[#9ca3af]">{record.approvedWith}</td>
+                                <td className="px-4 py-3 text-sm text-[#9ca3af]">{record.internal}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )
+                })()}
                 </div>
               )}
             </div>
