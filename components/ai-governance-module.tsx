@@ -625,6 +625,7 @@ export function AIGovernanceModule() {
   
   const [selectedPolicy, setSelectedPolicy] = useState<number | null>(null)
   const [policyDetailExpanded, setPolicyDetailExpanded] = useState(true)
+  const [policyMenuOpen, setPolicyMenuOpen] = useState(false)
 
   // OneTrust Brand Color System - use Mint sparingly for key emphasis
   // Secondary palette: Sky (#0788F7), Yellow (#FFEF3C), Leaf (#00B935)
@@ -2026,9 +2027,46 @@ export function AIGovernanceModule() {
                                   <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${policy.isActive ? 'left-5' : 'left-0.5'}`}></span>
                                 </button>
                               </div>
-                              <button className="p-1 text-[#9ca3af] hover:text-white transition-colors">
-                                <MoreHorizontal className="w-5 h-5" />
-                              </button>
+                              <div className="relative">
+                                <button 
+                                  onClick={() => setPolicyMenuOpen(!policyMenuOpen)}
+                                  className="p-1 text-[#9ca3af] hover:text-white transition-colors"
+                                >
+                                  <MoreHorizontal className="w-5 h-5" />
+                                </button>
+                                {policyMenuOpen && (
+                                  <>
+                                    <div 
+                                      className="fixed inset-0 z-10" 
+                                      onClick={() => setPolicyMenuOpen(false)}
+                                    />
+                                    <div className="absolute right-0 top-full mt-1 w-40 bg-[#13151f] border border-[#1e2130] rounded-lg shadow-lg z-20 py-1">
+                                      <button 
+                                        onClick={() => {
+                                          setPolicyMenuOpen(false)
+                                          // Handle edit policy
+                                        }}
+                                        className="w-full px-3 py-2 text-left text-sm text-white hover:bg-[#1e2130] transition-colors"
+                                      >
+                                        Edit policy
+                                      </button>
+                                      <button 
+                                        onClick={() => {
+                                          setPolicyMenuOpen(false)
+                                          // Handle delete policy
+                                          if (selectedPolicy) {
+                                            setPolicies(policies.filter(p => p.id !== selectedPolicy))
+                                            setSelectedPolicy(null)
+                                          }
+                                        }}
+                                        className="w-full px-3 py-2 text-left text-sm text-[#ef4444] hover:bg-[#1e2130] transition-colors"
+                                      >
+                                        Delete policy
+                                      </button>
+                                    </div>
+                                  </>
+                                )}
+                              </div>
                               <button 
                                 onClick={() => setPolicyDetailExpanded(!policyDetailExpanded)}
                                 className="p-1 text-[#9ca3af] hover:text-white transition-colors"
