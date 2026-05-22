@@ -2189,6 +2189,70 @@ export function AIGovernanceModule() {
                           </>
                         )}
                       </div>
+
+                      {/* Active Records Section */}
+                      <h3 className="text-base font-medium text-[#6CEEAD] mt-6 mb-4">Active records linked to rule</h3>
+                      
+                      {/* Filter Row */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 px-3 py-1.5 bg-[#13151f] rounded-md border border-[#1e2130]">
+                            <Filter className="w-4 h-4 text-[#9ca3af]" />
+                            <span className="text-sm text-white">OneTrust</span>
+                            <ChevronDown className="w-4 h-4 text-[#9ca3af]" />
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="relative">
+                            <input
+                              type="text"
+                              placeholder="Search..."
+                              className="pl-3 pr-8 py-1.5 bg-[#13151f] text-white rounded-md text-sm border border-[#1e2130] focus:outline-none focus:border-[#6CEEAD] w-48"
+                            />
+                            <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9ca3af]" />
+                          </div>
+                          <button className="p-1.5 text-[#9ca3af] hover:text-white transition-colors">
+                            <Layers className="w-4 h-4" />
+                          </button>
+                          <button className="p-1.5 text-[#9ca3af] hover:text-white transition-colors">
+                            <RefreshCw className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Records Table */}
+                      <div className="overflow-hidden">
+                        <table className="w-full">
+                          <thead>
+                            <tr className="border-b border-[#1e2130]">
+                              <th className="text-left px-4 py-3 text-sm font-medium text-white">Name</th>
+                              <th className="text-left px-4 py-3 text-sm font-medium text-white">Policy approval</th>
+                              <th className="text-left px-4 py-3 text-sm font-medium text-white">Inventory type</th>
+                              <th className="text-left px-4 py-3 text-sm font-medium text-white">Description</th>
+                              <th className="text-left px-4 py-3 text-sm font-medium text-white">Approved for use with</th>
+                              <th className="text-left px-4 py-3 text-sm font-medium text-white">Internal or External</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {policy.linkedRecords?.map((record, i) => (
+                              <tr key={i} className="border-b border-[#1e2130] last:border-b-0">
+                                <td className="px-4 py-3 text-sm text-white">{record.name}</td>
+                                <td className="px-4 py-3">
+                                  <span className={`text-xs px-2 py-0.5 rounded-full border ${
+                                    record.approval === 'Approved' 
+                                      ? 'border-[#1e2130] text-[#9ca3af]' 
+                                      : 'border-[#1e2130] text-[#9ca3af]'
+                                  }`}>{record.approval}</span>
+                                </td>
+                                <td className="px-4 py-3 text-sm text-[#9ca3af]">{record.type}</td>
+                                <td className="px-4 py-3 text-sm text-[#9ca3af]">{record.description}</td>
+                                <td className="px-4 py-3 text-sm text-[#9ca3af]">{record.approvedWith}</td>
+                                <td className="px-4 py-3 text-sm text-[#9ca3af]">{record.internal}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   )
                 })()}
