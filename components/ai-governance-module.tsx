@@ -1122,9 +1122,8 @@ export function AIGovernanceModule() {
                           </button>
                           <div>
                             <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-1">
-                              {policies.find(p => p.id === selectedPolicy)?.title}
+                              Acceptable Use Policy Details
                             </h2>
-                            <p className="text-[#9ca3af] text-sm">{policies.find(p => p.id === selectedPolicy)?.description}</p>
                           </div>
                         </div>
                       ) : (
