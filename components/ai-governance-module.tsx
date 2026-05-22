@@ -1108,22 +1108,19 @@ export function AIGovernanceModule() {
                         </div>
                       </div>
 
-                      {/* Summary Card */}
+                      {/* Summary Card with Build Accepted AI Use Pairings */}
                       <div className="bg-white rounded-lg mb-6">
                         <div className="p-4 border-b border-[#e5e5e5]">
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <h4 className="text-base font-semibold text-[#1a1a1a]">
-                                {formName || 'Anthropic for internal use'}
-                              </h4>
-                              <p className="text-sm text-[#767676] mt-0.5">
-                                {formDescription || 'Approved for internal use only'}
-                              </p>
-                            </div>
-                            <ChevronDown className="w-5 h-5 text-[#767676]" />
+                          <div>
+                            <h4 className="text-base font-semibold text-[#1a1a1a]">
+                              {formName || 'Anthropic for internal use'}
+                            </h4>
+                            <p className="text-sm text-[#767676] mt-0.5">
+                              {formDescription || 'Approved for internal use only'}
+                            </p>
                           </div>
                         </div>
-                        <div className="px-4 py-3 flex items-center gap-6 text-sm">
+                        <div className="px-4 py-3 flex items-center gap-6 text-sm border-b border-[#e5e5e5]">
                           <div className="flex items-center gap-2">
                             <span className="text-[#767676]">Record type:</span>
                             <span className="text-[#1a1a1a]">{formRecordType || 'Model'}</span>
@@ -1139,86 +1136,86 @@ export function AIGovernanceModule() {
                             <span className="text-[#1a1a1a]">{formApplyOutcome === 'auto-apply' ? 'True' : 'False'}</span>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Build Accepted AI Use Pairings */}
-                      <div className="mb-6">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="text-sm font-medium text-white">Build Accepted AI Use Pairings</h4>
-                          <div className="w-4 h-4 rounded-full border border-[#4b5563] flex items-center justify-center">
-                            <span className="text-[10px] text-[#4b5563]">?</span>
-                          </div>
-                        </div>
-                        <p className="text-xs text-[#9ca3af] mb-4">
-                          Select conditions to apply the outcome to. Every condition added must be met for the outcome to be applied.
-                        </p>
-
-                        {/* Condition Rows */}
-                        <div className="space-y-3">
-                          {conditionPairings.map((pairing, index) => (
-                            <div key={pairing.id} className="flex items-center gap-3">
-                              <select
-                                value={pairing.field}
-                                onChange={(e) => {
-                                  const updated = [...conditionPairings]
-                                  updated[index].field = e.target.value
-                                  setConditionPairings(updated)
-                                }}
-                                className="w-44 px-3 py-2 bg-white text-[#767676] rounded-md text-sm border border-[#e5e5e5] focus:outline-none focus:ring-2 focus:ring-[#6CEEAD]"
-                              >
-                                <option value="Model Provider">Model Provider</option>
-                                <option value="Use type">Use type</option>
-                                <option value="Risk level">Risk level</option>
-                                <option value="Data classification">Data classification</option>
-                                <option value="Deployment">Deployment</option>
-                              </select>
-                              
-                              <span className="text-sm text-[#9ca3af]">Is</span>
-                              
-                              <div className="w-44 px-3 py-1.5 bg-white rounded-md border border-[#e5e5e5] flex items-center justify-between">
-                                <div className="flex items-center gap-1">
-                                  <span className="px-2 py-0.5 bg-[#3a3a3a] text-white text-xs rounded flex items-center gap-1">
-                                    {pairing.value}
-                                    <button 
-                                      onClick={() => {
-                                        const updated = [...conditionPairings]
-                                        updated[index].value = ''
-                                        setConditionPairings(updated)
-                                      }}
-                                      className="hover:text-[#ef4444]"
-                                    >
-                                      <X className="w-3 h-3" />
-                                    </button>
-                                  </span>
-                                </div>
-                                <ChevronDown className="w-4 h-4 text-[#767676]" />
-                              </div>
-                              
-                              <button 
-                                onClick={() => {
-                                  setConditionPairings(conditionPairings.filter(p => p.id !== pairing.id))
-                                }}
-                                className="text-sm text-[#1a1a1a] hover:text-[#ef4444] transition-colors"
-                              >
-                                Remove
-                              </button>
-                              
-                              {index === conditionPairings.length - 1 && (
-                                <button
-                                  onClick={() => {
-                                    setConditionPairings([
-                                      ...conditionPairings,
-                                      { id: Date.now(), field: 'Model Provider', value: '' }
-                                    ])
-                                  }}
-                                  className="flex items-center gap-1 px-3 py-1.5 bg-white text-[#1a1a1a] rounded-md text-sm border border-[#e5e5e5] hover:bg-[#f5f5f5] transition-colors"
-                                >
-                                  <Plus className="w-3 h-3" />
-                                  Add
-                                </button>
-                              )}
+                        {/* Build Accepted AI Use Pairings - Inside Card */}
+                        <div className="p-4">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h4 className="text-sm font-medium text-[#1a1a1a]">Build Accepted AI Use Pairings</h4>
+                            <div className="w-4 h-4 rounded-full border border-[#9ca3af] flex items-center justify-center">
+                              <span className="text-[10px] text-[#9ca3af]">?</span>
                             </div>
-                          ))}
+                          </div>
+                          <p className="text-xs text-[#767676] mb-4">
+                            Select conditions to apply the outcome to. Every condition added must be met for the outcome to be applied.
+                          </p>
+
+                          {/* Condition Rows */}
+                          <div className="space-y-3">
+                            {conditionPairings.map((pairing, index) => (
+                              <div key={pairing.id} className="flex items-center gap-3">
+                                <select
+                                  value={pairing.field}
+                                  onChange={(e) => {
+                                    const updated = [...conditionPairings]
+                                    updated[index].field = e.target.value
+                                    setConditionPairings(updated)
+                                  }}
+                                  className="w-44 px-3 py-2 bg-white text-[#767676] rounded-md text-sm border border-[#e5e5e5] focus:outline-none focus:ring-2 focus:ring-[#6CEEAD]"
+                                >
+                                  <option value="Model Provider">Model Provider</option>
+                                  <option value="Use type">Use type</option>
+                                  <option value="Risk level">Risk level</option>
+                                  <option value="Data classification">Data classification</option>
+                                  <option value="Deployment">Deployment</option>
+                                </select>
+                                
+                                <span className="text-sm text-[#767676]">Is</span>
+                                
+                                <div className="w-44 px-3 py-1.5 bg-white rounded-md border border-[#e5e5e5] flex items-center justify-between">
+                                  <div className="flex items-center gap-1">
+                                    <span className="px-2 py-0.5 bg-[#3a3a3a] text-white text-xs rounded flex items-center gap-1">
+                                      {pairing.value}
+                                      <button 
+                                        onClick={() => {
+                                          const updated = [...conditionPairings]
+                                          updated[index].value = ''
+                                          setConditionPairings(updated)
+                                        }}
+                                        className="hover:text-[#ef4444]"
+                                      >
+                                        <X className="w-3 h-3" />
+                                      </button>
+                                    </span>
+                                  </div>
+                                  <ChevronDown className="w-4 h-4 text-[#767676]" />
+                                </div>
+                                
+                                <button 
+                                  onClick={() => {
+                                    setConditionPairings(conditionPairings.filter(p => p.id !== pairing.id))
+                                  }}
+                                  className="text-sm text-[#1a1a1a] hover:text-[#ef4444] transition-colors"
+                                >
+                                  Remove
+                                </button>
+                                
+                                {index === conditionPairings.length - 1 && (
+                                  <button
+                                    onClick={() => {
+                                      setConditionPairings([
+                                        ...conditionPairings,
+                                        { id: Date.now(), field: 'Model Provider', value: '' }
+                                      ])
+                                    }}
+                                    className="flex items-center gap-1 px-3 py-1.5 bg-white text-[#1a1a1a] rounded-md text-sm border border-[#e5e5e5] hover:bg-[#f5f5f5] transition-colors"
+                                  >
+                                    <Plus className="w-3 h-3" />
+                                    Add
+                                  </button>
+                                )}
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
 
