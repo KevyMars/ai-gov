@@ -624,6 +624,7 @@ export function AIGovernanceModule() {
   ])
   
   const [selectedPolicy, setSelectedPolicy] = useState<number | null>(null)
+  const [policyDetailExpanded, setPolicyDetailExpanded] = useState(true)
 
   // OneTrust Brand Color System - use Mint sparingly for key emphasis
   // Secondary palette: Sky (#0788F7), Yellow (#FFEF3C), Leaf (#00B935)
@@ -2028,13 +2029,19 @@ export function AIGovernanceModule() {
                               <button className="p-1 text-[#9ca3af] hover:text-white transition-colors">
                                 <MoreHorizontal className="w-5 h-5" />
                               </button>
-                              <button className="p-1 text-[#9ca3af] hover:text-white transition-colors">
-                                <ChevronDown className="w-5 h-5" />
+                              <button 
+                                onClick={() => setPolicyDetailExpanded(!policyDetailExpanded)}
+                                className="p-1 text-[#9ca3af] hover:text-white transition-colors"
+                              >
+                                <ChevronDown className={`w-5 h-5 transition-transform ${policyDetailExpanded ? '' : '-rotate-90'}`} />
                               </button>
                             </div>
                           </div>
                         </div>
 
+                        {/* Collapsible Content */}
+                        {policyDetailExpanded && (
+                          <>
                         {/* Divider */}
                         <div className="border-t border-[#1e2130] mx-6"></div>
 
@@ -2141,6 +2148,8 @@ export function AIGovernanceModule() {
                             ))}
                           </div>
                         </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   )
