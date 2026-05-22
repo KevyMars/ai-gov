@@ -299,7 +299,7 @@ function IncidentManagementDashboard() {
       {/* Header */}
       <div>
         <h2 className="text-lg font-medium text-white">Active Incidents</h2>
-        <p className="text-xs text-[#9ca3af] mt-0.5">Incident Management · Breach Response &amp; Regulatory Notification</p>
+        <p className="text-xs text-[#9ca3af] mt-0.5">Incident Management �� Breach Response &amp; Regulatory Notification</p>
       </div>
 
       {/* Stat cards */}
@@ -1205,7 +1205,7 @@ const moduleScores = [
   { name: 'Privacy Notices',      score: 3.8, barColor: '#00B935', indAvg: 3.5, gap: '+0.3', gapColor: '#00B935', trend: '↑', trendColor: '#00B935', highlight: false },
   { name: 'Consent Management',   score: 3.6, barColor: '#00B935', indAvg: 3.6, gap: '0.0',  gapColor: '#4b5563', trend: '→', trendColor: '#4b5563', highlight: false },
   { name: 'Privacy Rights DSAR',  score: 3.5, barColor: '#f59e0b', indAvg: 3.7, gap: '–0.2', gapColor: '#f59e0b', trend: '→', trendColor: '#4b5563', highlight: false },
-  { name: 'PIA & DPIA',           score: 3.2, barColor: '#f59e0b', indAvg: 3.4, gap: '–0.2', gapColor: '#f59e0b', trend: '↓', trendColor: '#ef4444', highlight: true  },
+  { name: 'PIA & DPIA',           score: 3.2, barColor: '#f59e0b', indAvg: 3.4, gap: '���0.2', gapColor: '#f59e0b', trend: '↓', trendColor: '#ef4444', highlight: true  },
   { name: 'Incident Response',    score: 3.0, barColor: '#ef4444', indAvg: 3.6, gap: '–0.6', gapColor: '#ef4444', trend: '→', trendColor: '#4b5563', highlight: false },
 ]
 
@@ -2032,24 +2032,6 @@ export function PrivacyManagementModule() {
   return (
     <div className="h-full flex flex-col">
 
-      {/* ── Top tab bar ── */}
-      <div className="border-b border-[#1e2130] px-6 shrink-0">
-        <div className="flex gap-1">
-          {tabs.map((tab) => (
-            <button key={tab.id} onClick={() => setPrivacyTab(tab.id)}
-              className={cn(
-                "px-4 py-3 text-sm font-medium transition-colors relative",
-                privacyTab === tab.id ? "text-[#6CEEAD]" : "text-[#9ca3af] hover:text-white"
-              )}>
-              {tab.label}
-              {privacyTab === tab.id && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#6CEEAD]" />
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* ── Body: persistent secondary nav + main content ── */}
       <div className="flex-1 flex overflow-hidden">
 
@@ -2093,7 +2075,27 @@ export function PrivacyManagementModule() {
         </div>
 
         {/* Main content — switches by tab */}
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto flex flex-col">
+
+          {/* Sub-module tabs */}
+          <div className="border-b border-[#1e2130] px-6 shrink-0">
+            <div className="flex gap-1">
+              {tabs.map((tab) => (
+                <button key={tab.id} onClick={() => setPrivacyTab(tab.id)}
+                  className={cn(
+                    "px-4 py-3 text-sm font-medium transition-colors relative",
+                    privacyTab === tab.id ? "text-[#6CEEAD]" : "text-[#9ca3af] hover:text-white"
+                  )}>
+                  {tab.label}
+                  {privacyTab === tab.id && (
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#6CEEAD]" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-auto">
 
           {/* Overview — per-section dashboard */}
           {privacyTab === 'overview' && <OverviewContent item={privacyRecordItem} />}
@@ -2199,6 +2201,7 @@ export function PrivacyManagementModule() {
             </div>
           )}
 
+          </div>
         </div>
       </div>
     </div>
