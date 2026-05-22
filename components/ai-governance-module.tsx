@@ -1996,7 +1996,7 @@ export function AIGovernanceModule() {
                         <div className="p-6 pb-4">
                           <div className="flex items-start justify-between">
                             <div>
-                              <h4 className="text-lg font-semibold text-white">{policy.title}</h4>
+                              <h4 className="text-base font-semibold text-white">{policy.title}</h4>
                               <p className="text-sm text-[#9ca3af] mt-1">{policy.description}</p>
                             </div>
                             <div className="flex items-center gap-3">
