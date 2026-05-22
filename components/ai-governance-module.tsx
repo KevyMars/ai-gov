@@ -81,10 +81,19 @@ const riskTrendBars = [
 const riskXLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
 
 const governancePacksData = [
-  { name: 'EU AI Act',     desc: 'Full compliance for EU regulations',  status: 'Active',    stColor: '#00B935', coverage: 94 },
-  { name: 'NIST AI RMF',   desc: 'Risk management framework controls',  status: 'Active',    stColor: '#00B935', coverage: 87 },
-  { name: 'ISO 42001',     desc: 'AI management system standards',      status: 'Partial',   stColor: '#f59e0b', coverage: 62 },
-  { name: 'State AI Laws', desc: 'US state-level AI requirements',      status: 'Available', stColor: '#0788F7', coverage: 0  },
+  { name: 'EU AI Act',     desc: 'Full compliance for EU regulations',  status: 'Active',      stColor: '#00B935', coverage: 94 },
+  { name: 'NIST AI RMF',   desc: 'Risk management framework controls',  status: 'In Use',      stColor: '#0788F7', coverage: 87 },
+  { name: 'ISO 42001',     desc: 'AI management system standards',      status: 'In Progress', stColor: '#f59e0b', coverage: 62 },
+  { name: 'State AI Laws', desc: 'US state-level AI requirements',      status: 'Stalled',     stColor: '#ef4444', coverage: 28 },
+  { name: 'OECD AI Principles', desc: 'International AI ethics guidelines', status: 'Active',  stColor: '#00B935', coverage: 91 },
+  { name: 'IEEE Ethically Aligned', desc: 'Ethics framework for autonomous systems', status: 'In Use', stColor: '#0788F7', coverage: 78 },
+]
+
+const governancePacksStats = [
+  { label: 'Active',      value: 2, accent: '#00B935' },
+  { label: 'In Use',      value: 2, accent: '#0788F7' },
+  { label: 'In Progress', value: 1, accent: '#f59e0b' },
+  { label: 'Stalled',     value: 1, accent: '#ef4444' },
 ]
 
 // ── AI Governance Overview Dashboard ─────────────────────────────────────────
@@ -335,7 +344,21 @@ function AIGovernanceOverviewDashboard() {
           <Package className="w-4 h-4 text-[#976FE6]" />
           Governance Packs
         </h3>
+        
+        {/* Stats Row */}
         <div className="grid grid-cols-4 gap-3">
+          {governancePacksStats.map((s) => (
+            <div key={s.label} className="bg-[#13151f] border border-[#1e2130] rounded-lg p-3 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: `${s.accent}15` }}>
+                <span className="text-lg font-bold" style={{ color: s.accent }}>{s.value}</span>
+              </div>
+              <p className="text-xs font-medium text-[#9ca3af]">{s.label}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Packs Grid */}
+        <div className="grid grid-cols-3 gap-3">
           {governancePacksData.map((pack) => (
             <div key={pack.name} className="bg-[#13151f] border border-[#1e2130] rounded-lg p-4 hover:border-[#2a2d3a] transition-colors cursor-pointer">
               <div className="flex items-start justify-between mb-2">
@@ -344,19 +367,15 @@ function AIGovernanceOverviewDashboard() {
                   style={{ color: pack.stColor, background: `${pack.stColor}1a` }}>{pack.status}</span>
               </div>
               <p className="text-[10px] text-[#9ca3af] mb-3">{pack.desc}</p>
-              {pack.coverage > 0 ? (
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <p className="text-[10px] text-[#4b5563]">Coverage</p>
-                    <p className="text-[10px] font-semibold text-white">{pack.coverage}%</p>
-                  </div>
-                  <div className="h-1.5 bg-[#1e2130] rounded-full overflow-hidden">
-                    <div className="h-full rounded-full" style={{ width: `${pack.coverage}%`, background: pack.stColor }} />
-                  </div>
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] text-[#4b5563]">Coverage</p>
+                  <p className="text-[10px] font-semibold text-white">{pack.coverage}%</p>
                 </div>
-              ) : (
-                <button className="text-[10px] text-[#0788F7] hover:underline">Install pack →</button>
-              )}
+                <div className="h-1.5 bg-[#1e2130] rounded-full overflow-hidden">
+                  <div className="h-full rounded-full" style={{ width: `${pack.coverage}%`, background: pack.stColor }} />
+                </div>
+              </div>
             </div>
           ))}
         </div>
