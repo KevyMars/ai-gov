@@ -760,46 +760,65 @@ export function AIGovernanceModule() {
             <div className="flex-1 overflow-auto p-6">
               {aiGovAcceptableUseItem === 'accepted-inventory' && (
                 <div>
-                  <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-2">Accepted Inventory</h2>
-                  <p className="text-[#9ca3af] mb-6">AI systems and tools that have been approved for use within your organization.</p>
-                  
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
-                      <h3 className="text-sm font-medium text-white mb-2">Approved Systems</h3>
-                      <p className="text-2xl font-semibold text-[#00B935]">34</p>
-                      <p className="text-xs text-[#9ca3af]">Ready to use</p>
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-1">Inventory</h2>
+                      <p className="text-[#9ca3af] text-sm">AI systems and tools that have been approved for use within your organization.</p>
                     </div>
-                    <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
-                      <h3 className="text-sm font-medium text-white mb-2">Pending Approval</h3>
-                      <p className="text-2xl font-semibold text-[#FFEF3C]">7</p>
-                      <p className="text-xs text-[#9ca3af]">Under review</p>
+                    <div className="flex items-center gap-3">
+                      <select className="px-3 py-1.5 bg-[#13151f] border border-[#1e2130] rounded-md text-xs text-white">
+                        <option>My models</option>
+                        <option>All models</option>
+                        <option>AI Systems</option>
+                        <option>Agents</option>
+                      </select>
+                      <button className="flex items-center gap-2 px-3 py-1.5 bg-[#6CEEAD] text-[#0f1117] rounded-md text-xs font-medium hover:bg-[#5dd99c] transition-colors">
+                        <Plus className="w-3 h-3" />
+                        Add new model
+                      </button>
                     </div>
                   </div>
 
                   <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
-                    <div className="flex items-center justify-between px-4 py-3 bg-[#0f1117] border-b border-[#1e2130]">
-                      <p className="text-sm font-semibold text-white">Approved AI Tools</p>
-                      <button className="flex items-center gap-2 px-3 py-1.5 bg-[#6CEEAD] text-[#0f1117] rounded-md text-xs font-medium hover:bg-[#5dd99c] transition-colors">
-                        <Plus className="w-3 h-3" />
-                        Add Tool
-                      </button>
-                    </div>
                     <div className="px-4">
+                      {/* Table Header */}
+                      <div className="grid gap-4 py-3 border-b border-[#1e2130]"
+                        style={{ gridTemplateColumns: '1fr 110px 100px 1fr 140px 110px' }}>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Name</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Policy Approval</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Inventory type</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Description</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Approved for use with</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Internal or External</p>
+                      </div>
+                      {/* Table Rows */}
                       {[
-                        { name: 'ChatGPT Enterprise', category: 'LLM', status: 'Approved', dept: 'All' },
-                        { name: 'GitHub Copilot', category: 'Code Assistant', status: 'Approved', dept: 'Engineering' },
-                        { name: 'Jasper AI', category: 'Content', status: 'Approved', dept: 'Marketing' },
-                        { name: 'Grammarly Business', category: 'Writing', status: 'Approved', dept: 'All' },
-                        { name: 'Midjourney', category: 'Image Gen', status: 'Restricted', dept: 'Design' },
-                      ].map((tool, i) => (
+                        { name: 'Record name', approval: 'Needs review', type: 'Model', desc: 'Description', approvedWith: 'DataBricks', scope: 'Internal' },
+                        { name: 'Record name', approval: 'Approved', type: 'Model', desc: 'Description', approvedWith: 'All', scope: 'External' },
+                        { name: 'Record name', approval: 'Approved', type: 'AI System', desc: 'Description', approvedWith: 'Anthropic, OpenAI', scope: 'Both' },
+                        { name: 'Record name', approval: 'Approved', type: 'AI System', desc: 'Description', approvedWith: 'Anthropic, OpenAI', scope: 'Internal' },
+                        { name: 'Record name', approval: 'Approved', type: 'AI System', desc: 'Description', approvedWith: 'Anthropic, OpenAI', scope: 'Internal' },
+                        { name: 'Record name', approval: 'Denied', type: 'AI System', desc: 'Description', approvedWith: 'Gemini', scope: 'External' },
+                        { name: 'Record name', approval: 'Denied', type: 'Model', desc: 'Description', approvedWith: 'AI System', scope: 'Both' },
+                        { name: 'Record name', approval: 'Approved', type: 'Project', desc: 'Description', approvedWith: 'Anthropic, OpenAI', scope: 'Internal' },
+                        { name: 'Record name', approval: 'Denied', type: 'Agent', desc: 'Description', approvedWith: 'Anthropic, OpenAI', scope: 'Both' },
+                        { name: 'Record name', approval: 'Denied', type: 'Agent', desc: 'Description', approvedWith: 'Anthropic, OpenAI', scope: 'Both' },
+                        { name: 'Record name', approval: 'Approved', type: 'Model', desc: 'Description', approvedWith: 'AI System', scope: 'External' },
+                      ].map((row, i) => (
                         <div key={i} className="grid gap-4 py-3 border-b border-[#1e2130] last:border-0 hover:bg-[#1a1d2a] cursor-pointer transition-colors -mx-4 px-4 items-center"
-                          style={{ gridTemplateColumns: '1fr 100px 90px 80px' }}>
-                          <p className="text-sm font-medium text-white">{tool.name}</p>
-                          <p className="text-xs text-[#9ca3af]">{tool.category}</p>
-                          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full w-fit ${
-                            tool.status === 'Approved' ? 'bg-[#00B935]/10 text-[#00B935]' : 'bg-[#f59e0b]/10 text-[#f59e0b]'
-                          }`}>{tool.status}</span>
-                          <p className="text-xs text-[#9ca3af]">{tool.dept}</p>
+                          style={{ gridTemplateColumns: '1fr 110px 100px 1fr 140px 110px' }}>
+                          <p className="text-sm font-medium text-white">{row.name}</p>
+                          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded border w-fit ${
+                            row.approval === 'Approved' 
+                              ? 'border-[#00B935]/30 text-[#00B935]' 
+                              : row.approval === 'Denied'
+                              ? 'border-[#ef4444]/30 text-[#ef4444]'
+                              : 'border-[#f59e0b]/30 text-[#f59e0b]'
+                          }`}>{row.approval}</span>
+                          <p className="text-xs text-[#9ca3af]">{row.type}</p>
+                          <p className="text-xs text-[#9ca3af]">{row.desc}</p>
+                          <p className="text-xs text-[#9ca3af]">{row.approvedWith}</p>
+                          <p className="text-xs text-[#9ca3af]">{row.scope}</p>
                         </div>
                       ))}
                     </div>
