@@ -21,9 +21,349 @@ import {
   Filter,
   Download,
   FileText,
-  Settings
+  Settings,
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
+  TrendingUp,
+  Shield,
+  Activity,
+  BarChart3,
+  Package
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+
+// ── Overview Dashboard Data ───────────────────────────────────────────────────
+
+const programHealthStats = [
+  { label: 'AI Systems Registered', value: '47',  sub: '+5 this month',    accent: '#0788F7' },
+  { label: 'High Risk Systems',     value: '4',   sub: '2 need attention', accent: '#ef4444' },
+  { label: 'Pending Assessments',   value: '12',  sub: '3 overdue',        accent: '#FFEF3C' },
+  { label: 'Compliance Rate',       value: '89%', sub: '↑ 4% vs Q1',       accent: '#00B935' },
+]
+
+const C_AI = 2 * Math.PI * 38
+const overallHealth = [
+  { label: 'Compliant',   pct: 0.68, color: '#00B935', offset: 0    },
+  { label: 'In Progress', pct: 0.21, color: '#f59e0b', offset: 0.68 },
+  { label: 'At Risk',     pct: 0.11, color: '#ef4444', offset: 0.89 },
+]
+
+const efficiencyStats = [
+  { label: 'Avg Assessment Time',   value: '4.2d', sub: '↓ 1.3d vs last quarter', accent: '#00B935', icon: Clock },
+  { label: 'Auto-Approved',         value: '62%',  sub: 'low risk systems',       accent: '#0788F7', icon: CheckCircle2 },
+  { label: 'Review Bottleneck',     value: '8',    sub: 'awaiting legal review',  accent: '#FFEF3C', icon: AlertTriangle },
+  { label: 'Time to Compliance',    value: '12d',  sub: 'avg for new systems',    accent: '#976FE6', icon: TrendingUp },
+]
+
+const recentAssessments = [
+  { name: 'Customer Support Chatbot',    type: 'High Risk', risk: 'High',   riskAccent: '#ef4444', status: 'In Review',  statusAccent: '#FFEF3C' },
+  { name: 'Document Classification ML',  type: 'Limited',   risk: 'Medium', riskAccent: '#f59e0b', status: 'Active',     statusAccent: '#00B935' },
+  { name: 'Fraud Detection Engine',      type: 'High Risk', risk: 'High',   riskAccent: '#ef4444', status: 'Overdue',    statusAccent: '#ef4444' },
+  { name: 'Marketing Recommendation AI', type: 'Limited',   risk: 'Low',    riskAccent: '#00B935', status: 'Complete',   statusAccent: '#00B935' },
+  { name: 'HR Resume Screening Tool',    type: 'High Risk', risk: 'High',   riskAccent: '#ef4444', status: 'In Progress',statusAccent: '#0788F7' },
+]
+
+const aiRisks = [
+  { category: 'Bias & Fairness',      count: 7,  pct: 28, color: '#ef4444', trend: '↑ 2' },
+  { category: 'Data Privacy',         count: 5,  pct: 20, color: '#f59e0b', trend: '↓ 1' },
+  { category: 'Transparency',         count: 6,  pct: 24, color: '#976FE6', trend: '—' },
+  { category: 'Security',             count: 4,  pct: 16, color: '#0788F7', trend: '↓ 2' },
+  { category: 'Accountability',       count: 3,  pct: 12, color: '#00B935', trend: '↑ 1' },
+]
+
+const riskTrendBars = [
+  { h: 65, c: '#ef4444' }, { h: 58, c: '#ef4444' }, { h: 52, c: '#f59e0b' },
+  { h: 48, c: '#f59e0b' }, { h: 45, c: '#f59e0b' }, { h: 50, c: '#f59e0b' },
+  { h: 46, c: '#00B935' }, { h: 42, c: '#00B935' }, { h: 38, c: '#00B935' },
+  { h: 40, c: '#00B935' }, { h: 36, c: '#00B935' }, { h: 34, c: '#00B935' },
+]
+const riskXLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+
+const governancePacksData = [
+  { name: 'EU AI Act',     desc: 'Full compliance for EU regulations',  status: 'Active',    stColor: '#00B935', coverage: 94 },
+  { name: 'NIST AI RMF',   desc: 'Risk management framework controls',  status: 'Active',    stColor: '#00B935', coverage: 87 },
+  { name: 'ISO 42001',     desc: 'AI management system standards',      status: 'Partial',   stColor: '#f59e0b', coverage: 62 },
+  { name: 'State AI Laws', desc: 'US state-level AI requirements',      status: 'Available', stColor: '#0788F7', coverage: 0  },
+]
+
+// ── AI Governance Overview Dashboard ─────────────────────────────────────────
+
+function AIGovernanceOverviewDashboard() {
+  return (
+    <div className="p-6 space-y-4 overflow-y-auto flex-1">
+      {/* Header */}
+      <div>
+        <h2 className="text-lg font-medium text-white">AI Governance Overview</h2>
+        <p className="text-xs text-[#9ca3af] mt-0.5">Program Dashboard · Last updated today at 10:24 AM</p>
+      </div>
+
+      {/* ── Overall Program Health ─────────────────────────────────────────────── */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+          <Shield className="w-4 h-4 text-[#6CEEAD]" />
+          Overall Program Health
+        </h3>
+        <div className="grid grid-cols-4 gap-3">
+          {programHealthStats.map((s) => (
+            <div key={s.label} className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+              <div className="h-[3px]" style={{ background: s.accent }} />
+              <div className="p-4">
+                <p className="text-2xl font-bold text-white">{s.value}</p>
+                <p className="text-[11px] font-semibold text-[#9ca3af] mt-2">{s.label}</p>
+                <p className="text-[10px] text-[#4b5563] mt-0.5">{s.sub}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-3 gap-3">
+          {/* Program Health Donut */}
+          <div className="bg-[#13151f] border border-[#1e2130] rounded-lg p-4 flex flex-col">
+            <p className="text-sm font-semibold text-white">Program Health</p>
+            <p className="text-[10px] text-[#9ca3af] mt-0.5">vs last quarter</p>
+            <div className="flex items-center justify-center flex-1 py-4">
+              <div className="relative w-28 h-28">
+                <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
+                  <circle cx="50" cy="50" r="38" fill="none" stroke="#1e2130" strokeWidth="10" />
+                  {overallHealth.map((seg) => (
+                    <circle key={seg.label} cx="50" cy="50" r="38" fill="none"
+                      stroke={seg.color} strokeWidth="10"
+                      strokeDasharray={`${seg.pct * C_AI} ${C_AI}`}
+                      strokeDashoffset={`${-seg.offset * C_AI}`}
+                      strokeLinecap="butt" />
+                  ))}
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <p className="text-xl font-bold text-white">68%</p>
+                  <p className="text-[10px] text-[#9ca3af]">compliant</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              {overallHealth.map((seg) => (
+                <div key={seg.label}>
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2.5 h-2.5 rounded-sm" style={{ background: seg.color }} />
+                      <p className="text-xs text-white">{seg.label}</p>
+                    </div>
+                    <p className="text-xs font-semibold" style={{ color: seg.color }}>
+                      {Math.round(seg.pct * 100)}%
+                    </p>
+                  </div>
+                  <div className="h-px bg-[#1e2130]" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Risk by Category */}
+          <div className="col-span-2 bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+            <div className="px-4 py-3 bg-[#0f1117] border-b border-[#1e2130]">
+              <p className="text-sm font-semibold text-white">Risk Distribution by Category</p>
+            </div>
+            <div className="p-4 space-y-3">
+              {aiRisks.map((r) => (
+                <div key={r.category} className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-white">{r.category}</p>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] text-[#4b5563]">{r.trend}</span>
+                      <span className="text-xs font-semibold" style={{ color: r.color }}>{r.count}</span>
+                    </div>
+                  </div>
+                  <div className="h-1.5 bg-[#1e2130] rounded-full overflow-hidden">
+                    <div className="h-full rounded-full transition-all" style={{ width: `${r.pct}%`, background: r.color }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Efficiency Insights ────────────────────────────────────────────────── */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+          <Activity className="w-4 h-4 text-[#0788F7]" />
+          Efficiency Insights
+        </h3>
+        <div className="grid grid-cols-4 gap-3">
+          {efficiencyStats.map((s) => {
+            const Icon = s.icon
+            return (
+              <div key={s.label} className="bg-[#13151f] border border-[#1e2130] rounded-lg p-4">
+                <div className="flex items-start justify-between mb-2">
+                  <div className="p-2 rounded-lg" style={{ background: `${s.accent}15` }}>
+                    <Icon className="w-4 h-4" style={{ color: s.accent }} />
+                  </div>
+                </div>
+                <p className="text-2xl font-bold text-white">{s.value}</p>
+                <p className="text-[11px] font-semibold text-[#9ca3af] mt-1">{s.label}</p>
+                <p className="text-[10px] text-[#4b5563] mt-0.5">{s.sub}</p>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* ── Assessments ────────────────────────────────────────────────────────── */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+          <BarChart3 className="w-4 h-4 text-[#FFEF3C]" />
+          Assessments
+        </h3>
+        <div className="grid grid-cols-3 gap-3">
+          <div className="col-span-2 bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3 bg-[#0f1117] border-b border-[#1e2130]">
+              <p className="text-sm font-semibold text-white">Recent AI Assessments</p>
+              <button className="text-[11px] text-[#6CEEAD] hover:underline">View all →</button>
+            </div>
+            <div className="px-4">
+              <div className="grid gap-2 py-2.5 border-b border-[#1e2130]"
+                style={{ gridTemplateColumns: '1fr 90px 80px 90px' }}>
+                {['AI System', 'Risk Category', 'Risk', 'Status'].map((h) => (
+                  <p key={h} className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">{h}</p>
+                ))}
+              </div>
+              {recentAssessments.map((row, i) => (
+                <div key={i}
+                  className="grid gap-2 py-3 border-b border-[#1e2130] last:border-0 hover:bg-[#1a1d2a] cursor-pointer transition-colors -mx-4 px-4 items-center"
+                  style={{ gridTemplateColumns: '1fr 90px 80px 90px' }}>
+                  <p className="text-xs font-medium text-white truncate">{row.name}</p>
+                  <p className="text-[10px] text-[#9ca3af]">{row.type}</p>
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full w-fit"
+                    style={{ color: row.riskAccent, background: `${row.riskAccent}1a` }}>{row.risk}</span>
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full w-fit"
+                    style={{ color: row.statusAccent, background: `${row.statusAccent}1a` }}>{row.status}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+            <div className="px-4 py-3 border-b border-[#1e2130]">
+              <p className="text-sm font-semibold text-white">Quick Actions</p>
+            </div>
+            <div className="p-3 space-y-2">
+              <button className="w-full text-left px-3 py-2.5 rounded-md text-xs font-medium bg-[#6CEEAD]/10 text-[#6CEEAD] transition-opacity hover:opacity-80">
+                + New AI Assessment
+              </button>
+              <button className="w-full text-left px-3 py-2.5 rounded-md text-xs font-medium bg-[#1e2130] text-white transition-opacity hover:opacity-80">
+                Register AI System
+              </button>
+              <button className="w-full text-left px-3 py-2.5 rounded-md text-xs font-medium bg-[#f59e0b]/10 text-[#f59e0b] transition-opacity hover:opacity-80">
+                Run Risk Scan
+              </button>
+              <button className="w-full text-left px-3 py-2.5 rounded-md text-xs font-medium bg-[#1e2130] text-[#9ca3af] transition-opacity hover:opacity-80">
+                Export Report
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── AI Governance Risks ────────────────────────────────────────────────── */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-[#ef4444]" />
+          AI Governance Risks
+        </h3>
+        <div className="grid grid-cols-3 gap-3">
+          {/* Risk Trend Chart */}
+          <div className="col-span-2 bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+            <div className="flex items-start justify-between px-4 pt-3 pb-2 border-b border-[#1e2130]">
+              <div>
+                <p className="text-sm font-semibold text-white">Risk Trend — Last 6 Months</p>
+                <p className="text-[10px] text-[#9ca3af]">Aggregate risk score across AI systems</p>
+              </div>
+              <p className="text-xs font-medium text-[#00B935] whitespace-nowrap">↓ 2.4 pts improving</p>
+            </div>
+            <div className="px-4 pt-3 pb-4">
+              <div className="relative">
+                <div className="absolute inset-x-0 flex flex-col justify-between h-28 pointer-events-none">
+                  {[10, 8, 6, 4, 2, 0].map((n) => (
+                    <div key={n} className="flex items-center gap-1">
+                      <span className="text-[9px] text-[#4b5563] w-4 text-right shrink-0">{n}</span>
+                      <div className="flex-1 h-px bg-[#1e2130]" />
+                    </div>
+                  ))}
+                </div>
+                <div className="ml-6 flex items-end gap-1 h-28">
+                  {riskTrendBars.map((bar, i) => (
+                    <div key={i} className="flex-1 rounded-sm opacity-80 hover:opacity-100 transition-opacity"
+                      style={{ height: `${bar.h}%`, background: bar.c }} />
+                  ))}
+                </div>
+              </div>
+              <div className="ml-6 flex justify-between mt-1.5">
+                {riskXLabels.map((l) => (
+                  <p key={l} className="text-[9px] text-[#4b5563]">{l}</p>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Top Risks */}
+          <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+            <div className="px-4 py-3 border-b border-[#1e2130]">
+              <p className="text-sm font-semibold text-white">Top Risk Items</p>
+            </div>
+            <div className="p-3 space-y-2">
+              <div className="px-3 py-2 rounded-md bg-[#ef4444]/10 border border-[#ef4444]/20">
+                <p className="text-xs font-medium text-white">Customer Support Chatbot</p>
+                <p className="text-[10px] text-[#ef4444]">Bias detected in responses</p>
+              </div>
+              <div className="px-3 py-2 rounded-md bg-[#ef4444]/10 border border-[#ef4444]/20">
+                <p className="text-xs font-medium text-white">Fraud Detection Engine</p>
+                <p className="text-[10px] text-[#ef4444]">Assessment overdue by 14d</p>
+              </div>
+              <div className="px-3 py-2 rounded-md bg-[#f59e0b]/10 border border-[#f59e0b]/20">
+                <p className="text-xs font-medium text-white">HR Screening Tool</p>
+                <p className="text-[10px] text-[#f59e0b]">Missing transparency docs</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Governance Packs ───────────────────────────────────────────────────── */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+          <Package className="w-4 h-4 text-[#976FE6]" />
+          Governance Packs
+        </h3>
+        <div className="grid grid-cols-4 gap-3">
+          {governancePacksData.map((pack) => (
+            <div key={pack.name} className="bg-[#13151f] border border-[#1e2130] rounded-lg p-4 hover:border-[#2a2d3a] transition-colors cursor-pointer">
+              <div className="flex items-start justify-between mb-2">
+                <h4 className="text-sm font-medium text-white">{pack.name}</h4>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                  style={{ color: pack.stColor, background: `${pack.stColor}1a` }}>{pack.status}</span>
+              </div>
+              <p className="text-[10px] text-[#9ca3af] mb-3">{pack.desc}</p>
+              {pack.coverage > 0 ? (
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <p className="text-[10px] text-[#4b5563]">Coverage</p>
+                    <p className="text-[10px] font-semibold text-white">{pack.coverage}%</p>
+                  </div>
+                  <div className="h-1.5 bg-[#1e2130] rounded-full overflow-hidden">
+                    <div className="h-full rounded-full" style={{ width: `${pack.coverage}%`, background: pack.stColor }} />
+                  </div>
+                </div>
+              ) : (
+                <button className="text-[10px] text-[#0788F7] hover:underline">Install pack →</button>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const tabs: { id: AIGovTab; label: string }[] = [
   { id: 'overview', label: 'Overview' },
@@ -355,28 +695,7 @@ export function AIGovernanceModule() {
       {/* Tab Content */}
       <div className="flex-1 flex overflow-hidden">
         {aiGovTab === 'overview' && (
-          <div className="flex-1 p-6">
-            <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-4">Overview</h2>
-            <p className="text-[#9ca3af] mb-6">Get a high-level view of your AI governance program status and key metrics.</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
-                <h3 className="text-sm font-medium text-[#9ca3af] mb-2">Total AI Systems</h3>
-                <p className="text-2xl font-semibold text-white">24</p>
-              </div>
-              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
-                <h3 className="text-sm font-medium text-[#9ca3af] mb-2">High Risk Items</h3>
-                <p className="text-2xl font-semibold text-[#ef4444]">3</p>
-              </div>
-              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
-                <h3 className="text-sm font-medium text-[#9ca3af] mb-2">Pending Reviews</h3>
-                <p className="text-2xl font-semibold text-[#FFEF3C]">7</p>
-              </div>
-              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
-                <h3 className="text-sm font-medium text-[#9ca3af] mb-2">Compliance Score</h3>
-                <p className="text-2xl font-semibold text-[#00B935]">94%</p>
-              </div>
-            </div>
-          </div>
+          <AIGovernanceOverviewDashboard />
         )}
 
         {aiGovTab === 'acceptable-use' && (
