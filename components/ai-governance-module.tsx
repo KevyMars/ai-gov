@@ -34,7 +34,10 @@ import {
   Layers,
   ScrollText,
   ChevronDown,
-  X
+  X,
+  MoreHorizontal,
+  RefreshCw,
+  GripVertical
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -1200,7 +1203,255 @@ export function AIGovernanceModule() {
                         </div>
                       </div>
 
-                      {/* Summary Card with Build Accepted AI Use Pairings */}
+                      {advancedRules ? (
+                        /* Advanced Rules View */
+                        <>
+                          {/* Summary Card Header */}
+                          <div className="bg-[#13151f] border border-[#1e2130] rounded-lg mb-6">
+                            <div className="p-4 border-b border-[#1e2130]">
+                              <div className="flex items-start justify-between">
+                                <div>
+                                  <h4 className="text-base font-semibold text-white">
+                                    {formName || 'Anthropic for internal use'}
+                                  </h4>
+                                  <p className="text-sm text-[#9ca3af] mt-0.5">
+                                    {formDescription || 'Approved for internal use only'}
+                                  </p>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <button className="p-1 text-[#9ca3af] hover:text-white transition-colors">
+                                    <MoreHorizontal className="w-5 h-5" />
+                                  </button>
+                                  <button className="p-1 text-[#9ca3af] hover:text-white transition-colors">
+                                    <ChevronDown className="w-5 h-5" />
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Metadata Row */}
+                            <div className="px-4 py-3 flex items-center gap-6 text-sm border-b border-[#1e2130]">
+                              <div className="flex items-center gap-2">
+                                <span className="text-[#9ca3af]">Record type:</span>
+                                <span className="text-white">{formRecordType || 'Model'}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-[#9ca3af]">Outcome:</span>
+                                <span className="px-2 py-0.5 rounded border border-[#1e2130] text-white text-xs">
+                                  {formOutcome === 'Approved' ? 'Approved' : formOutcome === 'Denied' ? 'Denied' : 'Needs review'}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-[#9ca3af]">Auto-apply outcome:</span>
+                                <span className="text-white">{formApplyOutcome === 'auto-apply' ? 'True' : 'False'}</span>
+                              </div>
+                            </div>
+
+                            {/* Rule Summary */}
+                            <div className="p-4 border-b border-[#1e2130]">
+                              <div className="flex items-center justify-between mb-1">
+                                <h4 className="text-sm font-medium text-white">Rule summary</h4>
+                                <button className="p-1 text-[#9ca3af] hover:text-white transition-colors">
+                                  <RefreshCw className="w-4 h-4" />
+                                </button>
+                              </div>
+                              <p className="text-xs text-[#9ca3af] mb-3">Plain language preview</p>
+                              <div className="bg-[#0f1117] border border-[#1e2130] rounded-md p-3 flex flex-wrap items-center gap-2">
+                                <span className="px-2 py-1 border border-[#1e2130] rounded text-xs text-white font-medium">
+                                  {formOutcome === 'Approved' ? 'APPROVE' : formOutcome === 'Denied' ? 'DENY' : 'REVIEW'}
+                                </span>
+                                <span className="text-sm text-[#9ca3af]">as acceptable use</span>
+                                <span className="px-2 py-1 border border-[#1e2130] rounded text-xs text-white font-medium">IF</span>
+                                {conditionPairings.map((pairing, index) => (
+                                  <span key={pairing.id} className="flex items-center gap-2">
+                                    <span className="text-sm text-white">{pairing.field}</span>
+                                    <span className="text-sm text-[#9ca3af]">operand</span>
+                                    <span className="text-sm text-[#9ca3af]">&quot;{pairing.value || '-'}&quot;</span>
+                                    {index < conditionPairings.length - 1 && (
+                                      <span className="px-2 py-1 border border-[#1e2130] rounded text-xs text-white font-medium">AND</span>
+                                    )}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Conditions Section */}
+                            <div className="p-4">
+                              <div className="flex items-center justify-between mb-1">
+                                <div className="flex items-center gap-2">
+                                  <h4 className="text-sm font-medium text-white">Conditions</h4>
+                                  <div className="w-4 h-4 rounded-full border border-[#4b5563] flex items-center justify-center">
+                                    <span className="text-[10px] text-[#4b5563]">?</span>
+                                  </div>
+                                </div>
+                                <button className="p-1 text-[#9ca3af] hover:text-white transition-colors">
+                                  <RefreshCw className="w-4 h-4" />
+                                </button>
+                              </div>
+                              <p className="text-xs text-[#9ca3af] mb-4">Define conditions that surround this rule</p>
+
+                              {/* Condition Rows */}
+                              <div className="space-y-0">
+                                {conditionPairings.map((pairing, index) => (
+                                  <div key={pairing.id}>
+                                    <div className="flex items-center gap-3 py-2">
+                                      {/* Row Number */}
+                                      <div className="w-6 h-6 rounded-full border border-[#1e2130] flex items-center justify-center text-xs text-[#9ca3af]">
+                                        {index + 1}
+                                      </div>
+                                      
+                                      {/* Drag Handle */}
+                                      <button className="text-[#4b5563] hover:text-[#9ca3af] cursor-grab">
+                                        <GripVertical className="w-4 h-4" />
+                                      </button>
+
+                                      {/* Variable Dropdown */}
+                                      <select
+                                        value={pairing.field}
+                                        onChange={(e) => {
+                                          const updated = [...conditionPairings]
+                                          updated[index].field = e.target.value
+                                          setConditionPairings(updated)
+                                        }}
+                                        className="w-40 px-3 py-2 bg-[#0f1117] text-[#9ca3af] rounded-md text-sm border border-[#1e2130] focus:outline-none focus:border-[#6CEEAD]"
+                                      >
+                                        <option value="">Variable</option>
+                                        <option value="Model Provider">Model Provider</option>
+                                        <option value="Use type">Use type</option>
+                                        <option value="Risk level">Risk level</option>
+                                        <option value="Data classification">Data classification</option>
+                                        <option value="Deployment">Deployment</option>
+                                        <option value="Workflow stage">Workflow stage</option>
+                                      </select>
+
+                                      {/* Operand Dropdown */}
+                                      <select
+                                        className="w-32 px-3 py-2 bg-[#0f1117] text-[#9ca3af] rounded-md text-sm border border-[#1e2130] focus:outline-none focus:border-[#6CEEAD]"
+                                      >
+                                        <option value="equals">equals</option>
+                                        <option value="not_equals">not equals</option>
+                                        <option value="contains">contains</option>
+                                        <option value="starts_with">starts with</option>
+                                        <option value="ends_with">ends with</option>
+                                      </select>
+
+                                      {/* Value Dropdown */}
+                                      <select
+                                        value={pairing.value}
+                                        onChange={(e) => {
+                                          const updated = [...conditionPairings]
+                                          updated[index].value = e.target.value
+                                          setConditionPairings(updated)
+                                        }}
+                                        className="w-40 px-3 py-2 bg-[#0f1117] text-[#9ca3af] rounded-md text-sm border border-[#1e2130] focus:outline-none focus:border-[#6CEEAD]"
+                                      >
+                                        <option value="">value</option>
+                                        {pairing.field === 'Model Provider' && (
+                                          <>
+                                            <option value="Anthropic">Anthropic</option>
+                                            <option value="OpenAI">OpenAI</option>
+                                            <option value="Google">Google</option>
+                                            <option value="Microsoft">Microsoft</option>
+                                            <option value="Meta">Meta</option>
+                                            <option value="Cohere">Cohere</option>
+                                          </>
+                                        )}
+                                        {pairing.field === 'Use type' && (
+                                          <>
+                                            <option value="Internal Use">Internal Use</option>
+                                            <option value="External Use">External Use</option>
+                                            <option value="Customer Facing">Customer Facing</option>
+                                            <option value="Research">Research</option>
+                                            <option value="Development">Development</option>
+                                          </>
+                                        )}
+                                        {pairing.field === 'Risk level' && (
+                                          <>
+                                            <option value="Low">Low</option>
+                                            <option value="Medium">Medium</option>
+                                            <option value="High">High</option>
+                                            <option value="Critical">Critical</option>
+                                          </>
+                                        )}
+                                        {pairing.field === 'Data classification' && (
+                                          <>
+                                            <option value="Public">Public</option>
+                                            <option value="Internal">Internal</option>
+                                            <option value="Confidential">Confidential</option>
+                                            <option value="Restricted">Restricted</option>
+                                          </>
+                                        )}
+                                        {pairing.field === 'Deployment' && (
+                                          <>
+                                            <option value="Production">Production</option>
+                                            <option value="Staging">Staging</option>
+                                            <option value="Development">Development</option>
+                                            <option value="Testing">Testing</option>
+                                          </>
+                                        )}
+                                        {pairing.field === 'Workflow stage' && (
+                                          <>
+                                            <option value="Intake">Intake</option>
+                                            <option value="Review">Review</option>
+                                            <option value="Approval">Approval</option>
+                                            <option value="Implementation">Implementation</option>
+                                            <option value="Monitoring">Monitoring</option>
+                                            <option value="Retirement">Retirement</option>
+                                          </>
+                                        )}
+                                      </select>
+
+                                      {/* Delete Button */}
+                                      {index > 0 && (
+                                        <button 
+                                          onClick={() => {
+                                            setConditionPairings(conditionPairings.filter(p => p.id !== pairing.id))
+                                          }}
+                                          className="p-1 text-[#9ca3af] hover:text-[#ef4444] transition-colors"
+                                        >
+                                          <X className="w-4 h-4" />
+                                        </button>
+                                      )}
+                                    </div>
+
+                                    {/* AND Connector */}
+                                    {index < conditionPairings.length - 1 && (
+                                      <div className="flex items-center gap-3 py-2 pl-9">
+                                        <div className="w-px h-4 bg-[#1e2130] ml-3"></div>
+                                        <span className="px-2 py-1 border border-[#1e2130] rounded text-xs text-white font-medium">AND</span>
+                                        <span className="text-xs text-[#9ca3af]">and also match this</span>
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+
+                              {/* Add Buttons */}
+                              <div className="flex items-center gap-4 mt-4">
+                                <button
+                                  onClick={() => {
+                                    setConditionPairings([
+                                      ...conditionPairings,
+                                      { id: Date.now(), field: '', value: '' }
+                                    ])
+                                  }}
+                                  className="flex items-center gap-1 px-3 py-1.5 bg-[#0f1117] text-white rounded-md text-sm border border-[#1e2130] hover:bg-[#1e2130] transition-colors"
+                                >
+                                  <Plus className="w-3 h-3" />
+                                  Add condition
+                                </button>
+                                <button
+                                  className="flex items-center gap-1 px-3 py-1.5 text-[#9ca3af] hover:text-white rounded-md text-sm transition-colors"
+                                >
+                                  <Plus className="w-3 h-3" />
+                                  Add group
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                      /* Simple View - Summary Card with Build Accepted AI Use Pairings */
                       <div className="bg-[#13151f] border border-[#1e2130] rounded-lg mb-6">
                         <div className="p-4 border-b border-[#1e2130]">
                           <div>
@@ -1359,6 +1610,7 @@ export function AIGovernanceModule() {
                           </div>
                         </div>
                       </div>
+                      )}
 
                       {/* Form Actions */}
                       <div className="flex items-center gap-3 mt-8">
