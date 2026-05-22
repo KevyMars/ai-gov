@@ -420,6 +420,8 @@ export function AIGovernanceModule() {
     setSelectedRecordId 
   } = useNavigation()
 
+  const [acceptedInventoryFilter, setAcceptedInventoryFilter] = React.useState<'all' | 'Approved' | 'Needs review' | 'Denied'>('all')
+
   // OneTrust Brand Color System - use Mint sparingly for key emphasis
   // Secondary palette: Sky (#0788F7), Yellow (#FFEF3C), Leaf (#00B935)
   const stageColors = {
@@ -760,23 +762,43 @@ export function AIGovernanceModule() {
             <div className="flex-1 overflow-auto p-6">
               {aiGovAcceptableUseItem === 'accepted-inventory' && (
                 <div>
-                  <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center justify-between mb-4">
                     <div>
                       <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-1">Inventory</h2>
                       <p className="text-[#9ca3af] text-sm">AI systems and tools that have been approved for use within your organization.</p>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <select className="px-3 py-1.5 bg-[#13151f] border border-[#1e2130] rounded-md text-xs text-white">
-                        <option>My models</option>
-                        <option>All models</option>
-                        <option>AI Systems</option>
-                        <option>Agents</option>
-                      </select>
-                      <button className="flex items-center gap-2 px-3 py-1.5 bg-[#6CEEAD] text-[#0f1117] rounded-md text-xs font-medium hover:bg-[#5dd99c] transition-colors">
-                        <Plus className="w-3 h-3" />
-                        Add new model
+                    <select className="px-3 py-1.5 bg-[#13151f] border border-[#1e2130] rounded-md text-xs text-white">
+                      <option>My models</option>
+                      <option>All models</option>
+                      <option>AI Systems</option>
+                      <option>Agents</option>
+                    </select>
+                  </div>
+
+                  {/* Quick Insight Cards */}
+                  <div className="grid grid-cols-3 gap-3 mb-4">
+                    {[
+                      { label: 'Approved', value: 6, accent: '#00B935', filter: 'Approved' as const },
+                      { label: 'Needs review', value: 1, accent: '#f59e0b', filter: 'Needs review' as const },
+                      { label: 'Denied', value: 4, accent: '#ef4444', filter: 'Denied' as const },
+                    ].map((stat) => (
+                      <button
+                        key={stat.label}
+                        onClick={() => setAcceptedInventoryFilter(acceptedInventoryFilter === stat.filter ? 'all' : stat.filter)}
+                        className={cn(
+                          "p-3 bg-[#13151f] border rounded-lg text-left transition-all",
+                          acceptedInventoryFilter === stat.filter
+                            ? "border-[#6CEEAD] ring-1 ring-[#6CEEAD]/20"
+                            : "border-[#1e2130] hover:border-[#2a2d3a]"
+                        )}
+                      >
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs font-medium text-[#9ca3af]">{stat.label}</p>
+                          <div className="w-2 h-2 rounded-full" style={{ background: stat.accent }} />
+                        </div>
+                        <p className="text-2xl font-bold text-white mt-1">{stat.value}</p>
                       </button>
-                    </div>
+                    ))}
                   </div>
 
                   <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
@@ -804,7 +826,9 @@ export function AIGovernanceModule() {
                         { name: 'Record name', approval: 'Denied', type: 'Agent', desc: 'Description', approvedWith: 'Anthropic, OpenAI', scope: 'Both' },
                         { name: 'Record name', approval: 'Denied', type: 'Agent', desc: 'Description', approvedWith: 'Anthropic, OpenAI', scope: 'Both' },
                         { name: 'Record name', approval: 'Approved', type: 'Model', desc: 'Description', approvedWith: 'AI System', scope: 'External' },
-                      ].map((row, i) => (
+                      ]
+                        .filter((row) => acceptedInventoryFilter === 'all' || row.approval === acceptedInventoryFilter)
+                        .map((row, i) => (
                         <div key={i} className="grid gap-4 py-3 border-b border-[#1e2130] last:border-0 hover:bg-[#1a1d2a] cursor-pointer transition-colors -mx-4 px-4 items-center"
                           style={{ gridTemplateColumns: '1fr 110px 100px 1fr 140px 110px' }}>
                           <p className="text-sm font-medium text-white">{row.name}</p>
