@@ -2105,11 +2105,17 @@ export function AIGovernanceModule() {
                           <h4 className="text-sm font-medium text-white mb-1">Rule summary</h4>
                           <p className="text-xs text-[#9ca3af] mb-3">Plain language preview</p>
                           <div className="bg-[#0f1117] border border-[#1e2130] rounded-lg p-4 flex flex-wrap items-center gap-2">
-                            <span className="px-3 py-1.5 border border-[#1e2130] rounded text-xs text-white font-medium">
+                            <span className={`px-3 py-1.5 border rounded text-xs font-medium ${
+                              policy.outcome === 'Auto-approved' 
+                                ? 'border-[#6CEEAD]/30 text-[#6CEEAD] bg-[#6CEEAD]/10' 
+                                : policy.outcome === 'Denied' 
+                                ? 'border-[#ef4444]/30 text-[#ef4444] bg-[#ef4444]/10'
+                                : 'border-[#f59e0b]/30 text-[#f59e0b] bg-[#f59e0b]/10'
+                            }`}>
                               {policy.outcome === 'Auto-approved' ? 'APPROVE' : policy.outcome === 'Denied' ? 'DENY' : 'REVIEW'}
                             </span>
                             <span className="text-sm text-[#9ca3af]">as acceptable use</span>
-                            <span className="px-3 py-1.5 border border-[#1e2130] rounded text-xs text-white font-medium">IF</span>
+                            <span className="px-3 py-1.5 border border-[#4b5563]/50 rounded text-xs text-[#9ca3af] font-medium bg-[#4b5563]/10">IF</span>
                             {policy.conditionsList?.map((condition, index) => (
                               <span key={condition.id} className="flex items-center gap-2">
                                 <span className="text-sm text-white">{condition.field}</span>
