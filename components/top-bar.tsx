@@ -55,19 +55,35 @@ export function TopBar({ onSubscriptionClick }: TopBarProps) {
     })
   }
 
-  if (currentView === 'ai-governance' && aiGovTab === 'inventory') {
-    const inventoryLabels: Record<string, string> = {
-      'projects': 'Projects',
-      'ai-systems': 'AI Systems',
-      'models': 'Models',
-      'ai-agents': 'AI Agents',
-      'datasets': 'Datasets',
-      'vendors': 'Model Providers'
+  if (currentView === 'ai-governance') {
+    const aiGovTabLabels: Record<string, string> = {
+      'overview': 'Overview',
+      'acceptable-use': 'Acceptable Use',
+      'governance-packs': 'Governance Packs',
+      'inventory': 'Inventory',
+      'objects': 'Objects',
+      'ai-policies': 'AI Policies',
     }
-    breadcrumbs.push({ 
-      label: inventoryLabels[aiGovInventoryItem],
-      onClick: () => setSelectedRecordId(null)
-    })
+    
+    if (aiGovTab === 'inventory') {
+      const inventoryLabels: Record<string, string> = {
+        'projects': 'Projects',
+        'ai-systems': 'AI Systems',
+        'models': 'Models',
+        'ai-agents': 'AI Agents',
+        'datasets': 'Datasets',
+        'vendors': 'Model Providers'
+      }
+      breadcrumbs.push({ 
+        label: inventoryLabels[aiGovInventoryItem],
+        onClick: () => setSelectedRecordId(null)
+      })
+    } else {
+      breadcrumbs.push({ 
+        label: aiGovTabLabels[aiGovTab],
+        onClick: () => setSelectedRecordId(null)
+      })
+    }
   }
 
   if (currentView === 'privacy') {

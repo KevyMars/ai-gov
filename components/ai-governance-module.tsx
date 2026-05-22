@@ -26,6 +26,9 @@ import {
 import { cn } from '@/lib/utils'
 
 const tabs: { id: AIGovTab; label: string }[] = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'acceptable-use', label: 'Acceptable Use' },
+  { id: 'governance-packs', label: 'Governance Packs' },
   { id: 'inventory', label: 'Inventory' },
   { id: 'objects', label: 'Objects' },
   { id: 'ai-policies', label: 'AI Policies' },
@@ -351,6 +354,74 @@ export function AIGovernanceModule() {
 
       {/* Tab Content */}
       <div className="flex-1 flex overflow-hidden">
+        {aiGovTab === 'overview' && (
+          <div className="flex-1 p-6">
+            <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-4">Overview</h2>
+            <p className="text-[#9ca3af] mb-6">Get a high-level view of your AI governance program status and key metrics.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
+                <h3 className="text-sm font-medium text-[#9ca3af] mb-2">Total AI Systems</h3>
+                <p className="text-2xl font-semibold text-white">24</p>
+              </div>
+              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
+                <h3 className="text-sm font-medium text-[#9ca3af] mb-2">High Risk Items</h3>
+                <p className="text-2xl font-semibold text-[#ef4444]">3</p>
+              </div>
+              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
+                <h3 className="text-sm font-medium text-[#9ca3af] mb-2">Pending Reviews</h3>
+                <p className="text-2xl font-semibold text-[#FFEF3C]">7</p>
+              </div>
+              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
+                <h3 className="text-sm font-medium text-[#9ca3af] mb-2">Compliance Score</h3>
+                <p className="text-2xl font-semibold text-[#00B935]">94%</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {aiGovTab === 'acceptable-use' && (
+          <div className="flex-1 p-6">
+            <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-4">Acceptable Use</h2>
+            <p className="text-[#9ca3af] mb-6">Define and manage acceptable use policies for AI systems across your organization.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
+                <h3 className="text-sm font-medium text-white mb-2">Active Policies</h3>
+                <p className="text-2xl font-semibold text-[#00B935]">8</p>
+                <p className="text-xs text-[#9ca3af]">Currently enforced</p>
+              </div>
+              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
+                <h3 className="text-sm font-medium text-white mb-2">Violations (30d)</h3>
+                <p className="text-2xl font-semibold text-[#ef4444]">12</p>
+                <p className="text-xs text-[#9ca3af]">Requires attention</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {aiGovTab === 'governance-packs' && (
+          <div className="flex-1 p-6">
+            <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-4">Governance Packs</h2>
+            <p className="text-[#9ca3af] mb-6">Pre-built governance configurations for common AI use cases and regulatory requirements.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg hover:border-[#2a2d3a] transition-colors cursor-pointer">
+                <h3 className="text-sm font-medium text-white mb-1">EU AI Act Compliance</h3>
+                <p className="text-xs text-[#9ca3af] mb-3">Full compliance pack for EU AI Act requirements</p>
+                <span className="text-xs px-2 py-1 rounded bg-[#00B935]/10 text-[#00B935]">Installed</span>
+              </div>
+              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg hover:border-[#2a2d3a] transition-colors cursor-pointer">
+                <h3 className="text-sm font-medium text-white mb-1">NIST AI RMF</h3>
+                <p className="text-xs text-[#9ca3af] mb-3">NIST AI Risk Management Framework controls</p>
+                <span className="text-xs px-2 py-1 rounded bg-[#00B935]/10 text-[#00B935]">Installed</span>
+              </div>
+              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg hover:border-[#2a2d3a] transition-colors cursor-pointer">
+                <h3 className="text-sm font-medium text-white mb-1">ISO 42001</h3>
+                <p className="text-xs text-[#9ca3af] mb-3">AI Management System standard controls</p>
+                <span className="text-xs px-2 py-1 rounded bg-[#0788F7]/10 text-[#0788F7]">Available</span>
+              </div>
+            </div>
+          </div>
+        )}
+
         {aiGovTab === 'inventory' && (
           <>
             {/* Secondary Rail */}

@@ -21,7 +21,7 @@ export type NavigationView =
   | 'settings'
   | 'help'
 
-export type AIGovTab = 'inventory' | 'objects' | 'ai-policies'
+export type AIGovTab = 'overview' | 'acceptable-use' | 'governance-packs' | 'inventory' | 'objects' | 'ai-policies'
 export type AIGovInventoryItem = 'projects' | 'ai-systems' | 'models' | 'ai-agents' | 'datasets' | 'vendors'
 
 export type PrivacyTab = 'overview' | 'records' | 'objects' | 'policies'
@@ -48,7 +48,7 @@ const NavigationContext = createContext<NavigationContextType | undefined>(undef
 
 export function NavigationProvider({ children }: { children: ReactNode }) {
   const [currentView, setCurrentView] = useState<NavigationView>('home')
-  const [aiGovTab, setAIGovTab] = useState<AIGovTab>('inventory')
+  const [aiGovTab, setAIGovTab] = useState<AIGovTab>('overview')
   const [aiGovInventoryItem, setAIGovInventoryItem] = useState<AIGovInventoryItem>('ai-systems')
   const [privacyTab, setPrivacyTab] = useState<PrivacyTab>('overview')
   const [privacyRecordItem, setPrivacyRecordItem] = useState<PrivacyRecordItem>('pia-dpia')
