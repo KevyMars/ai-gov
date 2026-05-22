@@ -925,16 +925,20 @@ export function AIGovernanceModule() {
                   {/* Header */}
                   <div className="px-6 pt-6 pb-4 flex items-start justify-between">
                     <div>
-                      <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-1">Acceptable Use Policies</h2>
+                      <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-1">
+                        {showAddAcceptedUseForm ? 'Add Accepted Use Policy' : 'Acceptable Use Policies'}
+                      </h2>
                       <p className="text-[#9ca3af] text-sm">Define and manage acceptable use policies for AI systems across your organization.</p>
                     </div>
-                    <button 
-                      onClick={() => setShowAddAcceptedUseForm(true)}
-                      className="flex items-center gap-2 px-3 py-1.5 bg-[#6CEEAD] text-[#0f1117] rounded-md text-xs font-medium hover:bg-[#5dd99c] transition-colors"
-                    >
-                      <Plus className="w-3 h-3" />
-                      Add accepted use
-                    </button>
+                    {!showAddAcceptedUseForm && (
+                      <button 
+                        onClick={() => setShowAddAcceptedUseForm(true)}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-[#6CEEAD] text-[#0f1117] rounded-md text-xs font-medium hover:bg-[#5dd99c] transition-colors"
+                      >
+                        <Plus className="w-3 h-3" />
+                        Add accepted use
+                      </button>
+                    )}
                   </div>
 
                   {showAddAcceptedUseForm && acceptedUseFormStep === 1 ? (
