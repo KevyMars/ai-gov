@@ -430,6 +430,7 @@ export function AIGovernanceModule() {
   const [policySearchQuery, setPolicySearchQuery] = useState('')
   const [showAddAcceptedUseForm, setShowAddAcceptedUseForm] = useState(false)
   const [acceptedUseFormStep, setAcceptedUseFormStep] = useState<1 | 2>(1)
+  const [showDiscardModal, setShowDiscardModal] = useState(false)
   
   // Add Accepted Use Form State
   const [formRecordType, setFormRecordType] = useState('')
@@ -763,7 +764,13 @@ export function AIGovernanceModule() {
                 {acceptableUseItems.map((item) => (
                   <li key={item.id}>
                     <button
-                      onClick={() => setAIGovAcceptableUseItem(item.id)}
+                      onClick={() => {
+                        if (showAddAcceptedUseForm && item.id === 'accepted-use-policies') {
+                          setShowDiscardModal(true)
+                        } else {
+                          setAIGovAcceptableUseItem(item.id)
+                        }
+                      }}
                       className={cn(
                         "w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors",
                         aiGovAcceptableUseItem === item.id
@@ -778,6 +785,42 @@ export function AIGovernanceModule() {
                 ))}
               </ul>
             </div>
+
+            {/* Discard Modal */}
+            {showDiscardModal && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                <div className="bg-[#13151f] border border-[#1e2130] rounded-lg p-6 max-w-md w-full mx-4">
+                  <h3 className="text-lg font-medium text-white mb-2">Discard changes?</h3>
+                  <p className="text-sm text-[#9ca3af] mb-6">
+                    Do you want to discard this acceptable use policy? Any unsaved changes will be lost.
+                  </p>
+                  <div className="flex items-center justify-end gap-3">
+                    <button
+                      onClick={() => setShowDiscardModal(false)}
+                      className="px-4 py-2 text-[#9ca3af] hover:text-white rounded-md text-sm font-medium transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowDiscardModal(false)
+                        setShowAddAcceptedUseForm(false)
+                        setAcceptedUseFormStep(1)
+                        setFormRecordType('')
+                        setFormName('')
+                        setFormDescription('')
+                        setFormOutcome('Approved')
+                        setFormApplyOutcome('auto-apply')
+                        setAIGovAcceptableUseItem('accepted-use-policies')
+                      }}
+                      className="px-4 py-2 bg-[#ef4444] text-white rounded-md text-sm font-medium hover:bg-[#dc2626] transition-colors"
+                    >
+                      Yes, discard
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Main Content */}
             <div className="flex-1 overflow-auto p-6">
