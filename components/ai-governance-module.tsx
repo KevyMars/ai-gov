@@ -1992,29 +1992,23 @@ export function AIGovernanceModule() {
                       <h3 className="text-base font-medium text-[#6CEEAD] mb-4">Policy details</h3>
                       
                       {/* Policy Card */}
-                      <div className="bg-[#13151f] border border-[#1e2130] rounded-lg mb-6">
+                      <div className="bg-[#13151f] border border-[#1e2130] rounded-lg mb-8">
                         {/* Card Header */}
                         <div className="p-4 border-b border-[#1e2130]">
                           <div className="flex items-start justify-between">
                             <div>
-                              <h4 className="text-base font-semibold text-white">{policy.title}</h4>
-                              <p className="text-sm text-[#9ca3af] mt-0.5">{policy.description}</p>
+                              <h4 className="text-base font-semibold text-white">Anthropic for internal use</h4>
+                              <p className="text-sm text-[#9ca3af] mt-0.5">Approves use of Anthropic models when deployed on Databricks platform for low-risk use cases</p>
                             </div>
                             <div className="flex items-center gap-2">
                               <span className="text-[10px] px-2 py-0.5 rounded border border-[#1e2130] text-[#9ca3af]">
                                 {policy.conditions} condition{policy.conditions !== 1 ? 's' : ''}
                               </span>
-                              <span className={`text-[10px] px-2 py-0.5 rounded border ${
-                                policy.outcome === 'Auto-approved' 
-                                  ? 'border-[#00B935]/30 text-[#00B935]' 
-                                  : policy.outcome === 'Denied'
-                                  ? 'border-[#ef4444]/30 text-[#ef4444]'
-                                  : 'border-[#1e2130] text-[#9ca3af]'
-                              }`}>
-                                {policy.outcome === 'Auto-approved' ? 'Approved' : policy.outcome}
+                              <span className="text-[10px] px-2 py-0.5 rounded border border-[#1e2130] text-[#9ca3af]">
+                                Approved
                               </span>
                               <div className="flex items-center gap-1">
-                                <span className={`w-2 h-2 rounded-full ${policy.isActive ? 'bg-[#00B935]' : 'bg-[#4b5563]'}`}></span>
+                                <span className="w-2 h-2 rounded-full bg-[#00B935]"></span>
                                 <span className="text-xs text-[#9ca3af]">Active</span>
                                 <button 
                                   onClick={() => {
@@ -2041,12 +2035,12 @@ export function AIGovernanceModule() {
                         <div className="px-4 py-3 flex items-center gap-6 text-sm border-b border-[#1e2130]">
                           <div className="flex items-center gap-2">
                             <span className="text-[#9ca3af]">Record type:</span>
-                            <span className="text-white">{policy.useType}</span>
+                            <span className="text-white">Model, AI System</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="text-[#9ca3af]">Outcome:</span>
                             <span className="px-2 py-0.5 rounded border border-[#1e2130] text-white text-xs">
-                              {policy.outcome === 'Auto-approved' ? 'Approved' : policy.outcome}
+                              Approved
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
@@ -2061,22 +2055,17 @@ export function AIGovernanceModule() {
                           <p className="text-xs text-[#9ca3af] mb-3">Plain language preview</p>
                           <div className="bg-[#0f1117] border border-[#1e2130] rounded-md p-3 flex flex-wrap items-center gap-2">
                             <span className="px-2 py-1 border border-[#1e2130] rounded text-xs text-white font-medium">
-                              {policy.outcome === 'Auto-approved' ? 'APPROVE' : policy.outcome === 'Denied' ? 'DENY' : 'REVIEW'}
+                              APPROVE
                             </span>
                             <span className="text-sm text-[#9ca3af]">as acceptable use</span>
                             <span className="px-2 py-1 border border-[#1e2130] rounded text-xs text-white font-medium">IF</span>
-                            {policy.conditionsList?.map((condition, index) => (
-                              <span key={condition.id} className="flex items-center gap-2">
-                                <span className="text-sm text-white">{condition.field}</span>
-                                <span className="text-sm text-[#9ca3af]">is</span>
-                                <span className="text-sm text-[#9ca3af]">&quot;{condition.value}&quot;</span>
-                                {index < (policy.conditionsList?.length || 0) - 1 && (
-                                  <span className="px-2 py-1 border border-[#1e2130] rounded text-xs text-white font-medium">
-                                    {condition.operator}
-                                  </span>
-                                )}
-                              </span>
-                            ))}
+                            <span className="text-sm text-white">Risk</span>
+                            <span className="text-sm text-[#9ca3af]">is</span>
+                            <span className="text-sm text-[#9ca3af]">&quot;Low Risk&quot;</span>
+                            <span className="px-2 py-1 border border-[#1e2130] rounded text-xs text-white font-medium">AND</span>
+                            <span className="text-sm text-white">Vendor</span>
+                            <span className="text-sm text-[#9ca3af]">is</span>
+                            <span className="text-sm text-[#9ca3af]">&quot;Anthropic&quot;</span>
                           </div>
                         </div>
 
@@ -2092,49 +2081,54 @@ export function AIGovernanceModule() {
 
                           {/* Condition Rows */}
                           <div className="space-y-0">
-                            {policy.conditionsList?.map((condition, index) => (
-                              <div key={condition.id}>
-                                <div className="flex items-center gap-3 py-2">
-                                  {/* Row Number */}
-                                  <div className="w-6 h-6 rounded-full border border-[#1e2130] flex items-center justify-center text-xs text-[#9ca3af]">
-                                    {index + 1}
-                                  </div>
-                                  
-                                  {/* Drag Handle */}
-                                  <div className="text-[#4b5563]">
-                                    <GripVertical className="w-4 h-4" />
-                                  </div>
-
-                                  {/* Variable */}
-                                  <div className="w-40 px-3 py-2 bg-[#0f1117] text-white rounded-md text-sm border border-[#1e2130]">
-                                    {condition.field}
-                                  </div>
-
-                                  {/* Operand */}
-                                  <div className="w-32 px-3 py-2 bg-[#0f1117] text-[#9ca3af] rounded-md text-sm border border-[#1e2130]">
-                                    {condition.operand}
-                                  </div>
-
-                                  {/* Value */}
-                                  <div className="w-40 px-3 py-2 bg-[#0f1117] text-white rounded-md text-sm border border-[#1e2130]">
-                                    {condition.value}
-                                  </div>
+                            {/* Condition 1 */}
+                            <div>
+                              <div className="flex items-center gap-3 py-2">
+                                <div className="w-6 h-6 rounded-full border border-[#1e2130] flex items-center justify-center text-xs text-[#9ca3af]">
+                                  1
                                 </div>
-
-                                {/* AND/OR Connector */}
-                                {index < (policy.conditionsList?.length || 0) - 1 && (
-                                  <div className="flex items-center gap-3 py-2 pl-9">
-                                    <div className="w-px h-4 bg-[#1e2130] ml-3"></div>
-                                    <span className="px-2 py-1 border border-[#1e2130] rounded text-xs text-white font-medium">
-                                      {condition.operator}
-                                    </span>
-                                    <span className="text-xs text-[#9ca3af]">
-                                      {condition.operator === 'AND' ? 'and also match this' : 'or match this instead'}
-                                    </span>
-                                  </div>
-                                )}
+                                <div className="text-[#4b5563]">
+                                  <GripVertical className="w-4 h-4" />
+                                </div>
+                                <div className="w-40 px-3 py-2 bg-[#0f1117] text-white rounded-md text-sm border border-[#1e2130]">
+                                  Risk
+                                </div>
+                                <div className="w-32 px-3 py-2 bg-[#0f1117] text-[#9ca3af] rounded-md text-sm border border-[#1e2130]">
+                                  is equal to
+                                </div>
+                                <div className="w-40 px-3 py-2 bg-[#0f1117] text-white rounded-md text-sm border border-[#1e2130]">
+                                  Low Risk
+                                </div>
                               </div>
-                            ))}
+
+                              {/* AND Connector */}
+                              <div className="flex items-center gap-3 py-2 pl-9">
+                                <div className="w-px h-4 bg-[#1e2130] ml-3"></div>
+                                <span className="px-2 py-1 border border-[#1e2130] rounded text-xs text-white font-medium">
+                                  AND
+                                </span>
+                                <span className="text-xs text-[#9ca3af]">and also match this</span>
+                              </div>
+                            </div>
+
+                            {/* Condition 2 */}
+                            <div className="flex items-center gap-3 py-2">
+                              <div className="w-6 h-6 rounded-full border border-[#1e2130] flex items-center justify-center text-xs text-[#9ca3af]">
+                                2
+                              </div>
+                              <div className="text-[#4b5563]">
+                                <GripVertical className="w-4 h-4" />
+                              </div>
+                              <div className="w-40 px-3 py-2 bg-[#0f1117] text-white rounded-md text-sm border border-[#1e2130]">
+                                Vendor
+                              </div>
+                              <div className="w-32 px-3 py-2 bg-[#0f1117] text-[#9ca3af] rounded-md text-sm border border-[#1e2130]">
+                                Is equal to
+                              </div>
+                              <div className="w-40 px-3 py-2 bg-[#0f1117] text-white rounded-md text-sm border border-[#1e2130]">
+                                Anthropic
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -2145,18 +2139,20 @@ export function AIGovernanceModule() {
                       {/* Filter Row */}
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
-                          <select className="px-3 py-1.5 bg-[#0f1117] text-white rounded-md text-sm border border-[#1e2130] focus:outline-none focus:border-[#6CEEAD]">
-                            <option>OneTrust</option>
-                          </select>
+                          <div className="flex items-center gap-2 px-3 py-1.5 bg-[#13151f] rounded-md border border-[#1e2130]">
+                            <Filter className="w-4 h-4 text-[#9ca3af]" />
+                            <span className="text-sm text-white">OneTrust</span>
+                            <ChevronDown className="w-4 h-4 text-[#9ca3af]" />
+                          </div>
                         </div>
                         <div className="flex items-center gap-2">
                           <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9ca3af]" />
                             <input
                               type="text"
                               placeholder="Search..."
-                              className="pl-9 pr-3 py-1.5 bg-[#0f1117] text-white rounded-md text-sm border border-[#1e2130] focus:outline-none focus:border-[#6CEEAD] w-48"
+                              className="pl-3 pr-8 py-1.5 bg-[#13151f] text-white rounded-md text-sm border border-[#1e2130] focus:outline-none focus:border-[#6CEEAD] w-48"
                             />
+                            <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9ca3af]" />
                           </div>
                           <button className="p-1.5 text-[#9ca3af] hover:text-white transition-colors">
                             <Filter className="w-4 h-4" />
@@ -2168,35 +2164,59 @@ export function AIGovernanceModule() {
                       </div>
 
                       {/* Records Table */}
-                      <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+                      <div className="overflow-hidden">
                         <table className="w-full">
                           <thead>
                             <tr className="border-b border-[#1e2130]">
-                              <th className="text-left px-4 py-3 text-xs font-medium text-[#9ca3af]">Name</th>
-                              <th className="text-left px-4 py-3 text-xs font-medium text-[#9ca3af]">Policy approval</th>
-                              <th className="text-left px-4 py-3 text-xs font-medium text-[#9ca3af]">Inventory type</th>
-                              <th className="text-left px-4 py-3 text-xs font-medium text-[#9ca3af]">Description</th>
-                              <th className="text-left px-4 py-3 text-xs font-medium text-[#9ca3af]">Approved for use with</th>
-                              <th className="text-left px-4 py-3 text-xs font-medium text-[#9ca3af]">Internal or External</th>
+                              <th className="text-left px-4 py-3 text-xs font-medium text-white">Name</th>
+                              <th className="text-left px-4 py-3 text-xs font-medium text-white">Policy approval</th>
+                              <th className="text-left px-4 py-3 text-xs font-medium text-white">Inventory type</th>
+                              <th className="text-left px-4 py-3 text-xs font-medium text-white">Description</th>
+                              <th className="text-left px-4 py-3 text-xs font-medium text-white">Approved for use with</th>
+                              <th className="text-left px-4 py-3 text-xs font-medium text-white">Internal or External</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {policy.linkedRecords?.map((record, i) => (
-                              <tr key={i} className="border-b border-[#1e2130] last:border-b-0 hover:bg-[#1e2130]/50">
-                                <td className="px-4 py-3 text-sm text-white">{record.name}</td>
-                                <td className="px-4 py-3">
-                                  <span className={`text-[10px] px-2 py-0.5 rounded border ${
-                                    record.approval === 'Approved' 
-                                      ? 'border-[#00B935]/30 text-[#00B935]' 
-                                      : 'border-[#ef4444]/30 text-[#ef4444]'
-                                  }`}>{record.approval}</span>
-                                </td>
-                                <td className="px-4 py-3 text-sm text-[#9ca3af]">{record.type}</td>
-                                <td className="px-4 py-3 text-sm text-[#9ca3af]">{record.description}</td>
-                                <td className="px-4 py-3 text-sm text-[#9ca3af]">{record.approvedWith}</td>
-                                <td className="px-4 py-3 text-sm text-[#9ca3af]">{record.internal}</td>
-                              </tr>
-                            ))}
+                            <tr className="border-b border-[#1e2130]">
+                              <td className="px-4 py-3 text-sm text-white">Record name</td>
+                              <td className="px-4 py-3">
+                                <span className="text-[10px] px-2 py-0.5 rounded border border-[#1e2130] text-[#9ca3af]">Approved</span>
+                              </td>
+                              <td className="px-4 py-3 text-sm text-[#9ca3af]">Model</td>
+                              <td className="px-4 py-3 text-sm text-[#9ca3af]">Description</td>
+                              <td className="px-4 py-3 text-sm text-[#9ca3af]">DataBricks</td>
+                              <td className="px-4 py-3 text-sm text-[#9ca3af]">Internal</td>
+                            </tr>
+                            <tr className="border-b border-[#1e2130]">
+                              <td className="px-4 py-3 text-sm text-white">Record name</td>
+                              <td className="px-4 py-3">
+                                <span className="text-[10px] px-2 py-0.5 rounded border border-[#1e2130] text-[#9ca3af]">Approved</span>
+                              </td>
+                              <td className="px-4 py-3 text-sm text-[#9ca3af]">AI System</td>
+                              <td className="px-4 py-3 text-sm text-[#9ca3af]">Description</td>
+                              <td className="px-4 py-3 text-sm text-[#9ca3af]">Anthropic, OpenAI</td>
+                              <td className="px-4 py-3 text-sm text-[#9ca3af]">Internal</td>
+                            </tr>
+                            <tr className="border-b border-[#1e2130]">
+                              <td className="px-4 py-3 text-sm text-white">Record name</td>
+                              <td className="px-4 py-3">
+                                <span className="text-[10px] px-2 py-0.5 rounded border border-[#1e2130] text-[#9ca3af]">Approved</span>
+                              </td>
+                              <td className="px-4 py-3 text-sm text-[#9ca3af]">Model</td>
+                              <td className="px-4 py-3 text-sm text-[#9ca3af]">Description</td>
+                              <td className="px-4 py-3 text-sm text-[#9ca3af]">Anthropic, OpenAI</td>
+                              <td className="px-4 py-3 text-sm text-[#9ca3af]">External</td>
+                            </tr>
+                            <tr className="border-b border-[#1e2130] last:border-b-0">
+                              <td className="px-4 py-3 text-sm text-white">Record name</td>
+                              <td className="px-4 py-3">
+                                <span className="text-[10px] px-2 py-0.5 rounded border border-[#1e2130] text-[#9ca3af]">Denied</span>
+                              </td>
+                              <td className="px-4 py-3 text-sm text-[#9ca3af]">AI System</td>
+                              <td className="px-4 py-3 text-sm text-[#9ca3af]">Description</td>
+                              <td className="px-4 py-3 text-sm text-[#9ca3af]">Anthropic, OpenAI</td>
+                              <td className="px-4 py-3 text-sm text-[#9ca3af]">External</td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
