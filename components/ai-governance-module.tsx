@@ -1167,6 +1167,7 @@ export function AIGovernanceModule() {
                                   <option value="Risk level">Risk level</option>
                                   <option value="Data classification">Data classification</option>
                                   <option value="Deployment">Deployment</option>
+                                  <option value="Workflow stage">Workflow stage</option>
                                 </select>
                                 
                                 <span className="text-sm text-[#9ca3af]">Is</span>
