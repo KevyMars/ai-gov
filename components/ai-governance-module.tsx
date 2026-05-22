@@ -423,6 +423,9 @@ export function AIGovernanceModule() {
 
   const [acceptedInventoryFilter, setAcceptedInventoryFilter] = useState<'all' | 'Approved' | 'Needs review' | 'Denied'>('all')
   const [inventoryTypeFilter, setInventoryTypeFilter] = useState<'all' | 'Model' | 'AI System' | 'Agent' | 'Project'>('all')
+  const [policyOutcomeFilter, setPolicyOutcomeFilter] = useState<'all' | 'Auto-approved' | 'Requires review' | 'Denied'>('all')
+  const [policyTypeFilter, setPolicyTypeFilter] = useState<'all' | 'model-providers' | 'vendors'>('all')
+  const [policySearchQuery, setPolicySearchQuery] = useState('')
 
   // OneTrust Brand Color System - use Mint sparingly for key emphasis
   // Secondary palette: Sky (#0788F7), Yellow (#FFEF3C), Leaf (#00B935)
@@ -859,46 +862,215 @@ export function AIGovernanceModule() {
               )}
 
               {aiGovAcceptableUseItem === 'accepted-use-policies' && (
-                <div>
-                  <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-2">Accepted Use Policies</h2>
-                  <p className="text-[#9ca3af] mb-6">Define and manage acceptable use policies for AI systems across your organization.</p>
-                  
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
-                      <h3 className="text-sm font-medium text-white mb-2">Active Policies</h3>
-                      <p className="text-2xl font-semibold text-[#00B935]">8</p>
-                      <p className="text-xs text-[#9ca3af]">Currently enforced</p>
+                <div className="flex flex-1 overflow-hidden">
+                  {/* Left Sidebar - Policy Types Filter */}
+                  <div className="w-56 border-r border-[#1e2130] bg-[#0f1117] py-4 overflow-y-auto">
+                    {/* Search */}
+                    <div className="px-3 mb-4">
+                      <div className="relative">
+                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#4b5563]" />
+                        <input
+                          type="text"
+                          placeholder="Search"
+                          value={policySearchQuery}
+                          onChange={(e) => setPolicySearchQuery(e.target.value)}
+                          className="w-full pl-8 pr-3 py-1.5 bg-[#13151f] border border-[#1e2130] rounded-md text-xs text-white placeholder:text-[#4b5563] focus:outline-none focus:border-[#6CEEAD]"
+                        />
+                      </div>
                     </div>
-                    <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
-                      <h3 className="text-sm font-medium text-white mb-2">Violations (30d)</h3>
-                      <p className="text-2xl font-semibold text-[#ef4444]">12</p>
-                      <p className="text-xs text-[#9ca3af]">Requires attention</p>
-                    </div>
-                  </div>
 
-                  <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
-                    <div className="flex items-center justify-between px-4 py-3 bg-[#0f1117] border-b border-[#1e2130]">
-                      <p className="text-sm font-semibold text-white">Policy Library</p>
-                      <button className="flex items-center gap-2 px-3 py-1.5 bg-[#6CEEAD] text-[#0f1117] rounded-md text-xs font-medium hover:bg-[#5dd99c] transition-colors">
-                        <Plus className="w-3 h-3" />
-                        New Policy
+                    {/* All Policy Types */}
+                    <div className="px-3 mb-2">
+                      <button
+                        onClick={() => setPolicyTypeFilter('all')}
+                        className={cn(
+                          "w-full flex items-center justify-between px-2 py-1.5 rounded text-sm transition-colors",
+                          policyTypeFilter === 'all' ? "text-white font-semibold" : "text-[#9ca3af] hover:text-white"
+                        )}
+                      >
+                        <span>All Policy Types</span>
+                        <span className="text-xs text-[#9ca3af]">31</span>
                       </button>
                     </div>
-                    <div className="px-4">
+
+                    {/* Model Providers */}
+                    <div className="px-3 mb-1">
+                      <button
+                        onClick={() => setPolicyTypeFilter('model-providers')}
+                        className={cn(
+                          "w-full flex items-center justify-between px-2 py-1.5 rounded text-sm transition-colors",
+                          policyTypeFilter === 'model-providers' ? "text-white font-semibold" : "text-[#9ca3af] hover:text-white"
+                        )}
+                      >
+                        <span>Model Providers</span>
+                        <span className="text-xs text-[#9ca3af]">4</span>
+                      </button>
+                    </div>
+                    <ul className="px-3 mb-4 space-y-0.5">
+                      {['OpenAI', 'Anthropic', 'Google', 'Microsoft'].map((provider) => (
+                        <li key={provider}>
+                          <button className="w-full text-left px-4 py-1 text-xs text-[#9ca3af] hover:text-white transition-colors">
+                            {provider}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Vendors */}
+                    <div className="px-3 mb-1">
+                      <button
+                        onClick={() => setPolicyTypeFilter('vendors')}
+                        className={cn(
+                          "w-full flex items-center justify-between px-2 py-1.5 rounded text-sm transition-colors",
+                          policyTypeFilter === 'vendors' ? "text-white font-semibold" : "text-[#9ca3af] hover:text-white"
+                        )}
+                      >
+                        <span>Vendors</span>
+                        <span className="text-xs text-[#9ca3af]">14</span>
+                      </button>
+                    </div>
+                    <ul className="px-3 space-y-0.5">
+                      {['Internal', 'Aha!', 'Atlassian', 'Figma', 'Pendo', 'Google', 'Maze', 'Microsoft', 'Miro', 'Monday.com', 'Salesforce', 'Service Now', 'Vercel'].map((vendor) => (
+                        <li key={vendor}>
+                          <button className="w-full text-left px-4 py-1 text-xs text-[#9ca3af] hover:text-white transition-colors">
+                            {vendor}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Main Content */}
+                  <div className="flex-1 overflow-y-auto p-6">
+                    {/* Filter Tabs */}
+                    <div className="flex items-center gap-2 mb-6">
                       {[
-                        { name: 'Generative AI Usage Policy', scope: 'Organization', status: 'Active' },
-                        { name: 'Data Classification for AI', scope: 'Organization', status: 'Active' },
-                        { name: 'External AI Tool Approval', scope: 'Organization', status: 'Active' },
-                        { name: 'AI Output Review Requirements', scope: 'Dept-specific', status: 'Active' },
-                        { name: 'Customer Data AI Usage', scope: 'Organization', status: 'Draft' },
-                      ].map((policy, i) => (
-                        <div key={i} className="grid gap-4 py-3 border-b border-[#1e2130] last:border-0 hover:bg-[#1a1d2a] cursor-pointer transition-colors -mx-4 px-4 items-center"
-                          style={{ gridTemplateColumns: '1fr 120px 80px' }}>
-                          <p className="text-sm font-medium text-white">{policy.name}</p>
-                          <p className="text-xs text-[#9ca3af]">{policy.scope}</p>
-                          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full w-fit ${
-                            policy.status === 'Active' ? 'bg-[#00B935]/10 text-[#00B935]' : 'bg-[#FFEF3C]/10 text-[#FFEF3C]'
-                          }`}>{policy.status}</span>
+                        { id: 'all', label: 'All' },
+                        { id: 'Auto-approved', label: 'Auto-approved' },
+                        { id: 'Requires review', label: 'Requires review' },
+                        { id: 'Denied', label: 'Denied' },
+                      ].map((tab) => (
+                        <button
+                          key={tab.id}
+                          onClick={() => setPolicyOutcomeFilter(tab.id as typeof policyOutcomeFilter)}
+                          className={cn(
+                            "px-3 py-1.5 rounded-md text-xs font-medium transition-colors flex items-center gap-1.5",
+                            policyOutcomeFilter === tab.id
+                              ? "bg-[#1e2130] text-white"
+                              : "text-[#9ca3af] hover:text-white hover:bg-[#1e2130]/50"
+                          )}
+                        >
+                          {policyOutcomeFilter === tab.id && (
+                            <CheckCircle2 className="w-3 h-3" />
+                          )}
+                          {tab.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Policy Cards Grid */}
+                    <div className="grid grid-cols-2 gap-4">
+                      {[
+                        {
+                          title: 'Anthropic models on Databricks',
+                          activeRecords: 2,
+                          conditions: 2,
+                          description: 'Approves use of Anthropic models when deployed on Databricks platform for low-risk use cases',
+                          outcome: 'Auto-approved',
+                          useType: 'Model, AI System',
+                          model: 'Claude Sonnet 3.5',
+                          modelIcon: '✦',
+                          useCondition: "applies when model's risk level is low risk if all linked models' vendor..."
+                        },
+                        {
+                          title: 'External-facing AI systems require review',
+                          activeRecords: 2,
+                          conditions: 1,
+                          description: 'All AI systems marked as external-facing are not automatically approved and require manual review',
+                          outcome: 'Requires review',
+                          useType: 'AI System',
+                          useCondition: 'applies when AI system is marked external-facing'
+                        },
+                        {
+                          title: 'Google Cloud AI for internal use',
+                          activeRecords: 4,
+                          conditions: 3,
+                          description: 'Approves use of Google Cloud AI services for internal-facing applications',
+                          outcome: 'Auto-approved',
+                          useType: 'Model, AI Systems, Vendors',
+                          model: 'Gemini',
+                          modelIcon: '✦',
+                          vendor: 'All',
+                          useCondition: "applies when models' vendor name (via model-source) is Google and is marked Internal facing"
+                        },
+                        {
+                          title: 'Restricted data processing',
+                          activeRecords: 1,
+                          conditions: 2,
+                          description: 'AI systems processing restricted-sensitivity data are not automatically approved',
+                          outcome: 'Requires review',
+                          useType: 'AI Systems, Datasets',
+                          useCondition: "applies when models' vendor name (via model-source) is Google and is marked Internal facing"
+                        },
+                      ]
+                        .filter((policy) => policyOutcomeFilter === 'all' || policy.outcome === policyOutcomeFilter)
+                        .map((policy, i) => (
+                        <div key={i} className="bg-[#13151f] border border-[#1e2130] rounded-lg p-4 hover:border-[#2a2d3a] transition-colors cursor-pointer">
+                          <h3 className="text-base font-semibold text-white mb-3">{policy.title}</h3>
+                          
+                          {/* Badges */}
+                          <div className="flex items-center gap-2 mb-3">
+                            <span className="text-[10px] px-2 py-0.5 rounded border border-[#1e2130] text-[#9ca3af]">
+                              {policy.activeRecords} active records
+                            </span>
+                            <span className="text-[10px] px-2 py-0.5 rounded border border-[#1e2130] text-[#9ca3af]">
+                              {policy.conditions} condition{policy.conditions !== 1 ? 's' : ''}
+                            </span>
+                          </div>
+
+                          {/* Description */}
+                          <p className="text-xs text-[#9ca3af] mb-4">{policy.description}</p>
+
+                          {/* Details */}
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-[#9ca3af]">Outcome:</span>
+                              <span className={`text-[10px] font-medium px-2 py-0.5 rounded border ${
+                                policy.outcome === 'Auto-approved' 
+                                  ? 'border-[#00B935]/30 text-[#00B935]' 
+                                  : policy.outcome === 'Denied'
+                                  ? 'border-[#ef4444]/30 text-[#ef4444]'
+                                  : 'border-[#1e2130] text-[#9ca3af]'
+                              }`}>{policy.outcome === 'Auto-approved' ? 'Approved' : policy.outcome}</span>
+                            </div>
+                            
+                            <div className="flex items-start gap-2">
+                              <span className="text-xs text-[#9ca3af] shrink-0">Use type:</span>
+                              <span className="text-xs text-white">{policy.useType}</span>
+                            </div>
+
+                            {policy.model && (
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-[#9ca3af]">Model:</span>
+                                <span className="text-xs text-white flex items-center gap-1">
+                                  <span className="text-[#ef4444]">{policy.modelIcon}</span>
+                                  {policy.model}
+                                </span>
+                              </div>
+                            )}
+
+                            {policy.vendor && (
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-[#9ca3af]">Vendor:</span>
+                                <span className="text-xs text-white">{policy.vendor}</span>
+                              </div>
+                            )}
+
+                            <div className="flex items-start gap-2">
+                              <span className="text-xs text-[#9ca3af] shrink-0">Use Condition:</span>
+                              <span className="text-xs text-white">{policy.useCondition}</span>
+                            </div>
+                          </div>
                         </div>
                       ))}
                     </div>
