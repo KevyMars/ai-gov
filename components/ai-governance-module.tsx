@@ -443,8 +443,8 @@ export function AIGovernanceModule() {
   const [formApplyOutcome, setFormApplyOutcome] = useState<'auto-apply' | 'flag-admin'>('auto-apply')
   const [advancedRules, setAdvancedRules] = useState(false)
   const [conditionPairings, setConditionPairings] = useState([
-    { id: 1, field: 'Model Provider', value: 'Anthropic' },
-    { id: 2, field: 'Use type', value: 'Internal Use' },
+    { id: 1, field: 'Model Provider', value: 'Anthropic', operator: 'AND' as 'AND' | 'OR' },
+    { id: 2, field: 'Use type', value: 'Internal Use', operator: 'AND' as 'AND' | 'OR' },
   ])
   
   // Policies State
@@ -906,6 +906,10 @@ export function AIGovernanceModule() {
                         setFormDescription('')
                         setFormOutcome('Approved')
                         setFormApplyOutcome('auto-apply')
+                        setConditionPairings([
+                          { id: 1, field: 'Model Provider', value: 'Anthropic', operator: 'AND' as 'AND' | 'OR' },
+                          { id: 2, field: 'Use type', value: 'Internal Use', operator: 'AND' as 'AND' | 'OR' },
+                        ])
                         setAIGovAcceptableUseItem('accepted-use-policies')
                       }}
                       className="px-4 py-2 bg-[#ef4444] text-white rounded-md text-sm font-medium hover:bg-[#dc2626] transition-colors"
@@ -1268,7 +1272,9 @@ export function AIGovernanceModule() {
                                     <span className="text-sm text-[#9ca3af]">operand</span>
                                     <span className="text-sm text-[#9ca3af]">&quot;{pairing.value || '-'}&quot;</span>
                                     {index < conditionPairings.length - 1 && (
-                                      <span className="px-2 py-1 border border-[#1e2130] rounded text-xs text-white font-medium">AND</span>
+                                      <span className="px-2 py-1 border border-[#1e2130] rounded text-xs text-white font-medium">
+                                        {pairing.operator}
+                                      </span>
                                     )}
                                   </span>
                                 ))}
@@ -1414,12 +1420,23 @@ export function AIGovernanceModule() {
                                       )}
                                     </div>
 
-                                    {/* AND Connector */}
+                                    {/* AND/OR Connector */}
                                     {index < conditionPairings.length - 1 && (
                                       <div className="flex items-center gap-3 py-2 pl-9">
                                         <div className="w-px h-4 bg-[#1e2130] ml-3"></div>
-                                        <span className="px-2 py-1 border border-[#1e2130] rounded text-xs text-white font-medium">AND</span>
-                                        <span className="text-xs text-[#9ca3af]">and also match this</span>
+                                        <button
+                                          onClick={() => {
+                                            const updated = [...conditionPairings]
+                                            updated[index].operator = pairing.operator === 'AND' ? 'OR' : 'AND'
+                                            setConditionPairings(updated)
+                                          }}
+                                          className="px-2 py-1 border border-[#1e2130] rounded text-xs text-white font-medium hover:bg-[#1e2130] transition-colors cursor-pointer"
+                                        >
+                                          {pairing.operator}
+                                        </button>
+                                        <span className="text-xs text-[#9ca3af]">
+                                          {pairing.operator === 'AND' ? 'and also match this' : 'or match this instead'}
+                                        </span>
                                       </div>
                                     )}
                                   </div>
@@ -1432,7 +1449,7 @@ export function AIGovernanceModule() {
                                   onClick={() => {
                                     setConditionPairings([
                                       ...conditionPairings,
-                                      { id: Date.now(), field: '', value: '' }
+                                      { id: Date.now(), field: '', value: '', operator: 'AND' as 'AND' | 'OR' }
                                     ])
                                   }}
                                   className="flex items-center gap-1 px-3 py-1.5 bg-[#0f1117] text-white rounded-md text-sm border border-[#1e2130] hover:bg-[#1e2130] transition-colors"
@@ -1596,7 +1613,7 @@ export function AIGovernanceModule() {
                                     onClick={() => {
                                       setConditionPairings([
                                         ...conditionPairings,
-                                        { id: Date.now(), field: 'Model Provider', value: '' }
+                                        { id: Date.now(), field: 'Model Provider', value: '', operator: 'AND' as 'AND' | 'OR' }
                                       ])
                                     }}
                                     className="flex items-center gap-1 px-3 py-1.5 bg-[#0f1117] text-white rounded-md text-sm border border-[#1e2130] hover:bg-[#1e2130] transition-colors"
@@ -1647,8 +1664,8 @@ export function AIGovernanceModule() {
                             setFormOutcome('Approved')
                             setFormApplyOutcome('auto-apply')
                             setConditionPairings([
-                              { id: 1, field: 'Model Provider', value: 'Anthropic' },
-                              { id: 2, field: 'Use type', value: 'Internal Use' },
+                              { id: 1, field: 'Model Provider', value: 'Anthropic', operator: 'AND' as 'AND' | 'OR' },
+                              { id: 2, field: 'Use type', value: 'Internal Use', operator: 'AND' as 'AND' | 'OR' },
                             ])
                           }}
                           className="px-4 py-2 bg-[#6CEEAD] text-[#0f1117] rounded-md text-sm font-medium hover:bg-[#5dd99c] transition-colors"
