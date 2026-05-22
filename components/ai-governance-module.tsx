@@ -2191,7 +2191,7 @@ export function AIGovernanceModule() {
                       </div>
 
                       {/* Active Records Section */}
-                      <h3 className="text-base font-medium text-[#6CEEAD] mt-6 mb-4">Active records linked to rule</h3>
+                      <h3 className="text-base font-medium text-white mt-6 mb-4">Active records linked to rule</h3>
                       
                       {/* Filter Row */}
                       <div className="flex items-center justify-between mb-4">
