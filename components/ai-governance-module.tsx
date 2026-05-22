@@ -2221,37 +2221,37 @@ export function AIGovernanceModule() {
                       </div>
 
                       {/* Records Table */}
-                      <div className="overflow-hidden">
-                        <table className="w-full">
-                          <thead>
-                            <tr className="border-b border-[#1e2130]">
-                              <th className="text-left px-4 py-3 text-sm font-medium text-white">Name</th>
-                              <th className="text-left px-4 py-3 text-sm font-medium text-white">Policy approval</th>
-                              <th className="text-left px-4 py-3 text-sm font-medium text-white">Inventory type</th>
-                              <th className="text-left px-4 py-3 text-sm font-medium text-white">Description</th>
-                              <th className="text-left px-4 py-3 text-sm font-medium text-white">Approved for use with</th>
-                              <th className="text-left px-4 py-3 text-sm font-medium text-white">Internal or External</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {policy.linkedRecords?.map((record, i) => (
-                              <tr key={i} className="border-b border-[#1e2130] last:border-b-0">
-                                <td className="px-4 py-3 text-sm text-white">{record.name}</td>
-                                <td className="px-4 py-3">
-                                  <span className={`text-xs px-2 py-0.5 rounded-full border ${
-                                    record.approval === 'Approved' 
-                                      ? 'border-[#1e2130] text-[#9ca3af]' 
-                                      : 'border-[#1e2130] text-[#9ca3af]'
-                                  }`}>{record.approval}</span>
-                                </td>
-                                <td className="px-4 py-3 text-sm text-[#9ca3af]">{record.type}</td>
-                                <td className="px-4 py-3 text-sm text-[#9ca3af]">{record.description}</td>
-                                <td className="px-4 py-3 text-sm text-[#9ca3af]">{record.approvedWith}</td>
-                                <td className="px-4 py-3 text-sm text-[#9ca3af]">{record.internal}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                      <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+                        <div className="px-4">
+                          {/* Table Header */}
+                          <div className="grid gap-4 py-3 border-b border-[#1e2130]"
+                            style={{ gridTemplateColumns: '1fr 110px 100px 1fr 140px 110px' }}>
+                            <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Name</p>
+                            <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Policy Approval</p>
+                            <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Inventory type</p>
+                            <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Description</p>
+                            <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Approved for use with</p>
+                            <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Internal or External</p>
+                          </div>
+                          {/* Table Rows */}
+                          {policy.linkedRecords?.map((record, i) => (
+                            <div key={i} className="grid gap-4 py-3 border-b border-[#1e2130] last:border-0 hover:bg-[#1a1d2a] cursor-pointer transition-colors -mx-4 px-4 items-center"
+                              style={{ gridTemplateColumns: '1fr 110px 100px 1fr 140px 110px' }}>
+                              <p className="text-sm font-medium text-white">{record.name}</p>
+                              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded border w-fit ${
+                                record.approval === 'Approved' 
+                                  ? 'border-[#00B935]/30 text-[#00B935]' 
+                                  : record.approval === 'Denied'
+                                  ? 'border-[#ef4444]/30 text-[#ef4444]'
+                                  : 'border-[#f59e0b]/30 text-[#f59e0b]'
+                              }`}>{record.approval}</span>
+                              <p className="text-xs text-[#9ca3af]">{record.type}</p>
+                              <p className="text-xs text-[#9ca3af]">{record.description}</p>
+                              <p className="text-xs text-[#9ca3af]">{record.approvedWith}</p>
+                              <p className="text-xs text-[#9ca3af]">{record.internal}</p>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   )
