@@ -1011,7 +1011,7 @@ export function AIGovernanceModule() {
                             onClick={() => setShowAddAcceptedUseForm(false)}
                             className="px-4 py-2 bg-[#6CEEAD] text-[#0f1117] rounded-md text-sm font-medium hover:bg-[#5dd99c] transition-colors"
                           >
-                            Save
+                            Next
                           </button>
                           <button
                             onClick={() => {
