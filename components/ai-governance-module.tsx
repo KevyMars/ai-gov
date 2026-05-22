@@ -443,6 +443,98 @@ export function AIGovernanceModule() {
     { id: 1, field: 'Model Provider', value: 'Anthropic' },
     { id: 2, field: 'Use type', value: 'Internal Use' },
   ])
+  
+  // Policies State
+  const [policies, setPolicies] = useState([
+    {
+      title: 'Anthropic models on Databricks',
+      activeRecords: 2,
+      conditions: 2,
+      description: 'Approves use of Anthropic models when deployed on Databricks platform for low-risk use cases',
+      outcome: 'Auto-approved',
+      useType: 'Model, AI System',
+      model: 'Claude Sonnet 3.5',
+      modelIcon: '✦',
+      modelProvider: 'Anthropic',
+      useCondition: "applies when model's risk level is low risk if all linked models' vendor..."
+    },
+    {
+      title: 'External-facing AI systems require review',
+      activeRecords: 2,
+      conditions: 1,
+      description: 'All AI systems marked as external-facing are not automatically approved and require manual review',
+      outcome: 'Requires review',
+      useType: 'AI System',
+      useCondition: 'applies when AI system is marked external-facing'
+    },
+    {
+      title: 'Google Cloud AI for internal use',
+      activeRecords: 4,
+      conditions: 3,
+      description: 'Approves use of Google Cloud AI services for internal-facing applications',
+      outcome: 'Auto-approved',
+      useType: 'Model, AI Systems, Vendors',
+      model: 'Gemini',
+      modelIcon: '✦',
+      modelProvider: 'Google',
+      vendor: 'All',
+      useCondition: "applies when models' vendor name (via model-source) is Google and is marked Internal facing"
+    },
+    {
+      title: 'Restricted data processing',
+      activeRecords: 1,
+      conditions: 2,
+      description: 'AI systems processing restricted-sensitivity data are not automatically approved',
+      outcome: 'Requires review',
+      useType: 'AI Systems, Datasets',
+      useCondition: "applies when models' vendor name (via model-source) is Google and is marked Internal facing"
+    },
+    {
+      title: 'OpenAI GPT-4 Enterprise Policy',
+      activeRecords: 5,
+      conditions: 2,
+      description: 'Defines acceptable use for OpenAI GPT-4 models in enterprise applications',
+      outcome: 'Auto-approved',
+      useType: 'Model, AI System',
+      model: 'GPT-4',
+      modelIcon: '✦',
+      modelProvider: 'OpenAI',
+      useCondition: "applies when model provider is OpenAI and use case is approved"
+    },
+    {
+      title: 'Microsoft Azure AI Services',
+      activeRecords: 3,
+      conditions: 1,
+      description: 'Governs use of Microsoft Azure AI and Cognitive Services',
+      outcome: 'Auto-approved',
+      useType: 'Model, Vendors',
+      model: 'Azure OpenAI',
+      modelIcon: '✦',
+      modelProvider: 'Microsoft',
+      vendor: 'Microsoft',
+      useCondition: "applies when vendor is Microsoft and deployment is Azure"
+    },
+    {
+      title: 'Figma AI Features Policy',
+      activeRecords: 2,
+      conditions: 1,
+      description: 'Controls use of AI-powered features within Figma design tools',
+      outcome: 'Auto-approved',
+      useType: 'Vendors',
+      vendor: 'Figma',
+      useCondition: "applies when using Figma AI features for design work"
+    },
+    {
+      title: 'Salesforce Einstein Restrictions',
+      activeRecords: 1,
+      conditions: 3,
+      description: 'Restricts Salesforce Einstein AI for customer data processing',
+      outcome: 'Denied',
+      useType: 'Vendors, Datasets',
+      vendor: 'Salesforce',
+      useCondition: "applies when processing PII data through Einstein"
+    },
+  ])
 
   // OneTrust Brand Color System - use Mint sparingly for key emphasis
   // Secondary palette: Sky (#0788F7), Yellow (#FFEF3C), Leaf (#00B935)
@@ -1272,6 +1364,29 @@ export function AIGovernanceModule() {
                       <div className="flex items-center gap-3 mt-8">
                         <button
                           onClick={() => {
+                            // Create new policy from form data
+                            const outcomeMap: Record<string, string> = {
+                              'Approved': 'Auto-approved',
+                              'Needs additional review': 'Requires review',
+                              'Denied': 'Denied'
+                            }
+                            const modelProviderCondition = conditionPairings.find(p => p.field === 'Model Provider')
+                            const newPolicy = {
+                              title: formName || 'Untitled Policy',
+                              activeRecords: 0,
+                              conditions: conditionPairings.length,
+                              description: formDescription || 'No description provided',
+                              outcome: outcomeMap[formOutcome] || 'Auto-approved',
+                              useType: formRecordType || 'Model',
+                              model: modelProviderCondition ? modelProviderCondition.value : undefined,
+                              modelIcon: modelProviderCondition ? '✦' : undefined,
+                              modelProvider: modelProviderCondition?.value,
+                              vendor: conditionPairings.find(p => p.field === 'Deployment')?.value,
+                              useCondition: conditionPairings.map(p => `${p.field} is ${p.value}`).join(' and ')
+                            }
+                            setPolicies([newPolicy, ...policies])
+                            
+                            // Reset form
                             setShowAddAcceptedUseForm(false)
                             setAcceptedUseFormStep(1)
                             setFormRecordType('')
@@ -1279,6 +1394,10 @@ export function AIGovernanceModule() {
                             setFormDescription('')
                             setFormOutcome('Approved')
                             setFormApplyOutcome('auto-apply')
+                            setConditionPairings([
+                              { id: 1, field: 'Model Provider', value: 'Anthropic' },
+                              { id: 2, field: 'Use type', value: 'Internal Use' },
+                            ])
                           }}
                           className="px-4 py-2 bg-[#6CEEAD] text-[#0f1117] rounded-md text-sm font-medium hover:bg-[#5dd99c] transition-colors"
                         >
@@ -1401,96 +1520,7 @@ export function AIGovernanceModule() {
 
                     {/* Policy Cards Grid */}
                     <div className="grid grid-cols-2 gap-4">
-                      {[
-                        {
-                          title: 'Anthropic models on Databricks',
-                          activeRecords: 2,
-                          conditions: 2,
-                          description: 'Approves use of Anthropic models when deployed on Databricks platform for low-risk use cases',
-                          outcome: 'Auto-approved',
-                          useType: 'Model, AI System',
-                          model: 'Claude Sonnet 3.5',
-                          modelIcon: '✦',
-                          modelProvider: 'Anthropic',
-                          useCondition: "applies when model's risk level is low risk if all linked models' vendor..."
-                        },
-                        {
-                          title: 'External-facing AI systems require review',
-                          activeRecords: 2,
-                          conditions: 1,
-                          description: 'All AI systems marked as external-facing are not automatically approved and require manual review',
-                          outcome: 'Requires review',
-                          useType: 'AI System',
-                          useCondition: 'applies when AI system is marked external-facing'
-                        },
-                        {
-                          title: 'Google Cloud AI for internal use',
-                          activeRecords: 4,
-                          conditions: 3,
-                          description: 'Approves use of Google Cloud AI services for internal-facing applications',
-                          outcome: 'Auto-approved',
-                          useType: 'Model, AI Systems, Vendors',
-                          model: 'Gemini',
-                          modelIcon: '✦',
-                          modelProvider: 'Google',
-                          vendor: 'All',
-                          useCondition: "applies when models' vendor name (via model-source) is Google and is marked Internal facing"
-                        },
-                        {
-                          title: 'Restricted data processing',
-                          activeRecords: 1,
-                          conditions: 2,
-                          description: 'AI systems processing restricted-sensitivity data are not automatically approved',
-                          outcome: 'Requires review',
-                          useType: 'AI Systems, Datasets',
-                          useCondition: "applies when models' vendor name (via model-source) is Google and is marked Internal facing"
-                        },
-                        {
-                          title: 'OpenAI GPT-4 Enterprise Policy',
-                          activeRecords: 5,
-                          conditions: 2,
-                          description: 'Defines acceptable use for OpenAI GPT-4 models in enterprise applications',
-                          outcome: 'Auto-approved',
-                          useType: 'Model, AI System',
-                          model: 'GPT-4',
-                          modelIcon: '✦',
-                          modelProvider: 'OpenAI',
-                          useCondition: "applies when model provider is OpenAI and use case is approved"
-                        },
-                        {
-                          title: 'Microsoft Azure AI Services',
-                          activeRecords: 3,
-                          conditions: 1,
-                          description: 'Governs use of Microsoft Azure AI and Cognitive Services',
-                          outcome: 'Auto-approved',
-                          useType: 'Model, Vendors',
-                          model: 'Azure OpenAI',
-                          modelIcon: '✦',
-                          modelProvider: 'Microsoft',
-                          vendor: 'Microsoft',
-                          useCondition: "applies when vendor is Microsoft and deployment is Azure"
-                        },
-                        {
-                          title: 'Figma AI Features Policy',
-                          activeRecords: 2,
-                          conditions: 1,
-                          description: 'Controls use of AI-powered features within Figma design tools',
-                          outcome: 'Auto-approved',
-                          useType: 'Vendors',
-                          vendor: 'Figma',
-                          useCondition: "applies when using Figma AI features for design work"
-                        },
-                        {
-                          title: 'Salesforce Einstein Restrictions',
-                          activeRecords: 1,
-                          conditions: 3,
-                          description: 'Restricts Salesforce Einstein AI for customer data processing',
-                          outcome: 'Denied',
-                          useType: 'Vendors, Datasets',
-                          vendor: 'Salesforce',
-                          useCondition: "applies when processing PII data through Einstein"
-                        },
-                      ]
+                      {policies
                         .filter((policy) => policyOutcomeFilter === 'all' || policy.outcome === policyOutcomeFilter)
                         .filter((policy) => {
                           if (policyTypeFilter === 'all') return true
