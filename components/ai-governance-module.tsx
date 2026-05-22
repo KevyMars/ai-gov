@@ -1,6 +1,6 @@
 "use client"
 
-import { useNavigation, AIGovTab, AIGovInventoryItem } from '@/lib/navigation-context'
+import { useNavigation, AIGovTab, AIGovInventoryItem, AIGovAcceptableUseItem } from '@/lib/navigation-context'
 import { 
   aiSystems, 
   aiModels, 
@@ -29,7 +29,9 @@ import {
   Shield,
   Activity,
   BarChart3,
-  Package
+  Package,
+  Layers,
+  ScrollText
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -402,8 +404,21 @@ const inventoryItems: { id: AIGovInventoryItem; label: string; icon: React.React
   { id: 'vendors', label: 'Model Providers', icon: <Building2 className="w-4 h-4" /> },
 ]
 
+const acceptableUseItems: { id: AIGovAcceptableUseItem; label: string; icon: React.ReactNode }[] = [
+  { id: 'accepted-inventory', label: 'Accepted Inventory', icon: <Layers className="w-4 h-4" /> },
+  { id: 'accepted-use-policies', label: 'Accepted Use Policies', icon: <ScrollText className="w-4 h-4" /> },
+]
+
 export function AIGovernanceModule() {
-  const { aiGovTab, setAIGovTab, aiGovInventoryItem, setAIGovInventoryItem, setSelectedRecordId } = useNavigation()
+  const { 
+    aiGovTab, 
+    setAIGovTab, 
+    aiGovInventoryItem, 
+    setAIGovInventoryItem,
+    aiGovAcceptableUseItem,
+    setAIGovAcceptableUseItem,
+    setSelectedRecordId 
+  } = useNavigation()
 
   // OneTrust Brand Color System - use Mint sparingly for key emphasis
   // Secondary palette: Sky (#0788F7), Yellow (#FFEF3C), Leaf (#00B935)
@@ -718,22 +733,129 @@ export function AIGovernanceModule() {
         )}
 
         {aiGovTab === 'acceptable-use' && (
-          <div className="flex-1 p-6">
-            <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-4">Acceptable Use</h2>
-            <p className="text-[#9ca3af] mb-6">Define and manage acceptable use policies for AI systems across your organization.</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
-                <h3 className="text-sm font-medium text-white mb-2">Active Policies</h3>
-                <p className="text-2xl font-semibold text-[#00B935]">8</p>
-                <p className="text-xs text-[#9ca3af]">Currently enforced</p>
-              </div>
-              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
-                <h3 className="text-sm font-medium text-white mb-2">Violations (30d)</h3>
-                <p className="text-2xl font-semibold text-[#ef4444]">12</p>
-                <p className="text-xs text-[#9ca3af]">Requires attention</p>
-              </div>
+          <>
+            {/* Secondary Rail */}
+            <div className="w-48 border-r border-[#1e2130] bg-[#0f1117] py-4">
+              <ul className="space-y-1 px-2">
+                {acceptableUseItems.map((item) => (
+                  <li key={item.id}>
+                    <button
+                      onClick={() => setAIGovAcceptableUseItem(item.id)}
+                      className={cn(
+                        "w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors",
+                        aiGovAcceptableUseItem === item.id
+                          ? "bg-[#6CEEAD]/10 text-[#6CEEAD]"
+                          : "text-[#9ca3af] hover:bg-[#1e2130] hover:text-white"
+                      )}
+                    >
+                      {item.icon}
+                      <span>{item.label}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
+
+            {/* Main Content */}
+            <div className="flex-1 overflow-auto p-6">
+              {aiGovAcceptableUseItem === 'accepted-inventory' && (
+                <div>
+                  <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-2">Accepted Inventory</h2>
+                  <p className="text-[#9ca3af] mb-6">AI systems and tools that have been approved for use within your organization.</p>
+                  
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
+                      <h3 className="text-sm font-medium text-white mb-2">Approved Systems</h3>
+                      <p className="text-2xl font-semibold text-[#00B935]">34</p>
+                      <p className="text-xs text-[#9ca3af]">Ready to use</p>
+                    </div>
+                    <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
+                      <h3 className="text-sm font-medium text-white mb-2">Pending Approval</h3>
+                      <p className="text-2xl font-semibold text-[#FFEF3C]">7</p>
+                      <p className="text-xs text-[#9ca3af]">Under review</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+                    <div className="flex items-center justify-between px-4 py-3 bg-[#0f1117] border-b border-[#1e2130]">
+                      <p className="text-sm font-semibold text-white">Approved AI Tools</p>
+                      <button className="flex items-center gap-2 px-3 py-1.5 bg-[#6CEEAD] text-[#0f1117] rounded-md text-xs font-medium hover:bg-[#5dd99c] transition-colors">
+                        <Plus className="w-3 h-3" />
+                        Add Tool
+                      </button>
+                    </div>
+                    <div className="px-4">
+                      {[
+                        { name: 'ChatGPT Enterprise', category: 'LLM', status: 'Approved', dept: 'All' },
+                        { name: 'GitHub Copilot', category: 'Code Assistant', status: 'Approved', dept: 'Engineering' },
+                        { name: 'Jasper AI', category: 'Content', status: 'Approved', dept: 'Marketing' },
+                        { name: 'Grammarly Business', category: 'Writing', status: 'Approved', dept: 'All' },
+                        { name: 'Midjourney', category: 'Image Gen', status: 'Restricted', dept: 'Design' },
+                      ].map((tool, i) => (
+                        <div key={i} className="grid gap-4 py-3 border-b border-[#1e2130] last:border-0 hover:bg-[#1a1d2a] cursor-pointer transition-colors -mx-4 px-4 items-center"
+                          style={{ gridTemplateColumns: '1fr 100px 90px 80px' }}>
+                          <p className="text-sm font-medium text-white">{tool.name}</p>
+                          <p className="text-xs text-[#9ca3af]">{tool.category}</p>
+                          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full w-fit ${
+                            tool.status === 'Approved' ? 'bg-[#00B935]/10 text-[#00B935]' : 'bg-[#f59e0b]/10 text-[#f59e0b]'
+                          }`}>{tool.status}</span>
+                          <p className="text-xs text-[#9ca3af]">{tool.dept}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {aiGovAcceptableUseItem === 'accepted-use-policies' && (
+                <div>
+                  <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-2">Accepted Use Policies</h2>
+                  <p className="text-[#9ca3af] mb-6">Define and manage acceptable use policies for AI systems across your organization.</p>
+                  
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
+                      <h3 className="text-sm font-medium text-white mb-2">Active Policies</h3>
+                      <p className="text-2xl font-semibold text-[#00B935]">8</p>
+                      <p className="text-xs text-[#9ca3af]">Currently enforced</p>
+                    </div>
+                    <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
+                      <h3 className="text-sm font-medium text-white mb-2">Violations (30d)</h3>
+                      <p className="text-2xl font-semibold text-[#ef4444]">12</p>
+                      <p className="text-xs text-[#9ca3af]">Requires attention</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+                    <div className="flex items-center justify-between px-4 py-3 bg-[#0f1117] border-b border-[#1e2130]">
+                      <p className="text-sm font-semibold text-white">Policy Library</p>
+                      <button className="flex items-center gap-2 px-3 py-1.5 bg-[#6CEEAD] text-[#0f1117] rounded-md text-xs font-medium hover:bg-[#5dd99c] transition-colors">
+                        <Plus className="w-3 h-3" />
+                        New Policy
+                      </button>
+                    </div>
+                    <div className="px-4">
+                      {[
+                        { name: 'Generative AI Usage Policy', scope: 'Organization', status: 'Active' },
+                        { name: 'Data Classification for AI', scope: 'Organization', status: 'Active' },
+                        { name: 'External AI Tool Approval', scope: 'Organization', status: 'Active' },
+                        { name: 'AI Output Review Requirements', scope: 'Dept-specific', status: 'Active' },
+                        { name: 'Customer Data AI Usage', scope: 'Organization', status: 'Draft' },
+                      ].map((policy, i) => (
+                        <div key={i} className="grid gap-4 py-3 border-b border-[#1e2130] last:border-0 hover:bg-[#1a1d2a] cursor-pointer transition-colors -mx-4 px-4 items-center"
+                          style={{ gridTemplateColumns: '1fr 120px 80px' }}>
+                          <p className="text-sm font-medium text-white">{policy.name}</p>
+                          <p className="text-xs text-[#9ca3af]">{policy.scope}</p>
+                          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full w-fit ${
+                            policy.status === 'Active' ? 'bg-[#00B935]/10 text-[#00B935]' : 'bg-[#FFEF3C]/10 text-[#FFEF3C]'
+                          }`}>{policy.status}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </>
         )}
 
         {aiGovTab === 'governance-packs' && (

@@ -23,6 +23,7 @@ export type NavigationView =
 
 export type AIGovTab = 'overview' | 'acceptable-use' | 'governance-packs' | 'inventory' | 'objects' | 'ai-policies'
 export type AIGovInventoryItem = 'projects' | 'ai-systems' | 'models' | 'ai-agents' | 'datasets' | 'vendors'
+export type AIGovAcceptableUseItem = 'accepted-inventory' | 'accepted-use-policies'
 
 export type PrivacyTab = 'overview' | 'records' | 'objects' | 'policies'
 export type PrivacyRecordItem = 'pia-dpia' | 'incidents' | 'privacy-rights' | 'data-mapping' | 'privacy-notices' | 'benchmarking' | 'maturity-planning'
@@ -34,6 +35,8 @@ export interface NavigationContextType {
   setAIGovTab: (tab: AIGovTab) => void
   aiGovInventoryItem: AIGovInventoryItem
   setAIGovInventoryItem: (item: AIGovInventoryItem) => void
+  aiGovAcceptableUseItem: AIGovAcceptableUseItem
+  setAIGovAcceptableUseItem: (item: AIGovAcceptableUseItem) => void
   privacyTab: PrivacyTab
   setPrivacyTab: (tab: PrivacyTab) => void
   privacyRecordItem: PrivacyRecordItem
@@ -50,6 +53,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const [currentView, setCurrentView] = useState<NavigationView>('home')
   const [aiGovTab, setAIGovTab] = useState<AIGovTab>('overview')
   const [aiGovInventoryItem, setAIGovInventoryItem] = useState<AIGovInventoryItem>('ai-systems')
+  const [aiGovAcceptableUseItem, setAIGovAcceptableUseItem] = useState<AIGovAcceptableUseItem>('accepted-inventory')
   const [privacyTab, setPrivacyTab] = useState<PrivacyTab>('overview')
   const [privacyRecordItem, setPrivacyRecordItem] = useState<PrivacyRecordItem>('pia-dpia')
   const [selectedRecordId, setSelectedRecordId] = useState<string | null>(null)
@@ -63,6 +67,8 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
       setAIGovTab,
       aiGovInventoryItem,
       setAIGovInventoryItem,
+      aiGovAcceptableUseItem,
+      setAIGovAcceptableUseItem,
       privacyTab,
       setPrivacyTab,
       privacyRecordItem,

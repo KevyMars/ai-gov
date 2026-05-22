@@ -31,6 +31,7 @@ export function TopBar({ onSubscriptionClick }: TopBarProps) {
     currentView,
     aiGovTab,
     aiGovInventoryItem,
+    aiGovAcceptableUseItem,
     privacyTab,
     privacyRecordItem,
     selectedRecordId,
@@ -76,6 +77,15 @@ export function TopBar({ onSubscriptionClick }: TopBarProps) {
       }
       breadcrumbs.push({ 
         label: inventoryLabels[aiGovInventoryItem],
+        onClick: () => setSelectedRecordId(null)
+      })
+    } else if (aiGovTab === 'acceptable-use') {
+      const acceptableUseLabels: Record<string, string> = {
+        'accepted-inventory': 'Accepted Inventory',
+        'accepted-use-policies': 'Accepted Use Policies'
+      }
+      breadcrumbs.push({ 
+        label: acceptableUseLabels[aiGovAcceptableUseItem],
         onClick: () => setSelectedRecordId(null)
       })
     } else {
