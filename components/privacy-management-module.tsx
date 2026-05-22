@@ -299,7 +299,7 @@ function IncidentManagementDashboard() {
       {/* Header */}
       <div>
         <h2 className="text-lg font-medium text-white">Active Incidents</h2>
-        <p className="text-xs text-[#9ca3af] mt-0.5">Incident Management �� Breach Response &amp; Regulatory Notification</p>
+        <p className="text-xs text-[#9ca3af] mt-0.5">Incident Management ���� Breach Response &amp; Regulatory Notification</p>
       </div>
 
       {/* Stat cards */}
@@ -2032,47 +2032,8 @@ export function PrivacyManagementModule() {
   return (
     <div className="h-full flex flex-col">
 
-      {/* ── Body: persistent secondary nav + main content ── */}
+      {/* ── Body: main content ── */}
       <div className="flex-1 flex overflow-hidden">
-
-        {/* Persistent secondary nav */}
-        <div className={cn(
-          "border-r border-[#1e2130] bg-[#0f1117] shrink-0 flex flex-col transition-all duration-200 overflow-hidden",
-          navCollapsed ? "w-12" : "w-52"
-        )}>
-          {/* Collapse toggle */}
-          <div className={cn("flex py-3 px-2 shrink-0", navCollapsed ? "justify-center" : "justify-end")}>
-            <button onClick={() => setNavCollapsed(!navCollapsed)}
-              title={navCollapsed ? "Expand navigation" : "Collapse navigation"}
-              className="p-1.5 rounded-md text-[#4b5563] hover:text-white hover:bg-[#1e2130] transition-colors">
-              {navCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-            </button>
-          </div>
-
-          {/* Nav items — clicking stays on current tab */}
-          <ul className="space-y-1 px-2 flex-1">
-            {recordItems.map((item) => (
-              <li key={item.id}>
-                <button
-                  onClick={() => setPrivacyRecordItem(item.id)}
-                  title={navCollapsed ? item.label : undefined}
-                  className={cn(
-                    "w-full flex items-center gap-2 px-2 py-2 rounded-md text-sm transition-colors",
-                    navCollapsed ? "justify-center" : "",
-                    privacyRecordItem === item.id
-                      ? "bg-[#6CEEAD]/10 text-[#6CEEAD]"
-                      : "text-[#9ca3af] hover:bg-[#1e2130] hover:text-white"
-                  )}>
-                  {item.icon}
-                  {!navCollapsed && <span className="truncate flex-1">{item.label}</span>}
-                  {!navCollapsed && item.alertColor && (
-                    <AlertTriangle className="w-3.5 h-3.5 shrink-0" style={{ color: item.alertColor }} />
-                  )}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
 
         {/* Main content — switches by tab */}
         <div className="flex-1 overflow-auto flex flex-col">
