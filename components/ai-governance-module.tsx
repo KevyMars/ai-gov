@@ -1997,7 +1997,8 @@ export function AIGovernanceModule() {
                         <div className="p-6 pb-4">
                           <div className="flex items-start justify-between">
                             <div>
-                              <h4 className="text-lg font-semibold text-white">Acceptable Use Policy Details</h4>
+                              <h4 className="text-lg font-semibold text-white">{policy.title}</h4>
+                              <p className="text-sm text-[#9ca3af] mt-1">{policy.description}</p>
                             </div>
                             <div className="flex items-center gap-3">
                               <span className="text-xs px-3 py-1 rounded-full border border-[#1e2130] text-[#9ca3af]">
