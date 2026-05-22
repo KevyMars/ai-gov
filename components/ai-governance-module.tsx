@@ -980,6 +980,7 @@ export function AIGovernanceModule() {
                           useType: 'Model, AI System',
                           model: 'Claude Sonnet 3.5',
                           modelIcon: '✦',
+                          modelProvider: 'Anthropic',
                           useCondition: "applies when model's risk level is low risk if all linked models' vendor..."
                         },
                         {
@@ -1000,6 +1001,7 @@ export function AIGovernanceModule() {
                           useType: 'Model, AI Systems, Vendors',
                           model: 'Gemini',
                           modelIcon: '✦',
+                          modelProvider: 'Google',
                           vendor: 'All',
                           useCondition: "applies when models' vendor name (via model-source) is Google and is marked Internal facing"
                         },
@@ -1012,8 +1014,71 @@ export function AIGovernanceModule() {
                           useType: 'AI Systems, Datasets',
                           useCondition: "applies when models' vendor name (via model-source) is Google and is marked Internal facing"
                         },
+                        {
+                          title: 'OpenAI GPT-4 Enterprise Policy',
+                          activeRecords: 5,
+                          conditions: 2,
+                          description: 'Defines acceptable use for OpenAI GPT-4 models in enterprise applications',
+                          outcome: 'Auto-approved',
+                          useType: 'Model, AI System',
+                          model: 'GPT-4',
+                          modelIcon: '✦',
+                          modelProvider: 'OpenAI',
+                          useCondition: "applies when model provider is OpenAI and use case is approved"
+                        },
+                        {
+                          title: 'Microsoft Azure AI Services',
+                          activeRecords: 3,
+                          conditions: 1,
+                          description: 'Governs use of Microsoft Azure AI and Cognitive Services',
+                          outcome: 'Auto-approved',
+                          useType: 'Model, Vendors',
+                          model: 'Azure OpenAI',
+                          modelIcon: '✦',
+                          modelProvider: 'Microsoft',
+                          vendor: 'Microsoft',
+                          useCondition: "applies when vendor is Microsoft and deployment is Azure"
+                        },
+                        {
+                          title: 'Figma AI Features Policy',
+                          activeRecords: 2,
+                          conditions: 1,
+                          description: 'Controls use of AI-powered features within Figma design tools',
+                          outcome: 'Auto-approved',
+                          useType: 'Vendors',
+                          vendor: 'Figma',
+                          useCondition: "applies when using Figma AI features for design work"
+                        },
+                        {
+                          title: 'Salesforce Einstein Restrictions',
+                          activeRecords: 1,
+                          conditions: 3,
+                          description: 'Restricts Salesforce Einstein AI for customer data processing',
+                          outcome: 'Denied',
+                          useType: 'Vendors, Datasets',
+                          vendor: 'Salesforce',
+                          useCondition: "applies when processing PII data through Einstein"
+                        },
                       ]
                         .filter((policy) => policyOutcomeFilter === 'all' || policy.outcome === policyOutcomeFilter)
+                        .filter((policy) => {
+                          if (policyTypeFilter === 'all') return true
+                          if (policyTypeFilter === 'model-providers') return !!policy.modelProvider
+                          if (policyTypeFilter === 'vendors') return !!policy.vendor
+                          return true
+                        })
+                        .filter((policy) => {
+                          if (!policySearchQuery.trim()) return true
+                          const query = policySearchQuery.toLowerCase()
+                          return (
+                            policy.title.toLowerCase().includes(query) ||
+                            policy.description.toLowerCase().includes(query) ||
+                            policy.useType.toLowerCase().includes(query) ||
+                            (policy.model?.toLowerCase().includes(query) ?? false) ||
+                            (policy.vendor?.toLowerCase().includes(query) ?? false) ||
+                            (policy.modelProvider?.toLowerCase().includes(query) ?? false)
+                          )
+                        })
                         .map((policy, i) => (
                         <div key={i} className="bg-[#13151f] border border-[#1e2130] rounded-lg p-4 hover:border-[#2a2d3a] transition-colors cursor-pointer">
                           <h3 className="text-base font-semibold text-white mb-3">{policy.title}</h3>
