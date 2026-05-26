@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useNavigation, AIGovTab, AIGovInventoryItem, AIGovAcceptableUseItem } from '@/lib/navigation-context'
+import { GovernancePacksView } from './governance-packs'
 import { 
   aiSystems, 
   aiModels, 
@@ -2272,27 +2273,7 @@ export function AIGovernanceModule() {
         )}
 
         {aiGovTab === 'governance-packs' && (
-          <div className="flex-1 p-6">
-            <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-4">Governance Packs</h2>
-            <p className="text-[#9ca3af] mb-6">Pre-built governance configurations for common AI use cases and regulatory requirements.</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg hover:border-[#2a2d3a] transition-colors cursor-pointer">
-                <h3 className="text-sm font-medium text-white mb-1">EU AI Act Compliance</h3>
-                <p className="text-xs text-[#9ca3af] mb-3">Full compliance pack for EU AI Act requirements</p>
-                <span className="text-xs px-2 py-1 rounded bg-[#00B935]/10 text-[#00B935]">Installed</span>
-              </div>
-              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg hover:border-[#2a2d3a] transition-colors cursor-pointer">
-                <h3 className="text-sm font-medium text-white mb-1">NIST AI RMF</h3>
-                <p className="text-xs text-[#9ca3af] mb-3">NIST AI Risk Management Framework controls</p>
-                <span className="text-xs px-2 py-1 rounded bg-[#00B935]/10 text-[#00B935]">Installed</span>
-              </div>
-              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg hover:border-[#2a2d3a] transition-colors cursor-pointer">
-                <h3 className="text-sm font-medium text-white mb-1">ISO 42001</h3>
-                <p className="text-xs text-[#9ca3af] mb-3">AI Management System standard controls</p>
-                <span className="text-xs px-2 py-1 rounded bg-[#0788F7]/10 text-[#0788F7]">Available</span>
-              </div>
-            </div>
-          </div>
+          <GovernancePacksView />
         )}
 
         {aiGovTab === 'inventory' && (
