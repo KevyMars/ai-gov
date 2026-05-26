@@ -1799,7 +1799,8 @@ export function AIGovernanceModule() {
                               modelIcon: modelProviderCondition ? '✦' : undefined,
                               modelProvider: modelProviderCondition?.value,
                               vendor: conditionPairings.find(p => p.field === 'Deployment')?.value,
-                              useCondition: conditionPairings.map(p => `${p.field} is ${p.value}`).join(' and ')
+                              useCondition: conditionPairings.map(p => `${p.field} is ${p.value}`).join(' and '),
+                              pairings: conditionPairings.map(p => ({ field: p.field, value: p.value, operator: p.operator }))
                             }
                             setPolicies([newPolicy, ...policies])
                             
@@ -2052,22 +2053,26 @@ export function AIGovernanceModule() {
                                   {policy.outcome === 'Auto-approved' ? 'APPROVE' : policy.outcome === 'Denied' ? 'DENY' : 'REVIEW'}
                                 </span>
                                 <span className="text-xs text-[#4b5563]">IF</span>
-                                {policy.conditionsList?.map((condition, index) => (
-                                  <span key={condition.id} className="flex items-center gap-1.5">
-                                    <span className="text-xs text-white">{condition.field}</span>
-                                    <span className="text-xs text-[#4b5563]">=</span>
-                                    <span className="text-xs text-[#6CEEAD]">&quot;{condition.value}&quot;</span>
-                                    {index < (policy.conditionsList?.length || 0) - 1 && (
-                                      <span className={`px-1.5 py-0.5 rounded text-[9px] font-semibold ${
-                                        condition.operator === 'AND' 
-                                          ? 'text-[#6CEEAD] bg-[#6CEEAD]/10' 
-                                          : 'text-[#f59e0b] bg-[#f59e0b]/10'
-                                      }`}>
-                                        {condition.operator}
-                                      </span>
-                                    )}
-                                  </span>
-                                ))}
+                                {/* Display conditionsList (from advanced rules) or pairings (from simple builder) */}
+                                {(policy.conditionsList || policy.pairings)?.map((condition: { id?: number; field: string; value: string; operator?: string }, index: number) => {
+                                  const conditions = policy.conditionsList || policy.pairings || []
+                                  return (
+                                    <span key={condition.id || index} className="flex items-center gap-1.5">
+                                      <span className="text-xs text-white">{condition.field}</span>
+                                      <span className="text-xs text-[#4b5563]">=</span>
+                                      <span className="text-xs text-[#6CEEAD]">&quot;{condition.value}&quot;</span>
+                                      {index < conditions.length - 1 && condition.operator && (
+                                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-semibold ${
+                                          condition.operator === 'AND' 
+                                            ? 'text-[#6CEEAD] bg-[#6CEEAD]/10' 
+                                            : 'text-[#f59e0b] bg-[#f59e0b]/10'
+                                        }`}>
+                                          {condition.operator}
+                                        </span>
+                                      )}
+                                    </span>
+                                  )
+                                })}
                               </div>
                             </div>
                             <div className="flex items-center gap-3">
