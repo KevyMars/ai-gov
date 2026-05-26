@@ -1925,6 +1925,7 @@ export function PrivacyManagementModule() {
 
             {/* Main Content Area */}
             <div className="flex-1 overflow-auto p-6">
+              {/* Pending Inventory */}
               {dataMappingTertiary === 'pending' && (
                 <>
                   <h2 className="text-lg font-medium text-white mb-4">Pending Inventory</h2>
@@ -1975,10 +1976,389 @@ export function PrivacyManagementModule() {
                   </div>
                 </>
               )}
-              {dataMappingTertiary !== 'pending' && (
-                <div className="text-center py-16 text-[#9ca3af]">
-                  <p className="text-sm">{dataMappingTertiaryTabs.find(t => t.id === dataMappingTertiary)?.label} view coming soon</p>
-                </div>
+
+              {/* Processing Activities */}
+              {dataMappingTertiary === 'processing' && (
+                <>
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h2 className="text-lg font-medium text-white">Processing activities</h2>
+                      <p className="text-sm text-[#9ca3af]">Processing activities are records of business activities that involve the collection, storage, processing, and potential disclosure, sharing, or selling of personal information.</p>
+                    </div>
+                    <button className="flex items-center gap-2 px-4 py-2 bg-[#6CEEAD] text-[#0f1117] rounded-md text-sm font-medium hover:bg-[#5dd99c] transition-colors whitespace-nowrap">
+                      <Plus className="w-4 h-4" />
+                      Add processing activity
+                    </button>
+                  </div>
+                  <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+                    <div className="px-4">
+                      <div className="grid gap-4 py-3 border-b border-[#1e2130]"
+                        style={{ gridTemplateColumns: '70px 1fr 180px 180px 100px' }}>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">ID</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Name</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Managing Organization</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Business Process Owner</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Status</p>
+                      </div>
+                      {[
+                        { id: '15692', name: 'N-Bulk PA-101 - location', org: 'LKGBTenant3LID40', owner: 'dm26661-test1@ot.com', status: 'Pending' },
+                        { id: '9917', name: 'N-Bulk PA-1011', org: 'LKGBTenant3LID40', owner: 'lkgb sa', status: 'Archived' },
+                        { id: '15844', name: 'N-Bulk PA-1011-0089', org: 'LKGBTenant3LID40', owner: 'Anurag Deep', status: 'Active' },
+                        { id: '15778', name: 'N-Bulk PA-1011-klm', org: 'LKGBTenant3LID40', owner: 'Praveen Kupati', status: 'Active' },
+                        { id: '9922', name: 'N-Bulk PA-1012', org: 'W.L. GORE & Associates', owner: 'lkgb sa', status: 'Active' },
+                        { id: '9912', name: 'N-Bulk PA-1013', org: 'W.L. GORE & Associates', owner: 'lkgb sa', status: 'Active' },
+                        { id: '9907', name: 'N-Bulk PA-1015', org: 'LKGBTenant3LID40', owner: 'lkgb sa', status: 'Active' },
+                        { id: '9934', name: 'N-Bulk PA-1016', org: 'LKGBTenant3LID40', owner: 'lkgb sa', status: 'Active' },
+                      ].map((record) => (
+                        <div key={record.id}
+                          className="grid gap-4 py-3 border-b border-[#1e2130] last:border-0 hover:bg-[#1a1d2a] cursor-pointer transition-colors -mx-4 px-4 items-center"
+                          style={{ gridTemplateColumns: '70px 1fr 180px 180px 100px' }}
+                          onClick={() => setSelectedRecordId(record.name)}>
+                          <p className="text-sm text-[#9ca3af]">{record.id}</p>
+                          <p className="text-sm font-medium text-[#0788F7]">{record.name}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.org}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.owner}</p>
+                          <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded w-fit", statusColors[record.status])}>{record.status}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Assets */}
+              {dataMappingTertiary === 'assets' && (
+                <>
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h2 className="text-lg font-medium text-white">Assets</h2>
+                      <p className="text-sm text-[#9ca3af]">Assets are any data, devices, or other components within an organization that support information-related activities.</p>
+                    </div>
+                    <button className="flex items-center gap-2 px-4 py-2 bg-[#6CEEAD] text-[#0f1117] rounded-md text-sm font-medium hover:bg-[#5dd99c] transition-colors">
+                      <Plus className="w-4 h-4" />
+                      Add asset
+                    </button>
+                  </div>
+                  <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+                    <div className="px-4">
+                      <div className="grid gap-4 py-3 border-b border-[#1e2130]"
+                        style={{ gridTemplateColumns: '70px 1fr 180px 120px 120px 100px 80px' }}>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">ID</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Name</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Managing Organization</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Hosting Location</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Type</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">IT Owner</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Status</p>
+                      </div>
+                      {[
+                        { id: '10773', name: 'N-Bulk-1978', org: 'LKGBTenant3LID40', location: 'Aruba', type: '- - - -', owner: '- - - -', status: 'Active' },
+                        { id: '10770', name: 'N-Bulk-1979', org: 'LKGBTenant3LID40', location: 'Australia', type: '- - - -', owner: '- - - -', status: 'Active' },
+                        { id: '8972', name: 'N-Bulk-198', org: 'LKGBTenant3LID40', location: 'Antarctica', type: '- - - -', owner: '- - - -', status: 'Active' },
+                        { id: '10738', name: 'N-Bulk-1981', org: 'LKGBTenant3LID40', location: 'Azerbaijan', type: '- - - -', owner: '- - - -', status: 'Active' },
+                        { id: '10745', name: 'N-Bulk-1982', org: 'LKGBTenant3LID40', location: 'Bahamas', type: '- - - -', owner: '- - - -', status: 'Active' },
+                        { id: '10741', name: 'N-Bulk-1983', org: 'LKGBTenant3LID40', location: 'Bahrain', type: '- - - -', owner: '- - - -', status: 'Active' },
+                        { id: '10737', name: 'N-Bulk-1984', org: 'LKGBTenant3LID40', location: 'Bangladesh', type: '- - - -', owner: '- - - -', status: 'Active' },
+                        { id: '10765', name: 'N-Bulk-1985', org: 'LKGBTenant3LID40', location: 'Barbados', type: '- - - -', owner: '- - - -', status: 'Active' },
+                      ].map((record) => (
+                        <div key={record.id}
+                          className="grid gap-4 py-3 border-b border-[#1e2130] last:border-0 hover:bg-[#1a1d2a] cursor-pointer transition-colors -mx-4 px-4 items-center"
+                          style={{ gridTemplateColumns: '70px 1fr 180px 120px 120px 100px 80px' }}
+                          onClick={() => setSelectedRecordId(record.name)}>
+                          <p className="text-sm text-[#9ca3af]">{record.id}</p>
+                          <p className="text-sm font-medium text-[#0788F7]">{record.name}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.org}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.location}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.type}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.owner}</p>
+                          <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded w-fit", statusColors[record.status])}>{record.status}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Entities */}
+              {dataMappingTertiary === 'entities' && (
+                <>
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h2 className="text-lg font-medium text-white">Legal entities</h2>
+                      <p className="text-sm text-[#9ca3af]">Entities are individuals, companies, or organizations that have legal rights and obligations.</p>
+                    </div>
+                    <button className="flex items-center gap-2 px-4 py-2 bg-[#6CEEAD] text-[#0f1117] rounded-md text-sm font-medium hover:bg-[#5dd99c] transition-colors">
+                      <Plus className="w-4 h-4" />
+                      Add entity
+                    </button>
+                  </div>
+                  <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+                    <div className="px-4">
+                      <div className="grid gap-4 py-3 border-b border-[#1e2130]"
+                        style={{ gridTemplateColumns: '60px 1fr 160px 140px 100px 100px' }}>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">ID</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Entity Name</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Organization</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Primary Location</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Type</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Int/External</p>
+                      </div>
+                      {[
+                        { id: '9504', name: '6.4 - Entity New', org: 'LKGBTenant3LID40', location: 'Aland Islands', type: 'Branch, Affiliate', intExt: 'External' },
+                        { id: '9547', name: '6.4 - Entity New', org: 'LKGBTenant3LID40', location: 'American Samoa', type: 'Affiliate', intExt: 'External' },
+                        { id: '9506', name: '6.4 - Entity New test', org: 'LKGBTenant3LID40', location: 'American Samoa', type: 'Affiliate, Branch', intExt: 'External' },
+                        { id: '40', name: 'Entity 1', org: 'Ujjavale1234', location: 'India', type: 'Affiliate', intExt: 'External' },
+                        { id: '9539', name: 'En 1711/10', org: 'LKGBTenant3LID40', location: 'Albania', type: 'Affiliate', intExt: '- - - -' },
+                        { id: '46', name: 'Entity 789', org: 'Ujjavale1234', location: 'Unknown', type: 'Affiliate', intExt: 'Internal' },
+                        { id: '38', name: 'N entity lkgb', org: 'Ujjavale1234', location: 'Albania', type: 'Affiliate', intExt: 'Internal' },
+                        { id: '9638', name: '#entity-1', org: 'LKGBTenant3LID40', location: 'Aland Islands', type: '- - - -', intExt: '- - - -' },
+                      ].map((record) => (
+                        <div key={record.id}
+                          className="grid gap-4 py-3 border-b border-[#1e2130] last:border-0 hover:bg-[#1a1d2a] cursor-pointer transition-colors -mx-4 px-4 items-center"
+                          style={{ gridTemplateColumns: '60px 1fr 160px 140px 100px 100px' }}
+                          onClick={() => setSelectedRecordId(record.name)}>
+                          <p className="text-sm text-[#9ca3af]">{record.id}</p>
+                          <p className="text-sm font-medium text-[#0788F7]">{record.name}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.org}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.location}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.type}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.intExt}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Projects */}
+              {dataMappingTertiary === 'projects' && (
+                <>
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h2 className="text-lg font-medium text-white">Projects</h2>
+                      <p className="text-sm text-[#9ca3af]">Organize and collaborate on the work required for this object.</p>
+                    </div>
+                    <button className="flex items-center gap-2 px-4 py-2 bg-[#6CEEAD] text-[#0f1117] rounded-md text-sm font-medium hover:bg-[#5dd99c] transition-colors">
+                      <Plus className="w-4 h-4" />
+                      Add new
+                    </button>
+                  </div>
+                  <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+                    <div className="px-4">
+                      <div className="grid gap-4 py-3 border-b border-[#1e2130]"
+                        style={{ gridTemplateColumns: '1fr 120px 160px 1fr 180px' }}>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Name</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Stage</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Organization</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Description</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Project Owner</p>
+                      </div>
+                      {[
+                        { name: '12-2-project-1', stage: 'Under review', org: 'LKGBTenant3LID40', desc: '- - - - -', owner: 'Hongze Liu' },
+                        { name: '13-2-project-1', stage: 'Not started', org: 'LKGBTenant3LID40', desc: '- - - - -', owner: '' },
+                        { name: 'abc', stage: 'Not started', org: 'LKGBTenant3LID40', desc: '- - - - -', owner: '' },
+                        { name: 'abcd-project', stage: 'Not started', org: 'Incident Manager', desc: '- - - - -', owner: 'Hongze Liu' },
+                        { name: 'AuditD1 updated testing final testing', stage: 'Not started', org: 'LKGBTenant3LID40', desc: '- - - - -', owner: '' },
+                        { name: 'AuditTest', stage: 'Under review', org: 'LKGBTenant3LID40', desc: '- - - - -', owner: '' },
+                        { name: 'AuditTest updated', stage: 'Not started', org: 'LKGBTenant3LID40', desc: '- - - - -', owner: '' },
+                        { name: 'bug check 26-11-2025 testing', stage: 'Completed', org: 'LKGBTenant3LID40', desc: '- - - - -', owner: '' },
+                      ].map((record, idx) => (
+                        <div key={idx}
+                          className="grid gap-4 py-3 border-b border-[#1e2130] last:border-0 hover:bg-[#1a1d2a] cursor-pointer transition-colors -mx-4 px-4 items-center"
+                          style={{ gridTemplateColumns: '1fr 120px 160px 1fr 180px' }}
+                          onClick={() => setSelectedRecordId(record.name)}>
+                          <p className="text-sm font-medium text-[#0788F7]">{record.name}</p>
+                          <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded w-fit",
+                            record.stage === 'Under review' ? 'bg-[#FFEF3C]/10 text-[#FFEF3C]' :
+                            record.stage === 'Completed' ? 'bg-[#00B935]/10 text-[#00B935]' :
+                            'bg-[#4b5563]/10 text-[#9ca3af]'
+                          )}>{record.stage}</span>
+                          <p className="text-xs text-[#9ca3af]">{record.org}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.desc}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.owner || '—'}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Asset Map */}
+              {dataMappingTertiary === 'asset-map' && (
+                <>
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h2 className="text-lg font-medium text-white">Asset map</h2>
+                      <p className="text-sm text-[#9ca3af]">Filter by organization group to see the internal and third-party assets hosted in each location.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-6">
+                    {/* Map Area */}
+                    <div className="flex-1 bg-[#1a2030] rounded-lg overflow-hidden relative" style={{ minHeight: '500px' }}>
+                      <img 
+                        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-rkiYBuzg6zPeDNS5nHrrqaB1LgQTvp.png" 
+                        alt="Asset Map"
+                        className="w-full h-full object-cover opacity-80"
+                      />
+                    </div>
+                    {/* Filters Panel */}
+                    <div className="w-64 bg-[#13151f] border border-[#1e2130] rounded-lg p-4">
+                      <h3 className="text-sm font-medium text-white mb-4">Filters</h3>
+                      <div className="mb-4">
+                        <label className="text-xs text-[#9ca3af] mb-2 block">Organization group</label>
+                        <select className="w-full bg-[#1e2130] border border-[#2a2d3a] rounded-md px-3 py-2 text-sm text-white">
+                          <option>LKGBTenant3LID40</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-xs text-[#9ca3af] mb-2 block">Internal or 3rd party</label>
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2 text-sm text-white">
+                            <input type="checkbox" defaultChecked className="rounded" /> 3rd Party
+                          </label>
+                          <label className="flex items-center gap-2 text-sm text-white">
+                            <input type="checkbox" defaultChecked className="rounded" /> Internal
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Cross-Border */}
+              {dataMappingTertiary === 'cross-border' && (
+                <>
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h2 className="text-lg font-medium text-white">Cross-Border</h2>
+                      <p className="text-sm text-[#9ca3af]">View cross-border data transfers between related inventories. Keep your records current by reviewing and confirming potential inventory relationships.</p>
+                    </div>
+                    <button className="flex items-center gap-2 px-4 py-2 bg-[#6CEEAD] text-[#0f1117] rounded-md text-sm font-medium hover:bg-[#5dd99c] transition-colors">
+                      <Download className="w-4 h-4" />
+                      Export
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex items-center gap-2 text-sm text-[#f59e0b]">
+                      <AlertTriangle className="w-4 h-4" />
+                      <span>160 Potential relationships</span>
+                    </div>
+                    <label className="flex items-center gap-2 text-sm text-white">
+                      <input type="checkbox" defaultChecked className="rounded" />
+                      Show relationships
+                    </label>
+                  </div>
+                  <div className="bg-[#1a2030] rounded-lg overflow-hidden" style={{ minHeight: '500px' }}>
+                    <img 
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ffq4ewpInExFLQFrx7L2E3RJx7U8kQ.png" 
+                      alt="Cross-Border Data Transfers"
+                      className="w-full h-full object-cover opacity-90"
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* Data Lineage */}
+              {dataMappingTertiary === 'data-lineage' && (
+                <>
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h2 className="text-lg font-medium text-white">Data lineage</h2>
+                      <p className="text-sm text-[#9ca3af]">Manage the lineage diagrams of your processing activities.</p>
+                    </div>
+                  </div>
+                  <div className="flex justify-end mb-4">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4b5563]" />
+                      <input type="text" placeholder="Search"
+                        className="pl-9 pr-4 py-2 bg-[#1e2130] border border-[#2a2d3a] rounded-md text-sm text-white placeholder-[#4b5563] focus:outline-none focus:border-[#6CEEAD]/50 w-64" />
+                    </div>
+                  </div>
+                  <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+                    <div className="px-4">
+                      <div className="grid gap-4 py-3 border-b border-[#1e2130]"
+                        style={{ gridTemplateColumns: '1fr 200px' }}>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Name</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Managing Organization</p>
+                      </div>
+                      {[
+                        { name: 'N-Bulk PA-1012', org: 'W.L. GORE & Associates' },
+                        { name: 'N-Bulk PA-1019', org: 'LKGBTenant3LID40' },
+                        { name: 'N-Bulk PA-1039', org: 'LKGBTenant3LID40' },
+                        { name: 'Add New PA for test', org: 'LKGBTenant3LID40' },
+                        { name: 'Launch Assessment (repeated)', org: 'LKGBTenant3LID40' },
+                        { name: 'Plan, transport, and deliver outbound product', org: 'LKGBTenant3LID40' },
+                        { name: 'Tuesday morning', org: 'LKGBTenant3LID40' },
+                      ].map((record, idx) => (
+                        <div key={idx}
+                          className="grid gap-4 py-3 border-b border-[#1e2130] last:border-0 hover:bg-[#1a1d2a] cursor-pointer transition-colors -mx-4 px-4 items-center"
+                          style={{ gridTemplateColumns: '1fr 200px' }}
+                          onClick={() => setSelectedRecordId(record.name)}>
+                          <p className="text-sm font-medium text-[#0788F7]">{record.name}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.org}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Reports */}
+              {dataMappingTertiary === 'reports' && (
+                <>
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-lg font-medium text-white">Reports</h2>
+                    <button className="flex items-center gap-2 px-4 py-2 bg-[#6CEEAD] text-[#0f1117] rounded-md text-sm font-medium hover:bg-[#5dd99c] transition-colors">
+                      <Plus className="w-4 h-4" />
+                      Create new
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <button className="flex items-center gap-1 px-3 py-1.5 bg-[#1e2130] border border-[#2a2d3a] rounded-md text-xs text-[#9ca3af] hover:text-white">
+                      <Filter className="w-3 h-3" /> Add filter
+                    </button>
+                    <div className="relative flex-1 max-w-xs ml-auto">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4b5563]" />
+                      <input type="text" placeholder="Search"
+                        className="w-full pl-9 pr-4 py-2 bg-[#1e2130] border border-[#2a2d3a] rounded-md text-sm text-white placeholder-[#4b5563] focus:outline-none focus:border-[#6CEEAD]/50" />
+                    </div>
+                  </div>
+                  <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+                    <div className="px-4">
+                      <div className="grid gap-4 py-3 border-b border-[#1e2130]"
+                        style={{ gridTemplateColumns: '1fr 100px 140px 80px 140px 120px' }}>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Report Name</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Data Type</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Organization</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Type</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Created By</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Date Created</p>
+                      </div>
+                      {[
+                        { name: 'A DM col asset - Copy - Copy', dataType: 'Asset', org: 'LKGBTenant3LID40', type: 'COLUMN', createdBy: 'Sanatan Surya', date: '19/11/2024' },
+                        { name: 'A DM col asset - Copy - Copy1', dataType: 'Asset', org: 'LKGBTenant3LID40', type: 'COLUMN', createdBy: 'Linu K.M', date: '27/06/2024' },
+                        { name: 'A PIA col', dataType: 'Assessment', org: 'LKGBTenant3LID40', type: 'COLUMN', createdBy: 'site40 admintester', date: '21/03/2023' },
+                        { name: 'A PIA col - Copy Surya', dataType: 'Assessment', org: 'LKGBTenant3LID40', type: 'COLUMN', createdBy: 'NEW USERAGAIN', date: '27/01/2025' },
+                        { name: 'A01 PIA & DPIA Automation PDF', dataType: 'Assessment', org: 'LKGBTenant3LID40', type: 'PDF', createdBy: 'site40 admintester', date: '17/03/2023' },
+                        { name: 'A02 PIA & DPIA Automation - Any Template P...', dataType: 'Assessment', org: 'LKGBTenant3LID40', type: 'PDF', createdBy: 'Sanatan Surya', date: '19/11/2024' },
+                        { name: 'A03 Data Mapping Automation - Asset - PDF', dataType: 'Asset', org: 'LKGBTenant3LID40', type: 'PDF', createdBy: 'site40 admintester', date: '17/03/2023' },
+                      ].map((record, idx) => (
+                        <div key={idx}
+                          className="grid gap-4 py-3 border-b border-[#1e2130] last:border-0 hover:bg-[#1a1d2a] cursor-pointer transition-colors -mx-4 px-4 items-center"
+                          style={{ gridTemplateColumns: '1fr 100px 140px 80px 140px 120px' }}
+                          onClick={() => setSelectedRecordId(record.name)}>
+                          <p className="text-sm font-medium text-[#0788F7] truncate">{record.name}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.dataType}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.org}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.type}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.createdBy}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.date}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
               )}
             </div>
           </div>
