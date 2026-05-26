@@ -18,6 +18,15 @@ import {
   CheckCircle,
   Clock,
   ArrowRight,
+  Inbox,
+  Activity,
+  Database,
+  Building2,
+  FolderKanban,
+  Map,
+  Globe,
+  GitBranch,
+  FileBarChart,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -44,16 +53,16 @@ const privacyRightsTertiaryTabs: { id: PrivacyRightsTertiaryTab; label: string }
 
 // Tertiary tabs for Data Mapping
 type DataMappingTertiaryTab = 'pending' | 'processing' | 'assets' | 'entities' | 'projects' | 'asset-map' | 'cross-border' | 'data-lineage' | 'reports'
-const dataMappingTertiaryTabs: { id: DataMappingTertiaryTab; label: string }[] = [
-  { id: 'pending',      label: 'Pending Inventory' },
-  { id: 'processing',   label: 'Processing Activities' },
-  { id: 'assets',       label: 'Assets' },
-  { id: 'entities',     label: 'Entities' },
-  { id: 'projects',     label: 'Projects' },
-  { id: 'asset-map',    label: 'Asset Map' },
-  { id: 'cross-border', label: 'Cross Border' },
-  { id: 'data-lineage', label: 'Data Lineage' },
-  { id: 'reports',      label: 'Reports' },
+const dataMappingTertiaryTabs: { id: DataMappingTertiaryTab; label: string; icon: React.ReactNode }[] = [
+  { id: 'pending',      label: 'Pending Inventory',     icon: <Inbox className="w-4 h-4" /> },
+  { id: 'processing',   label: 'Processing Activities', icon: <Activity className="w-4 h-4" /> },
+  { id: 'assets',       label: 'Assets',                icon: <Database className="w-4 h-4" /> },
+  { id: 'entities',     label: 'Entities',              icon: <Building2 className="w-4 h-4" /> },
+  { id: 'projects',     label: 'Projects',              icon: <FolderKanban className="w-4 h-4" /> },
+  { id: 'asset-map',    label: 'Asset Map',             icon: <Map className="w-4 h-4" /> },
+  { id: 'cross-border', label: 'Cross Border',          icon: <Globe className="w-4 h-4" /> },
+  { id: 'data-lineage', label: 'Data Lineage',          icon: <GitBranch className="w-4 h-4" /> },
+  { id: 'reports',      label: 'Reports',               icon: <FileBarChart className="w-4 h-4" /> },
 ]
 
 // ── PIA & DPIA dashboard data ─────────────────────────────────────────────────
@@ -1891,28 +1900,30 @@ export function PrivacyManagementModule() {
 
         {/* Tab 4: Data Mapping */}
         {activeTab === 'data-mapping' && (
-          <div className="flex flex-col h-full">
-            {/* Tertiary Tabs */}
-            <div className="border-b border-[#1e2130] px-6 shrink-0 bg-[#0f1117]">
-              <div className="flex gap-1 overflow-x-auto">
+          <div className="flex h-full">
+            {/* Vertical Tertiary Navigation Rail */}
+            <div className="w-48 border-r border-[#1e2130] bg-[#0f1117] py-4 shrink-0">
+              <ul className="space-y-1 px-2">
                 {dataMappingTertiaryTabs.map((tab) => (
-                  <button
-                    key={tab.id}
-                    onClick={() => setDataMappingTertiary(tab.id)}
-                    className={cn(
-                      "px-3 py-2 text-xs font-medium transition-colors relative whitespace-nowrap",
-                      dataMappingTertiary === tab.id ? "text-white" : "text-[#9ca3af] hover:text-white"
-                    )}
-                  >
-                    {tab.label}
-                    {dataMappingTertiary === tab.id && (
-                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4b5563]" />
-                    )}
-                  </button>
+                  <li key={tab.id}>
+                    <button
+                      onClick={() => setDataMappingTertiary(tab.id)}
+                      className={cn(
+                        "w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors",
+                        dataMappingTertiary === tab.id
+                          ? "bg-[#6CEEAD]/10 text-[#6CEEAD]"
+                          : "text-[#9ca3af] hover:bg-[#1e2130] hover:text-white"
+                      )}
+                    >
+                      {tab.icon}
+                      <span>{tab.label}</span>
+                    </button>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
 
+            {/* Main Content Area */}
             <div className="flex-1 overflow-auto p-6">
               {dataMappingTertiary === 'pending' && (
                 <>
