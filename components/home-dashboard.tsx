@@ -10,7 +10,6 @@ import {
   Clock,
   AlertCircle,
   Activity,
-  TrendingUp,
   Users,
   Lock,
   Package,
@@ -20,19 +19,6 @@ import {
 import { cn } from '@/lib/utils'
 
 // ── Combined Stats Data ───────────────────────────────────────────────────────
-
-const programHealthStats = {
-  aiGovernance: {
-    compliant: 68,
-    inProgress: 22,
-    atRisk: 10,
-  },
-  privacy: {
-    compliant: 73,
-    inProgress: 18,
-    atRisk: 9,
-  }
-}
 
 const aiGovStats = [
   { label: 'AI Systems', value: '47', sub: '+3 this month', accent: '#6CEEAD', icon: Brain },
@@ -86,61 +72,6 @@ export function HomeDashboard() {
           </span>
         </div>
         <p className="text-[#9ca3af] leading-[1.2]">Consolidated view across AI Governance and Privacy Management programs</p>
-      </div>
-
-      {/* Program Health */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-        {/* AI Governance Health */}
-        <div className="bg-[#13151f] border border-[#1e2130] rounded-lg p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-lg bg-[#6CEEAD]/10 flex items-center justify-center">
-              <Brain className="w-4 h-4 text-[#6CEEAD]" />
-            </div>
-            <div>
-              <p className="text-xs font-semibold text-[#9ca3af]">AI Governance</p>
-              <p className="text-lg font-bold text-white">{programHealthStats.aiGovernance.compliant}%</p>
-            </div>
-          </div>
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-[10px]">
-              <span className="text-[#9ca3af]">Compliant</span>
-              <span className="text-[#00B935]">{programHealthStats.aiGovernance.compliant}%</span>
-            </div>
-            <div className="h-1.5 bg-[#1e2130] rounded-full overflow-hidden">
-              <div className="h-full bg-[#00B935] rounded-full" style={{ width: `${programHealthStats.aiGovernance.compliant}%` }} />
-            </div>
-            <div className="flex items-center justify-between text-[10px] pt-1">
-              <span className="text-[#f59e0b]">{programHealthStats.aiGovernance.inProgress}% in progress</span>
-              <span className="text-[#ef4444]">{programHealthStats.aiGovernance.atRisk}% at risk</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Privacy Health */}
-        <div className="bg-[#13151f] border border-[#1e2130] rounded-lg p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-lg bg-[#0788F7]/10 flex items-center justify-center">
-              <Lock className="w-4 h-4 text-[#0788F7]" />
-            </div>
-            <div>
-              <p className="text-xs font-semibold text-[#9ca3af]">Privacy Management</p>
-              <p className="text-lg font-bold text-white">{programHealthStats.privacy.compliant}%</p>
-            </div>
-          </div>
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-[10px]">
-              <span className="text-[#9ca3af]">Compliant</span>
-              <span className="text-[#00B935]">{programHealthStats.privacy.compliant}%</span>
-            </div>
-            <div className="h-1.5 bg-[#1e2130] rounded-full overflow-hidden">
-              <div className="h-full bg-[#00B935] rounded-full" style={{ width: `${programHealthStats.privacy.compliant}%` }} />
-            </div>
-            <div className="flex items-center justify-between text-[10px] pt-1">
-              <span className="text-[#f59e0b]">{programHealthStats.privacy.inProgress}% in progress</span>
-              <span className="text-[#ef4444]">{programHealthStats.privacy.atRisk}% at risk</span>
-            </div>
-          </div>
-        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
