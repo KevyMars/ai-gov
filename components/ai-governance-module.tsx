@@ -2037,9 +2037,38 @@ export function AIGovernanceModule() {
                         {/* Card Header */}
                         <div className="p-6 pb-4">
                           <div className="flex items-start justify-between">
-                            <div>
+                            <div className="flex-1 min-w-0">
                               <h4 className="text-base font-semibold text-white">{policy.title}</h4>
                               <p className="text-sm text-[#9ca3af] mt-1">{policy.description}</p>
+                              {/* Rule Summary Inline */}
+                              <div className="flex flex-wrap items-center gap-1.5 mt-3">
+                                <span className={`px-2 py-1 border rounded text-[10px] font-semibold ${
+                                  policy.outcome === 'Auto-approved' 
+                                    ? 'border-[#6CEEAD]/30 text-[#6CEEAD] bg-[#6CEEAD]/10' 
+                                    : policy.outcome === 'Denied' 
+                                    ? 'border-[#ef4444]/30 text-[#ef4444] bg-[#ef4444]/10'
+                                    : 'border-[#f59e0b]/30 text-[#f59e0b] bg-[#f59e0b]/10'
+                                }`}>
+                                  {policy.outcome === 'Auto-approved' ? 'APPROVE' : policy.outcome === 'Denied' ? 'DENY' : 'REVIEW'}
+                                </span>
+                                <span className="text-xs text-[#4b5563]">IF</span>
+                                {policy.conditionsList?.map((condition, index) => (
+                                  <span key={condition.id} className="flex items-center gap-1.5">
+                                    <span className="text-xs text-white">{condition.field}</span>
+                                    <span className="text-xs text-[#4b5563]">=</span>
+                                    <span className="text-xs text-[#6CEEAD]">&quot;{condition.value}&quot;</span>
+                                    {index < (policy.conditionsList?.length || 0) - 1 && (
+                                      <span className={`px-1.5 py-0.5 rounded text-[9px] font-semibold ${
+                                        condition.operator === 'AND' 
+                                          ? 'text-[#6CEEAD] bg-[#6CEEAD]/10' 
+                                          : 'text-[#f59e0b] bg-[#f59e0b]/10'
+                                      }`}>
+                                        {condition.operator}
+                                      </span>
+                                    )}
+                                  </span>
+                                ))}
+                              </div>
                             </div>
                             <div className="flex items-center gap-3">
                               <span className="text-xs px-3 py-1 rounded-full border border-[#1e2130] text-[#9ca3af]">
