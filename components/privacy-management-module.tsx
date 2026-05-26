@@ -1,52 +1,59 @@
 "use client"
 
 import { useState } from 'react'
-import { useNavigation, PrivacyTab, PrivacyRecordItem } from '@/lib/navigation-context'
+import { useNavigation } from '@/lib/navigation-context'
 import {
   piaRecords,
   incidentRecords,
   privacyRightRequests,
   dataMappingRecords,
   privacyNotices,
-  benchmarkRecords,
-  maturityRecords,
 } from '@/lib/sample-data'
 import {
-  FileSearch,
-  AlertOctagon,
-  UserCheck,
-  Map,
-  FileText,
-  BarChart2,
-  TrendingUp,
   Plus,
   Search,
   Filter,
   Download,
-  Globe,
-  ChevronLeft,
-  ChevronRight,
   AlertTriangle,
+  CheckCircle,
+  Clock,
+  ArrowRight,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-// ── Tab & nav config ──────────────────────────────────────────────────────────
+// ── Secondary Tab config ──────────────────────────────────────────────────────────
+type SecondaryTab = 'overview' | 'incidents' | 'privacy-rights' | 'data-mapping' | 'privacy-notices' | 'benchmarking' | 'maturity'
 
-const tabs: { id: PrivacyTab; label: string }[] = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'records',  label: 'Records'  },
-  { id: 'objects',  label: 'Objects'  },
-  { id: 'policies', label: 'Policies' },
+const secondaryTabs: { id: SecondaryTab; label: string }[] = [
+  { id: 'overview',        label: 'Overview' },
+  { id: 'incidents',       label: 'Incident Manager' },
+  { id: 'privacy-rights',  label: 'Privacy Rights' },
+  { id: 'data-mapping',    label: 'Data Mapping' },
+  { id: 'privacy-notices', label: 'Privacy Notices' },
+  { id: 'benchmarking',    label: 'Program Benchmarking' },
+  { id: 'maturity',        label: 'Maturity & Planning' },
 ]
 
-const recordItems: { id: PrivacyRecordItem; label: string; icon: React.ReactNode; alertColor?: string }[] = [
-  { id: 'pia-dpia',          label: 'PIA & DPIA',          icon: <FileSearch   className="w-4 h-4 shrink-0" /> },
-  { id: 'incidents',         label: 'Incident Management', icon: <AlertOctagon className="w-4 h-4 shrink-0" />, alertColor: '#ef4444'  },
-  { id: 'privacy-rights',    label: 'Privacy Rights',      icon: <UserCheck    className="w-4 h-4 shrink-0" />, alertColor: '#E4982E'  },
-  { id: 'data-mapping',      label: 'Data Mapping',        icon: <Map          className="w-4 h-4 shrink-0" /> },
-  { id: 'privacy-notices',   label: 'Privacy Notices',     icon: <FileText     className="w-4 h-4 shrink-0" /> },
-  { id: 'benchmarking',      label: 'Benchmarking',        icon: <BarChart2    className="w-4 h-4 shrink-0" /> },
-  { id: 'maturity-planning', label: 'Maturity & Planning', icon: <TrendingUp   className="w-4 h-4 shrink-0" />, alertColor: '#E4982E'  },
+// Tertiary tabs for Privacy Rights
+type PrivacyRightsTertiaryTab = 'requests' | 'reports' | 'subtasks'
+const privacyRightsTertiaryTabs: { id: PrivacyRightsTertiaryTab; label: string }[] = [
+  { id: 'requests', label: 'Requests' },
+  { id: 'reports',  label: 'Reports' },
+  { id: 'subtasks', label: 'Subtasks' },
+]
+
+// Tertiary tabs for Data Mapping
+type DataMappingTertiaryTab = 'pending' | 'processing' | 'assets' | 'entities' | 'projects' | 'asset-map' | 'cross-border' | 'data-lineage' | 'reports'
+const dataMappingTertiaryTabs: { id: DataMappingTertiaryTab; label: string }[] = [
+  { id: 'pending',      label: 'Pending Inventory' },
+  { id: 'processing',   label: 'Processing Activities' },
+  { id: 'assets',       label: 'Assets' },
+  { id: 'entities',     label: 'Entities' },
+  { id: 'projects',     label: 'Projects' },
+  { id: 'asset-map',    label: 'Asset Map' },
+  { id: 'cross-border', label: 'Cross Border' },
+  { id: 'data-lineage', label: 'Data Lineage' },
+  { id: 'reports',      label: 'Reports' },
 ]
 
 // ── PIA & DPIA dashboard data ─────────────────────────────────────────────────
@@ -299,7 +306,7 @@ function IncidentManagementDashboard() {
       {/* Header */}
       <div>
         <h2 className="text-lg font-medium text-white">Active Incidents</h2>
-        <p className="text-xs text-[#9ca3af] mt-0.5">Incident Management ���� Breach Response &amp; Regulatory Notification</p>
+        <p className="text-xs text-[#9ca3af] mt-0.5">Incident Management ������ Breach Response &amp; Regulatory Notification</p>
       </div>
 
       {/* Stat cards */}
@@ -1682,8 +1689,10 @@ function OverviewContent({ item }: { item: PrivacyRecordItem }) {
 // ── Main module ───────────────────────────────────────────────────────────────
 
 export function PrivacyManagementModule() {
-  const [navCollapsed, setNavCollapsed] = useState(false)
-  const { privacyTab, setPrivacyTab, privacyRecordItem, setPrivacyRecordItem, setSelectedRecordId } = useNavigation()
+  const [activeTab, setActiveTab] = useState<SecondaryTab>('overview')
+  const [privacyRightsTertiary, setPrivacyRightsTertiary] = useState<PrivacyRightsTertiaryTab>('requests')
+  const [dataMappingTertiary, setDataMappingTertiary] = useState<DataMappingTertiaryTab>('pending')
+  const { setSelectedRecordId } = useNavigation()
 
   const statusColors: Record<string, string> = {
     'Draft':                 'bg-[#9ca3af]/10 text-[#9ca3af]',
@@ -1717,453 +1726,352 @@ export function PrivacyManagementModule() {
     'Low':      'bg-[#00B935]/10 text-[#00B935]',
   }
 
-  const maturityLevelLabel = (level: number) =>
-    ['', 'Initial', 'Developing', 'Defined', 'Managed', 'Optimised'][level]
-
-  const maturityLevelColor = (level: number) => {
-    if (level <= 1) return 'text-[#ef4444]'
-    if (level === 2) return 'text-[#FFEF3C]'
-    if (level === 3) return 'text-[#0788F7]'
-    return 'text-[#00B935]'
-  }
-
-  const getItemLabel = () => recordItems.find(i => i.id === privacyRecordItem)?.label || ''
-  const getItemCount = () => {
-    switch (privacyRecordItem) {
-      case 'pia-dpia':          return piaRecords.length
-      case 'incidents':         return incidentRecords.length
-      case 'privacy-rights':   return privacyRightRequests.length
-      case 'data-mapping':     return dataMappingRecords.length
-      case 'privacy-notices':  return privacyNotices.length
-      case 'benchmarking':     return benchmarkRecords.length
-      case 'maturity-planning': return maturityRecords.length
-      default: return 0
-    }
-  }
-
-  const renderRecordsTable = () => {
-    switch (privacyRecordItem) {
-
-      case 'pia-dpia':
-        return (
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-[#1e2130]">
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">ID</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Name</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Type</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Owner</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Department</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Due Date</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Risk</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {piaRecords.map((record) => (
-                <tr key={record.id}
-                  className="border-b border-[#1e2130] hover:bg-[#1a1d2a] cursor-pointer transition-colors"
-                  onClick={() => setSelectedRecordId(record.name)}>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.id}</td>
-                  <td className="py-3 px-4 text-sm text-white font-medium">{record.name}</td>
-                  <td className="py-3 px-4">
-                    <span className="text-xs px-2 py-1 rounded bg-[#0788F7]/10 text-[#0788F7]">{record.type}</span>
-                  </td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.owner}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.department}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.dueDate}</td>
-                  <td className="py-3 px-4">
-                    <span className={cn("text-xs px-2 py-1 rounded", severityColors[record.riskLevel])}>{record.riskLevel}</span>
-                  </td>
-                  <td className="py-3 px-4">
-                    <span className={cn("text-xs px-2 py-1 rounded", statusColors[record.status])}>{record.status}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )
-
-      case 'incidents':
-        return (
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-[#1e2130]">
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">ID</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Title</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Type</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Severity</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Affected Records</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Reported</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {incidentRecords.map((record) => (
-                <tr key={record.id}
-                  className="border-b border-[#1e2130] hover:bg-[#1a1d2a] cursor-pointer transition-colors"
-                  onClick={() => setSelectedRecordId(record.title)}>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.id}</td>
-                  <td className="py-3 px-4 text-sm text-white font-medium">{record.title}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.type}</td>
-                  <td className="py-3 px-4">
-                    <span className={cn("text-xs px-2 py-1 rounded", severityColors[record.severity])}>{record.severity}</span>
-                  </td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.affectedRecords}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.reportedDate}</td>
-                  <td className="py-3 px-4">
-                    <span className={cn("text-xs px-2 py-1 rounded", statusColors[record.status])}>{record.status}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )
-
-      case 'privacy-rights':
-        return (
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-[#1e2130]">
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">ID</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Type</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Subject</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Assigned To</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Channel</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Received</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Due</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {privacyRightRequests.map((record) => (
-                <tr key={record.id}
-                  className="border-b border-[#1e2130] hover:bg-[#1a1d2a] cursor-pointer transition-colors"
-                  onClick={() => setSelectedRecordId(record.id)}>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.id}</td>
-                  <td className="py-3 px-4">
-                    <span className="text-xs px-2 py-1 rounded bg-[#976FE6]/10 text-[#976FE6]">{record.type}</span>
-                  </td>
-                  <td className="py-3 px-4 text-sm text-white font-medium">{record.subject}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.assignedTo}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.channel}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.receivedDate}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.dueDate}</td>
-                  <td className="py-3 px-4">
-                    <span className={cn("text-xs px-2 py-1 rounded", statusColors[record.status])}>{record.status}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )
-
-      case 'data-mapping':
-        return (
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-[#1e2130]">
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">ID</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Process</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Category</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Legal Basis</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Data Types</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Retention</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Cross-Border</th>
-              </tr>
-            </thead>
-            <tbody>
-              {dataMappingRecords.map((record) => (
-                <tr key={record.id}
-                  className="border-b border-[#1e2130] hover:bg-[#1a1d2a] cursor-pointer transition-colors"
-                  onClick={() => setSelectedRecordId(record.process)}>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.id}</td>
-                  <td className="py-3 px-4 text-sm text-white font-medium">{record.process}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.category}</td>
-                  <td className="py-3 px-4">
-                    <span className="text-xs px-2 py-1 rounded bg-[#3B40D8]/10 text-[#3B40D8]">{record.legalBasis}</span>
-                  </td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.dataTypes}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.retention}</td>
-                  <td className="py-3 px-4">
-                    {record.crossBorder ? (
-                      <span className="text-xs px-2 py-1 rounded bg-[#FFEF3C]/10 text-[#FFEF3C] flex items-center gap-1 w-fit">
-                        <Globe className="w-3 h-3" /> Yes
-                      </span>
-                    ) : (
-                      <span className="text-xs px-2 py-1 rounded bg-[#00B935]/10 text-[#00B935]">No</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )
-
-      case 'privacy-notices':
-        return (
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-[#1e2130]">
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">ID</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Name</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Type</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Version</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Owner</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Last Updated</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Languages</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {privacyNotices.map((record) => (
-                <tr key={record.id}
-                  className="border-b border-[#1e2130] hover:bg-[#1a1d2a] cursor-pointer transition-colors"
-                  onClick={() => setSelectedRecordId(record.name)}>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.id}</td>
-                  <td className="py-3 px-4 text-sm text-white font-medium">{record.name}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.type}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">v{record.version}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.owner}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.lastUpdated}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.languages}</td>
-                  <td className="py-3 px-4">
-                    <span className={cn("text-xs px-2 py-1 rounded", statusColors[record.status])}>{record.status}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )
-
-      case 'benchmarking':
-        return (
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-[#1e2130]">
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">ID</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Framework</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Score</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Assessor</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Last Assessed</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Next Review</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {benchmarkRecords.map((record) => (
-                <tr key={record.id}
-                  className="border-b border-[#1e2130] hover:bg-[#1a1d2a] cursor-pointer transition-colors"
-                  onClick={() => setSelectedRecordId(record.framework)}>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.id}</td>
-                  <td className="py-3 px-4 text-sm text-white font-medium">{record.framework}</td>
-                  <td className="py-3 px-4">
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 h-1.5 bg-[#1e2130] rounded-full w-20">
-                        <div className="h-1.5 rounded-full" style={{
-                          width: `${record.score}%`,
-                          background: record.score >= 80 ? '#00B935' : record.score >= 60 ? '#FFEF3C' : '#ef4444'
-                        }} />
-                      </div>
-                      <span className="text-sm text-white">{record.score}%</span>
-                    </div>
-                  </td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.assessor}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.lastAssessed}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.nextReview}</td>
-                  <td className="py-3 px-4">
-                    <span className={cn("text-xs px-2 py-1 rounded", statusColors[record.status])}>{record.status}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )
-
-      case 'maturity-planning':
-        return (
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-[#1e2130]">
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">ID</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Domain</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Current Level</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Target Level</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Owner</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Target Date</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Initiatives</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-[#9ca3af] uppercase tracking-wider">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {maturityRecords.map((record) => (
-                <tr key={record.id}
-                  className="border-b border-[#1e2130] hover:bg-[#1a1d2a] cursor-pointer transition-colors"
-                  onClick={() => setSelectedRecordId(record.domain)}>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.id}</td>
-                  <td className="py-3 px-4 text-sm text-white font-medium">{record.domain}</td>
-                  <td className="py-3 px-4">
-                    <span className={cn("text-sm font-medium", maturityLevelColor(record.currentLevel))}>
-                      L{record.currentLevel} – {maturityLevelLabel(record.currentLevel)}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4">
-                    <span className={cn("text-sm font-medium", maturityLevelColor(record.targetLevel))}>
-                      L{record.targetLevel} – {maturityLevelLabel(record.targetLevel)}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.owner}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.targetDate}</td>
-                  <td className="py-3 px-4 text-sm text-[#9ca3af]">{record.initiatives}</td>
-                  <td className="py-3 px-4">
-                    <span className={cn("text-xs px-2 py-1 rounded", statusColors[record.status])}>{record.status}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )
-
-      default:
-        return null
-    }
-  }
-
   return (
     <div className="h-full flex flex-col">
+      {/* Secondary Tabs - Horizontal tab strip */}
+      <div className="border-b border-[#1e2130] px-6 shrink-0">
+        <div className="flex gap-1">
+          {secondaryTabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={cn(
+                "px-4 py-3 text-sm font-medium transition-colors relative whitespace-nowrap",
+                activeTab === tab.id ? "text-[#6CEEAD]" : "text-[#9ca3af] hover:text-white"
+              )}
+            >
+              {tab.label}
+              {activeTab === tab.id && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#6CEEAD]" />
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
 
-      {/* ── Body: main content ── */}
-      <div className="flex-1 flex overflow-hidden">
+      {/* Tab Content */}
+      <div className="flex-1 overflow-auto">
 
-        {/* Main content — switches by tab */}
-        <div className="flex-1 overflow-auto flex flex-col">
+        {/* Tab 1: Overview (Default) */}
+        {activeTab === 'overview' && <PiaDpiaDashboard />}
 
-          {/* Sub-module tabs */}
-          <div className="border-b border-[#1e2130] px-6 shrink-0">
-            <div className="flex gap-1">
-              {tabs.map((tab) => (
-                <button key={tab.id} onClick={() => setPrivacyTab(tab.id)}
-                  className={cn(
-                    "px-4 py-3 text-sm font-medium transition-colors relative",
-                    privacyTab === tab.id ? "text-[#6CEEAD]" : "text-[#9ca3af] hover:text-white"
-                  )}>
-                  {tab.label}
-                  {privacyTab === tab.id && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#6CEEAD]" />
-                  )}
-                </button>
-              ))}
+        {/* Tab 2: Incident Manager */}
+        {activeTab === 'incidents' && (
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-medium text-white">Incident Register</h2>
+              <button className="flex items-center gap-2 px-4 py-2 bg-[#6CEEAD] text-[#0f1117] rounded-md text-sm font-medium hover:bg-[#5dd99c] transition-colors">
+                <Plus className="w-4 h-4" />
+                Add incident
+              </button>
+            </div>
+            <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+              <div className="px-4">
+                <div className="grid gap-4 py-3 border-b border-[#1e2130]"
+                  style={{ gridTemplateColumns: '80px 1fr 120px 140px 120px 100px 120px' }}>
+                  <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Incident #</p>
+                  <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Incident Name</p>
+                  <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Incident Type</p>
+                  <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Organization</p>
+                  <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Reporter</p>
+                  <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Stage</p>
+                  <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Assigned</p>
+                </div>
+                {incidentRecords.map((record) => (
+                  <div key={record.id}
+                    className="grid gap-4 py-3 border-b border-[#1e2130] last:border-0 hover:bg-[#1a1d2a] cursor-pointer transition-colors -mx-4 px-4 items-center"
+                    style={{ gridTemplateColumns: '80px 1fr 120px 140px 120px 100px 120px' }}
+                    onClick={() => setSelectedRecordId(record.title)}>
+                    <p className="text-sm text-[#9ca3af]">{record.id}</p>
+                    <p className="text-sm font-medium text-white truncate">{record.title}</p>
+                    <p className="text-xs text-[#9ca3af]">{record.type}</p>
+                    <p className="text-xs text-[#9ca3af]">OneTrust</p>
+                    <p className="text-xs text-[#9ca3af]">{record.reportedBy}</p>
+                    <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded w-fit", statusColors[record.status])}>{record.status}</span>
+                    <p className="text-xs text-[#9ca3af]">{record.reportedBy}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
+        )}
 
-          <div className="flex-1 overflow-auto">
-
-          {/* Overview — per-section dashboard */}
-          {privacyTab === 'overview' && <OverviewContent item={privacyRecordItem} />}
-
-          {/* Records — flat table */}
-          {privacyTab === 'records' && (
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h2 className="text-lg font-medium tracking-[-0.01em] text-white">{getItemLabel()}</h2>
-                  <p className="text-sm text-[#9ca3af]">{getItemCount()} items</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4b5563]" />
-                    <input type="text" placeholder="Search..."
-                      className="pl-9 pr-4 py-2 bg-[#1e2130] border border-[#2a2d3a] rounded-md text-sm text-white placeholder-[#4b5563] focus:outline-none focus:border-[#6CEEAD]/50 w-64" />
-                  </div>
-                  <button className="p-2 bg-[#1e2130] border border-[#2a2d3a] rounded-md text-[#9ca3af] hover:text-white hover:border-[#3a3d4a] transition-colors">
-                    <Filter className="w-4 h-4" />
+        {/* Tab 3: Privacy Rights */}
+        {activeTab === 'privacy-rights' && (
+          <div className="flex flex-col h-full">
+            {/* Tertiary Tabs */}
+            <div className="border-b border-[#1e2130] px-6 shrink-0 bg-[#0f1117]">
+              <div className="flex gap-1">
+                {privacyRightsTertiaryTabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setPrivacyRightsTertiary(tab.id)}
+                    className={cn(
+                      "px-3 py-2 text-xs font-medium transition-colors relative",
+                      privacyRightsTertiary === tab.id ? "text-white" : "text-[#9ca3af] hover:text-white"
+                    )}
+                  >
+                    {tab.label}
+                    {privacyRightsTertiary === tab.id && (
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4b5563]" />
+                    )}
                   </button>
-                  <button className="p-2 bg-[#1e2130] border border-[#2a2d3a] rounded-md text-[#9ca3af] hover:text-white hover:border-[#3a3d4a] transition-colors">
-                    <Download className="w-4 h-4" />
-                  </button>
-                  <button className="flex items-center gap-2 px-3 py-2 bg-[#6CEEAD] text-[#0f1117] rounded-md text-sm font-medium hover:bg-[#5dd99c] transition-colors">
-                    <Plus className="w-4 h-4" />
-                    Add new
-                  </button>
-                </div>
-              </div>
-              <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
-                {renderRecordsTable()}
+                ))}
               </div>
             </div>
-          )}
 
-          {/* Objects */}
-          {privacyTab === 'objects' && (
-            <div className="p-6">
-              <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-2">Objects</h2>
-              <p className="text-[#9ca3af] mb-6 text-sm">Reusable building blocks that can be connected across your privacy records.</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {[
-                  { label: 'Frameworks',          desc: 'GDPR, CCPA, ISO 27701 and more',  color: '#0788F7' },
-                  { label: 'Controls',            desc: 'Privacy controls and safeguards',   color: '#00B935' },
-                  { label: 'Templates',           desc: 'Reusable assessment templates',     color: '#FFEF3C' },
-                  { label: 'Data Categories',     desc: 'Defined personal data categories',  color: '#976FE6' },
-                  { label: 'Legal Bases',         desc: 'Approved lawful processing bases',  color: '#6CEEAD' },
-                  { label: 'Retention Schedules', desc: 'Data retention rules by category',  color: '#3B40D8' },
-                ].map((obj) => (
-                  <div key={obj.label}
-                    className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg hover:border-[#2a2d3a] transition-colors cursor-pointer">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: `${obj.color}18` }}>
-                        <FileText className="w-5 h-5" style={{ color: obj.color }} />
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-medium text-white">{obj.label}</h3>
-                        <p className="text-xs text-[#9ca3af]">{obj.desc}</p>
-                      </div>
+            <div className="flex-1 overflow-auto p-6">
+              {privacyRightsTertiary === 'requests' && (
+                <>
+                  {/* Data Redaction Alert Banner */}
+                  <div className="mb-6 p-4 bg-[#f59e0b]/10 border border-[#f59e0b]/30 rounded-lg flex items-start gap-3">
+                    <AlertTriangle className="w-5 h-5 text-[#f59e0b] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-white">Data Redaction for privacy requests</p>
+                      <p className="text-xs text-[#9ca3af] mt-1">Configure automated data redaction workflows to comply with GDPR Article 17 and CCPA deletion requests.</p>
                     </div>
                   </div>
+
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-lg font-medium text-white">Requests</h2>
+                    <div className="flex items-center gap-2">
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4b5563]" />
+                        <input type="text" placeholder="Search..."
+                          className="pl-9 pr-4 py-2 bg-[#1e2130] border border-[#2a2d3a] rounded-md text-sm text-white placeholder-[#4b5563] focus:outline-none focus:border-[#6CEEAD]/50 w-64" />
+                      </div>
+                      <button className="flex items-center gap-2 px-3 py-2 bg-[#6CEEAD] text-[#0f1117] rounded-md text-sm font-medium hover:bg-[#5dd99c] transition-colors">
+                        <Plus className="w-4 h-4" />
+                        Add new
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+                    <div className="px-4">
+                      <div className="grid gap-4 py-3 border-b border-[#1e2130]"
+                        style={{ gridTemplateColumns: '80px 1fr 100px 120px 100px 100px' }}>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">ID</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Subject</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Type</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Submitted</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Due Date</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Status</p>
+                      </div>
+                      {privacyRightRequests.map((record) => (
+                        <div key={record.id}
+                          className="grid gap-4 py-3 border-b border-[#1e2130] last:border-0 hover:bg-[#1a1d2a] cursor-pointer transition-colors -mx-4 px-4 items-center"
+                          style={{ gridTemplateColumns: '80px 1fr 100px 120px 100px 100px' }}
+                          onClick={() => setSelectedRecordId(record.subject)}>
+                          <p className="text-sm text-[#9ca3af]">{record.id}</p>
+                          <p className="text-sm font-medium text-white">{record.subject}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.type}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.receivedDate}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.dueDate}</p>
+                          <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded w-fit", statusColors[record.status])}>{record.status}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+              {privacyRightsTertiary === 'reports' && (
+                <div className="text-center py-16 text-[#9ca3af]">
+                  <p className="text-sm">Reports view coming soon</p>
+                </div>
+              )}
+              {privacyRightsTertiary === 'subtasks' && (
+                <div className="text-center py-16 text-[#9ca3af]">
+                  <p className="text-sm">Subtasks view coming soon</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Tab 4: Data Mapping */}
+        {activeTab === 'data-mapping' && (
+          <div className="flex flex-col h-full">
+            {/* Tertiary Tabs */}
+            <div className="border-b border-[#1e2130] px-6 shrink-0 bg-[#0f1117]">
+              <div className="flex gap-1 overflow-x-auto">
+                {dataMappingTertiaryTabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setDataMappingTertiary(tab.id)}
+                    className={cn(
+                      "px-3 py-2 text-xs font-medium transition-colors relative whitespace-nowrap",
+                      dataMappingTertiary === tab.id ? "text-white" : "text-[#9ca3af] hover:text-white"
+                    )}
+                  >
+                    {tab.label}
+                    {dataMappingTertiary === tab.id && (
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4b5563]" />
+                    )}
+                  </button>
                 ))}
               </div>
             </div>
-          )}
 
-          {/* Policies */}
-          {privacyTab === 'policies' && (
-            <div className="p-6">
-              <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-2">Privacy Policies</h2>
-              <p className="text-[#9ca3af] mb-6 text-sm">Policy engine enforcing privacy requirements across your records and processes.</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
-                  <h3 className="text-sm font-medium text-white mb-2">Active Policies</h3>
-                  <p className="text-2xl font-semibold text-[#00B935]">18</p>
-                  <p className="text-xs text-[#9ca3af]">Enforcing guardrails</p>
+            <div className="flex-1 overflow-auto p-6">
+              {dataMappingTertiary === 'pending' && (
+                <>
+                  <h2 className="text-lg font-medium text-white mb-4">Pending Inventory</h2>
+                  
+                  {/* Metric Summary */}
+                  <div className="grid grid-cols-4 gap-4 mb-6">
+                    {[
+                      { label: 'Total pending', value: '341', color: '#0788F7' },
+                      { label: 'New records', value: '141', color: '#6CEEAD' },
+                      { label: 'Updated record', value: '1', color: '#f59e0b' },
+                      { label: 'Similar records', value: '72', color: '#976FE6' },
+                    ].map((stat) => (
+                      <div key={stat.label} className="bg-[#13151f] border border-[#1e2130] rounded-lg p-4">
+                        <p className="text-2xl font-bold text-white">{stat.value}</p>
+                        <p className="text-xs text-[#9ca3af] mt-1">{stat.label}</p>
+                        <div className="h-1 mt-2 rounded-full" style={{ background: `${stat.color}30` }}>
+                          <div className="h-full rounded-full" style={{ background: stat.color, width: '60%' }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+                    <div className="px-4">
+                      <div className="grid gap-4 py-3 border-b border-[#1e2130]"
+                        style={{ gridTemplateColumns: '80px 1fr 120px 140px 100px' }}>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">ID</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Process</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Category</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Data Types</p>
+                        <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Cross-Border</p>
+                      </div>
+                      {dataMappingRecords.map((record) => (
+                        <div key={record.id}
+                          className="grid gap-4 py-3 border-b border-[#1e2130] last:border-0 hover:bg-[#1a1d2a] cursor-pointer transition-colors -mx-4 px-4 items-center"
+                          style={{ gridTemplateColumns: '80px 1fr 120px 140px 100px' }}
+                          onClick={() => setSelectedRecordId(record.process)}>
+                          <p className="text-sm text-[#9ca3af]">{record.id}</p>
+                          <p className="text-sm font-medium text-white">{record.process}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.category}</p>
+                          <p className="text-xs text-[#9ca3af]">{record.dataTypes}</p>
+                          <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded w-fit", record.crossBorder ? 'bg-[#f59e0b]/10 text-[#f59e0b]' : 'bg-[#00B935]/10 text-[#00B935]')}>
+                            {record.crossBorder ? 'Yes' : 'No'}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+              {dataMappingTertiary !== 'pending' && (
+                <div className="text-center py-16 text-[#9ca3af]">
+                  <p className="text-sm">{dataMappingTertiaryTabs.find(t => t.id === dataMappingTertiary)?.label} view coming soon</p>
                 </div>
-                <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
-                  <h3 className="text-sm font-medium text-white mb-2">Pending Review</h3>
-                  <p className="text-2xl font-semibold text-[#FFEF3C]">5</p>
-                  <p className="text-xs text-[#9ca3af]">Awaiting approval</p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Tab 5: Privacy Notices */}
+        {activeTab === 'privacy-notices' && (
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-medium text-white">Privacy Notices</h2>
+              <button className="flex items-center gap-2 px-4 py-2 bg-[#6CEEAD] text-[#0f1117] rounded-md text-sm font-medium hover:bg-[#5dd99c] transition-colors">
+                <Plus className="w-4 h-4" />
+                Add new
+              </button>
+            </div>
+            <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+              <div className="px-4">
+                <div className="grid gap-4 py-3 border-b border-[#1e2130]"
+                  style={{ gridTemplateColumns: '80px 1fr 120px 120px 100px 100px' }}>
+                  <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">ID</p>
+                  <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Notice Name</p>
+                  <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Type</p>
+                  <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Last Updated</p>
+                  <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Version</p>
+                  <p className="text-[10px] font-semibold text-[#4b5563] uppercase tracking-wider">Status</p>
                 </div>
-              </div>
-              <h3 className="text-sm font-medium text-white mb-3">Recent Policies</h3>
-              <div className="space-y-2">
-                {[
-                  { name: 'Data Minimisation Policy',      status: 'Active' },
-                  { name: 'Consent Withdrawal Procedure',  status: 'Active' },
-                  { name: 'Cross-Border Transfer Rules',   status: 'Active' },
-                  { name: 'Breach Notification SLA',       status: 'Draft'  },
-                  { name: 'Retention & Deletion Schedule', status: 'Active' },
-                ].map((policy) => (
-                  <div key={policy.name}
-                    className="p-3 bg-[#13151f] border border-[#1e2130] rounded-lg flex items-center justify-between hover:border-[#2a2d3a] cursor-pointer transition-colors">
-                    <span className="text-sm text-white">{policy.name}</span>
-                    <span className={cn("text-xs px-2 py-1 rounded", statusColors[policy.status])}>
-                      {policy.status}
-                    </span>
+                {privacyNotices.map((record) => (
+                  <div key={record.id}
+                    className="grid gap-4 py-3 border-b border-[#1e2130] last:border-0 hover:bg-[#1a1d2a] cursor-pointer transition-colors -mx-4 px-4 items-center"
+                    style={{ gridTemplateColumns: '80px 1fr 120px 120px 100px 100px' }}
+                    onClick={() => setSelectedRecordId(record.name)}>
+                    <p className="text-sm text-[#9ca3af]">{record.id}</p>
+                    <p className="text-sm font-medium text-white">{record.name}</p>
+                    <p className="text-xs text-[#9ca3af]">{record.type}</p>
+                    <p className="text-xs text-[#9ca3af]">{record.lastUpdated}</p>
+                    <p className="text-xs text-[#9ca3af]">{record.version}</p>
+                    <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded w-fit", statusColors[record.status])}>{record.status}</span>
                   </div>
                 ))}
               </div>
             </div>
-          )}
-
           </div>
-        </div>
+        )}
+
+        {/* Tab 6: Program Benchmarking */}
+        {activeTab === 'benchmarking' && (
+          <div className="flex-1 flex flex-col items-center justify-center p-12">
+            <div className="max-w-2xl text-center">
+              <h2 className="text-2xl font-semibold text-white mb-4">Welcome to Program Benchmarking</h2>
+              <p className="text-[#9ca3af] mb-8">Compare your privacy program against industry standards and peer organizations to identify gaps and opportunities for improvement.</p>
+              <button className="px-6 py-3 bg-[#6CEEAD] text-[#0f1117] rounded-md text-sm font-medium hover:bg-[#5dd99c] transition-colors mb-12">
+                Start assessment
+              </button>
+
+              <div className="grid grid-cols-3 gap-6">
+                {[
+                  { title: 'Self-Assess', desc: 'Evaluate your current privacy maturity across key domains', icon: <CheckCircle className="w-8 h-8 text-[#6CEEAD]" /> },
+                  { title: 'Benchmark', desc: 'Compare your results against industry peers and standards', icon: <Clock className="w-8 h-8 text-[#0788F7]" /> },
+                  { title: 'Gain insights', desc: 'Get actionable recommendations to improve your program', icon: <ArrowRight className="w-8 h-8 text-[#976FE6]" /> },
+                ].map((item) => (
+                  <div key={item.title} className="p-6 bg-[#13151f] border border-[#1e2130] rounded-lg text-center">
+                    <div className="flex justify-center mb-4">{item.icon}</div>
+                    <h3 className="text-sm font-medium text-white mb-2">{item.title}</h3>
+                    <p className="text-xs text-[#9ca3af]">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 7: Maturity & Planning */}
+        {activeTab === 'maturity' && (
+          <div className="flex-1 flex flex-col items-center justify-center p-12">
+            <div className="max-w-3xl text-center">
+              <h2 className="text-2xl font-semibold text-white mb-4">Welcome to Maturity & Planning</h2>
+              <p className="text-[#9ca3af] mb-8">Assess your privacy program maturity and create strategic roadmaps for continuous improvement.</p>
+              <button className="px-6 py-3 bg-[#6CEEAD] text-[#0f1117] rounded-md text-sm font-medium hover:bg-[#5dd99c] transition-colors mb-12">
+                Customize assessment
+              </button>
+
+              <h3 className="text-sm font-medium text-white mb-4">Readiness templates</h3>
+              <div className="grid grid-cols-3 gap-4">
+                {[
+                  { title: 'GDPR Readiness', desc: 'EU General Data Protection Regulation compliance assessment', color: '#0788F7' },
+                  { title: 'CCPA/CPRA Readiness', desc: 'California privacy law compliance assessment', color: '#6CEEAD' },
+                  { title: 'ISO 27701', desc: 'Privacy Information Management System certification', color: '#976FE6' },
+                  { title: 'NIST Privacy Framework', desc: 'US federal privacy framework alignment', color: '#f59e0b' },
+                  { title: 'Custom Assessment', desc: 'Build your own maturity assessment criteria', color: '#9ca3af' },
+                  { title: 'Industry Benchmark', desc: 'Compare against sector-specific standards', color: '#ef4444' },
+                ].map((template) => (
+                  <div key={template.title} className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg text-left hover:border-[#2a2d3a] cursor-pointer transition-colors">
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style={{ background: `${template.color}18` }}>
+                      <div className="w-4 h-4 rounded" style={{ background: template.color }} />
+                    </div>
+                    <h4 className="text-sm font-medium text-white mb-1">{template.title}</h4>
+                    <p className="text-xs text-[#9ca3af]">{template.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   )

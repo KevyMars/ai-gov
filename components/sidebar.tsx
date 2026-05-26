@@ -1,8 +1,7 @@
 "use client"
 
-import { useState, useEffect } from 'react'
 import { useSubscription, tierLabels } from '@/lib/subscription-context'
-import { useNavigation, NavigationView, PrivacyRecordItem } from '@/lib/navigation-context'
+import { useNavigation, NavigationView } from '@/lib/navigation-context'
 import {
   Home,
   LayoutDashboard,
@@ -17,31 +16,14 @@ import {
   HelpCircle,
   ChevronLeft,
   ChevronRight,
-  ChevronDown,
   Brain,
   Shield,
   Users,
   BarChart3,
   Database,
   Wrench,
-  FileSearch,
-  AlertOctagon,
-  UserCheck,
-  Map,
-  BarChart2,
-  TrendingUp,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-
-const privacySubItems: { id: PrivacyRecordItem; label: string; icon: React.ReactNode; alertColor?: string }[] = [
-  { id: 'pia-dpia',          label: 'PIA & DPIA',          icon: <FileSearch   className="w-4 h-4 shrink-0" /> },
-  { id: 'incidents',         label: 'Incident Management', icon: <AlertOctagon className="w-4 h-4 shrink-0" />, alertColor: '#ef4444' },
-  { id: 'privacy-rights',    label: 'Privacy Rights',      icon: <UserCheck    className="w-4 h-4 shrink-0" />, alertColor: '#E4982E' },
-  { id: 'data-mapping',      label: 'Data Mapping',        icon: <Map          className="w-4 h-4 shrink-0" /> },
-  { id: 'privacy-notices',   label: 'Privacy Notices',     icon: <FileText     className="w-4 h-4 shrink-0" /> },
-  { id: 'benchmarking',      label: 'Benchmarking',        icon: <BarChart2    className="w-4 h-4 shrink-0" /> },
-  { id: 'maturity-planning', label: 'Maturity & Planning', icon: <TrendingUp   className="w-4 h-4 shrink-0" />, alertColor: '#E4982E' },
-]
 
 interface NavItem {
   id: NavigationView
@@ -88,12 +70,7 @@ interface SidebarProps {
 
 export function Sidebar({ onSubscriptionClick }: SidebarProps) {
   const { tier } = useSubscription()
-  const { currentView, setCurrentView, sidebarCollapsed, setSidebarCollapsed, setSelectedRecordId, privacyRecordItem, setPrivacyRecordItem } = useNavigation()
-  const [privacyExpanded, setPrivacyExpanded] = useState(currentView === 'privacy')
-
-  useEffect(() => {
-    if (currentView === 'privacy') setPrivacyExpanded(true)
-  }, [currentView])
+  const { currentView, setCurrentView, sidebarCollapsed, setSidebarCollapsed, setSelectedRecordId } = useNavigation()
 
   const visibleModules = moduleItems.filter(item => {
     if (tier === 'lite') return false
@@ -206,77 +183,24 @@ export function Sidebar({ onSubscriptionClick }: SidebarProps) {
               </div>
             )}
             <ul className="space-y-1 px-2">
-              {visibleModules.map((item) => {
-                const isPrivacy = item.id === 'privacy'
-                if (isPrivacy && !sidebarCollapsed) {
-                  return (
-                    <li key={item.id}>
-                      <button
-                        onClick={() => {
-                          handleNavClick(item.id)
-                          setPrivacyExpanded(!privacyExpanded || currentView !== 'privacy')
-                        }}
-                        className={cn(
-                          "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
-                          currentView === item.id
-                            ? "bg-[#6CEEAD]/10 text-[#6CEEAD]"
-                            : "text-[#9ca3af] hover:bg-[#1e2130] hover:text-white"
-                        )}
-                      >
-                        {item.icon}
-                        <span className="flex-1 text-left">{item.label}</span>
-                        <ChevronDown className={cn("w-4 h-4 transition-transform", privacyExpanded ? "" : "-rotate-90")} />
-                      </button>
-                      {privacyExpanded && (
-                        <ul className="mt-1 space-y-0.5">
-                          {privacySubItems.map((sub) => (
-                            <li key={sub.id}>
-                              <button
-                                onClick={() => {
-                                  setCurrentView('privacy')
-                                  setPrivacyRecordItem(sub.id)
-                                  setSelectedRecordId(null)
-                                }}
-                                style={{ paddingLeft: '20px' }}
-                                className={cn(
-                                  "w-full flex items-center gap-2 pr-3 py-1.5 ml-3 rounded-md text-sm transition-colors",
-                                  currentView === 'privacy' && privacyRecordItem === sub.id
-                                    ? "bg-[#6CEEAD]/10 text-[#6CEEAD]"
-                                    : "text-[#9ca3af] hover:bg-[#1e2130] hover:text-white"
-                                )}
-                              >
-                                {sub.icon}
-                                <span className="truncate flex-1 text-left">{sub.label}</span>
-                                {sub.alertColor && (
-                                  <AlertTriangle className="w-3.5 h-3.5 shrink-0" style={{ color: sub.alertColor }} />
-                                )}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </li>
-                  )
-                }
-                return (
-                  <li key={item.id}>
-                    <button
-                      onClick={() => handleNavClick(item.id)}
-                      className={cn(
-                        "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
-                        currentView === item.id
-                          ? "bg-[#6CEEAD]/10 text-[#6CEEAD]"
-                          : "text-[#9ca3af] hover:bg-[#1e2130] hover:text-white",
-                        sidebarCollapsed && "justify-center px-2"
-                      )}
-                      title={sidebarCollapsed ? item.label : undefined}
-                    >
-                      {item.icon}
-                      {!sidebarCollapsed && <span>{item.label}</span>}
-                    </button>
-                  </li>
-                )
-              })}
+              {visibleModules.map((item) => (
+                <li key={item.id}>
+                  <button
+                    onClick={() => handleNavClick(item.id)}
+                    className={cn(
+                      "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
+                      currentView === item.id
+                        ? "bg-[#6CEEAD]/10 text-[#6CEEAD]"
+                        : "text-[#9ca3af] hover:bg-[#1e2130] hover:text-white",
+                      sidebarCollapsed && "justify-center px-2"
+                    )}
+                    title={sidebarCollapsed ? item.label : undefined}
+                  >
+                    {item.icon}
+                    {!sidebarCollapsed && <span>{item.label}</span>}
+                  </button>
+                </li>
+              ))}
             </ul>
             
             {/* Setup Section - Below Apps */}
