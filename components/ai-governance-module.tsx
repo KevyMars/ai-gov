@@ -1630,6 +1630,7 @@ export function AIGovernanceModule() {
                                 >
                                   <option value="Model Provider">Model Provider</option>
                                   <option value="Use type">Use type</option>
+                                  <option value="Use Case">Use Case</option>
                                   <option value="Risk level">Risk level</option>
                                   <option value="Data classification">Data classification</option>
                                   <option value="Deployment">Deployment</option>
@@ -1665,6 +1666,47 @@ export function AIGovernanceModule() {
                                       <option value="Customer Facing">Customer Facing</option>
                                       <option value="Research">Research</option>
                                       <option value="Development">Development</option>
+                                    </>
+                                  )}
+                                  {pairing.field === 'Use Case' && (
+                                    <>
+                                      <optgroup label="Prohibited AI Practices (Art. 5)">
+                                        <option value="Subliminal manipulation">Subliminal manipulation</option>
+                                        <option value="Exploitation of vulnerabilities">Exploitation of vulnerabilities</option>
+                                        <option value="Social scoring by public authorities">Social scoring by public authorities</option>
+                                        <option value="Real-time biometric identification">Real-time biometric identification</option>
+                                        <option value="Emotion recognition in workplace/education">Emotion recognition in workplace/education</option>
+                                        <option value="Biometric categorization (sensitive attributes)">Biometric categorization (sensitive attributes)</option>
+                                        <option value="Facial recognition database scraping">Facial recognition database scraping</option>
+                                      </optgroup>
+                                      <optgroup label="High-Risk AI Systems (Annex III)">
+                                        <option value="Biometric identification and categorisation">Biometric identification and categorisation</option>
+                                        <option value="Critical infrastructure management">Critical infrastructure management</option>
+                                        <option value="Education and vocational training">Education and vocational training</option>
+                                        <option value="Employment and worker management">Employment and worker management</option>
+                                        <option value="Access to essential services">Access to essential services</option>
+                                        <option value="Law enforcement">Law enforcement</option>
+                                        <option value="Migration and border control">Migration and border control</option>
+                                        <option value="Administration of justice">Administration of justice</option>
+                                        <option value="Democratic processes">Democratic processes</option>
+                                      </optgroup>
+                                      <optgroup label="Limited Risk AI (Art. 50)">
+                                        <option value="Chatbots and conversational AI">Chatbots and conversational AI</option>
+                                        <option value="Deepfake generation">Deepfake generation</option>
+                                        <option value="AI-generated content">AI-generated content</option>
+                                        <option value="Emotion recognition systems">Emotion recognition systems</option>
+                                      </optgroup>
+                                      <optgroup label="General Purpose AI (Art. 51-56)">
+                                        <option value="Foundation models">Foundation models</option>
+                                        <option value="General purpose AI with systemic risk">General purpose AI with systemic risk</option>
+                                        <option value="Large language models">Large language models</option>
+                                      </optgroup>
+                                      <optgroup label="Minimal/No Risk">
+                                        <option value="Spam filters">Spam filters</option>
+                                        <option value="AI-enabled video games">AI-enabled video games</option>
+                                        <option value="Inventory management">Inventory management</option>
+                                        <option value="Recommendation systems">Recommendation systems</option>
+                                      </optgroup>
                                     </>
                                   )}
                                   {pairing.field === 'Risk level' && (
