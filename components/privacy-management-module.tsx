@@ -2239,21 +2239,24 @@ export function PrivacyManagementModule() {
                       Export
                     </button>
                   </div>
-                  <div className="flex items-center gap-4 mb-4">
+                  <div className="flex items-center justify-end gap-4 mb-4">
                     <div className="flex items-center gap-2 text-sm text-[#f59e0b]">
                       <AlertTriangle className="w-4 h-4" />
                       <span>160 Potential relationships</span>
                     </div>
                     <label className="flex items-center gap-2 text-sm text-white">
                       <input type="checkbox" defaultChecked className="rounded" />
-                      Show relationships
+                      Show
                     </label>
+                    <button className="p-1 text-[#9ca3af] hover:text-white">
+                      <Filter className="w-4 h-4" />
+                    </button>
                   </div>
-                  <div className="bg-[#1a2030] rounded-lg overflow-hidden" style={{ minHeight: '500px' }}>
+                  <div className="rounded-lg overflow-hidden" style={{ minHeight: '500px' }}>
                     <img 
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ffq4ewpInExFLQFrx7L2E3RJx7U8kQ.png" 
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-BqVnNp3jPBzs1RLJvAlEoJFlKqoJYY.png" 
                       alt="Cross-Border Data Transfers"
-                      className="w-full h-full object-cover opacity-90"
+                      className="w-full h-auto object-contain"
                     />
                   </div>
                 </>
