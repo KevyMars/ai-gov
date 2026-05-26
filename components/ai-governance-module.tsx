@@ -400,7 +400,6 @@ const tabs: { id: AIGovTab; label: string }[] = [
   { id: 'governance-packs', label: 'Governance Packs' },
   { id: 'inventory', label: 'Inventory' },
   { id: 'objects', label: 'Objects' },
-  { id: 'ai-policies', label: 'AI Policies' },
 ]
 
 const inventoryItems: { id: AIGovInventoryItem; label: string; icon: React.ReactNode }[] = [
@@ -2382,37 +2381,7 @@ export function AIGovernanceModule() {
           </div>
         )}
 
-        {aiGovTab === 'ai-policies' && (
-          <div className="flex-1 p-6">
-            <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-4">AI Policies</h2>
-            <p className="text-[#9ca3af] mb-6">Policy engine that enforces guardrails and automated actions across your AI systems.</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
-                <h3 className="text-sm font-medium text-white mb-2">Active Policies</h3>
-                <p className="text-2xl font-semibold text-[#00B935]">12</p>
-                <p className="text-xs text-[#9ca3af]">Enforcing guardrails</p>
-              </div>
-              <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
-                <h3 className="text-sm font-medium text-white mb-2">Pending Review</h3>
-                <p className="text-2xl font-semibold text-[#FFEF3C]">3</p>
-                <p className="text-xs text-[#9ca3af]">Awaiting approval</p>
-              </div>
-            </div>
-            <div className="mt-6">
-              <h3 className="text-sm font-medium text-white mb-3">Recent Policies</h3>
-              <div className="space-y-2">
-                {['Data Retention Policy', 'Model Training Guidelines', 'PII Handling Requirements', 'Bias Detection Protocol'].map((policy, i) => (
-                  <div key={policy} className="p-3 bg-[#13151f] border border-[#1e2130] rounded-lg flex items-center justify-between hover:border-[#2a2d3a] cursor-pointer transition-colors">
-                    <span className="text-sm text-white">{policy}</span>
-                    <span className={`text-xs px-2 py-1 rounded ${i < 3 ? 'bg-[#00B935]/10 text-[#00B935]' : 'bg-[#FFEF3C]/10 text-[#FFEF3C]'}`}>
-                      {i < 3 ? 'Active' : 'Draft'}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+
       </div>
     </div>
   )

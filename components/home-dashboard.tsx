@@ -11,225 +11,458 @@ import {
   Brain,
   ChevronRight,
   Clock,
-  AlertCircle
+  AlertCircle,
+  Shield,
+  Activity,
+  BarChart3,
+  TrendingUp,
+  TrendingDown,
+  Users,
+  Globe,
+  Lock,
+  Eye,
+  Zap,
+  Package,
+  Database,
+  FileSearch,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-interface Action {
-  id: string
-  type: 'Assessment' | 'Task' | 'Risk' | 'Evidence'
-  title: string
-  dueDate: string
-  status: 'overdue' | 'due-soon' | 'upcoming'
+// ── Combined Stats Data ───────────────────────────────────────────────────────
+
+const programHealthStats = {
+  aiGovernance: {
+    compliant: 68,
+    inProgress: 22,
+    atRisk: 10,
+  },
+  privacy: {
+    compliant: 73,
+    inProgress: 18,
+    atRisk: 9,
+  }
 }
 
-const actions: Action[] = [
-  { id: '1', type: 'Assessment', title: 'Q2 Vendor Risk Assessment', dueDate: '2 days overdue', status: 'overdue' },
-  { id: '2', type: 'Risk', title: 'High risk AI system review', dueDate: 'Due today', status: 'due-soon' },
-  { id: '3', type: 'Task', title: 'Update privacy policy', dueDate: 'Due in 3 days', status: 'upcoming' },
-  { id: '4', type: 'Evidence', title: 'SOC 2 compliance evidence', dueDate: '1 day overdue', status: 'overdue' },
-  { id: '5', type: 'Assessment', title: 'AI Model validation', dueDate: 'Due in 5 days', status: 'upcoming' },
-  { id: '6', type: 'Task', title: 'Review vendor contract', dueDate: 'Due tomorrow', status: 'due-soon' },
+const aiGovStats = [
+  { label: 'AI Systems', value: '47', sub: '+3 this month', accent: '#6CEEAD', icon: Brain },
+  { label: 'High Risk', value: '12', sub: '2 need review', accent: '#ef4444', icon: AlertTriangle },
+  { label: 'Governance Packs', value: '4', sub: '2 active scanning', accent: '#976FE6', icon: Package },
+  { label: 'Pending Assessments', value: '8', sub: '3 overdue', accent: '#f59e0b', icon: ClipboardCheck },
 ]
 
-interface RecentActivity {
-  id: string
-  action: string
-  target: string
-  user: string
-  time: string
-}
-
-const recentActivity: RecentActivity[] = [
-  { id: '1', action: 'Updated', target: 'GPT-4 Integration', user: 'Sarah Chen', time: '2 hours ago' },
-  { id: '2', action: 'Created', target: 'New Vendor Assessment', user: 'Mark Rivera', time: '4 hours ago' },
-  { id: '3', action: 'Approved', target: 'AI Policy v2.1', user: 'Priya Nair', time: '5 hours ago' },
-  { id: '4', action: 'Flagged', target: 'High Risk Finding', user: 'Tom Walsh', time: '1 day ago' },
-  { id: '5', action: 'Completed', target: 'TPRM Assessment', user: 'Sarah Chen', time: '1 day ago' },
+const privacyStats = [
+  { label: 'Active PIAs', value: '24', sub: '+2 this week', accent: '#0788F7', icon: FileSearch },
+  { label: 'Open Incidents', value: '8', sub: '3 critical', accent: '#ef4444', icon: AlertCircle },
+  { label: 'DSARs Pending', value: '15', sub: '5 due soon', accent: '#FFEF3C', icon: Users },
+  { label: 'Data Records', value: '342', sub: 'Article 30 GDPR', accent: '#00B935', icon: Database },
 ]
 
-const quickAccessItems: { id: NavigationView; label: string; icon: React.ReactNode; count: number }[] = [
-  { id: 'vendors', label: 'Vendors', icon: <Building2 className="w-5 h-5" />, count: 142 },
-  { id: 'assessments', label: 'Assessments', icon: <ClipboardCheck className="w-5 h-5" />, count: 38 },
-  { id: 'risks', label: 'Risks', icon: <AlertTriangle className="w-5 h-5" />, count: 24 },
-  { id: 'assets', label: 'Assets', icon: <Server className="w-5 h-5" />, count: 89 },
-  { id: 'policies', label: 'Policies', icon: <FileText className="w-5 h-5" />, count: 15 },
+const riskItems = [
+  { name: 'Customer Support Chatbot', module: 'AI Governance', risk: 'High', riskColor: '#ef4444', issue: 'Bias detected in responses', daysOpen: 5 },
+  { name: 'Unauthorized Access — Marketing DB', module: 'Privacy', risk: 'Critical', riskColor: '#ef4444', issue: 'Active incident investigation', daysOpen: 3 },
+  { name: 'Fraud Detection Engine', module: 'AI Governance', risk: 'High', riskColor: '#ef4444', issue: 'Assessment overdue by 14d', daysOpen: 14 },
+  { name: 'Vendor API Key Exposed', module: 'Privacy', risk: 'Critical', riskColor: '#ef4444', issue: 'Third party data exposure', daysOpen: 2 },
+  { name: 'HR Screening Tool', module: 'AI Governance', risk: 'Medium', riskColor: '#f59e0b', issue: 'Missing transparency docs', daysOpen: 7 },
 ]
+
+const recentActivity = [
+  { id: '1', action: 'Updated', target: 'GPT-4 Integration', user: 'Sarah Chen', time: '2 hours ago', module: 'AI Governance' },
+  { id: '2', action: 'Created', target: 'New Vendor Assessment', user: 'Mark Rivera', time: '4 hours ago', module: 'Privacy' },
+  { id: '3', action: 'Approved', target: 'EU AI Act Pack', user: 'Priya Nair', time: '5 hours ago', module: 'AI Governance' },
+  { id: '4', action: 'Flagged', target: 'Data Breach Incident', user: 'Tom Walsh', time: '1 day ago', module: 'Privacy' },
+  { id: '5', action: 'Completed', target: 'DPIA Assessment', user: 'Sarah Chen', time: '1 day ago', module: 'Privacy' },
+]
+
+const upcomingDeadlines = [
+  { title: 'GDPR Art. 33 Notification', dueDate: '26h remaining', status: 'critical', module: 'Privacy' },
+  { title: 'AI System Risk Review', dueDate: 'Due in 2 days', status: 'warning', module: 'AI Governance' },
+  { title: 'Vendor Contract Renewal', dueDate: 'Due in 5 days', status: 'normal', module: 'Privacy' },
+  { title: 'Governance Pack Update', dueDate: 'Due in 7 days', status: 'normal', module: 'AI Governance' },
+]
+
+const C = 2 * Math.PI * 36
 
 export function HomeDashboard() {
   const { tier } = useSubscription()
   const { setCurrentView } = useNavigation()
 
-  // OneTrust Secondary Palette for status/type differentiation
-  // Using Sky, Leaf, Destructive, Yellow - avoiding Mint overuse
-  const typeColors = {
-    Assessment: 'bg-[#0788F7]/10 text-[#0788F7]', // Sky
-    Task: 'bg-[#00B935]/10 text-[#00B935]', // Leaf
-    Risk: 'bg-[#ef4444]/10 text-[#ef4444]', // Destructive red
-    Evidence: 'bg-[#FFEF3C]/10 text-[#FFEF3C]' // Yellow
-  }
-
-  const statusColors = {
-    overdue: 'text-[#ef4444]',
-    'due-soon': 'text-[#FFEF3C]', // OneTrust Yellow
-    upcoming: 'text-[#9ca3af]'
-  }
+  const combinedCompliance = Math.round(
+    (programHealthStats.aiGovernance.compliant + programHealthStats.privacy.compliant) / 2
+  )
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="p-6 max-w-[1600px] mx-auto overflow-y-auto">
       {/* Welcome Header */}
-      <div className="mb-8">
+      <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
-          <h1 className="text-2xl font-medium tracking-[-0.03em] text-white">Welcome back, Jacob</h1>
+          <h1 className="text-2xl font-semibold tracking-[-0.03em] text-white">Admin Overview</h1>
           <span className="py-1 px-2.5 rounded-md bg-[#6CEEAD]/10 border border-[#6CEEAD]/30 text-[#6CEEAD] text-sm font-medium">
             {tierLabels[tier]}
           </span>
         </div>
-        <p className="text-[#9ca3af] leading-[1.2]">Here&apos;s what&apos;s happening across your governance programs</p>
+        <p className="text-[#9ca3af] leading-[1.2]">Consolidated view across AI Governance and Privacy Management programs</p>
+      </div>
+
+      {/* Overall Program Health */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6">
+        {/* Combined Compliance Score */}
+        <div className="bg-[#13151f] border border-[#1e2130] rounded-lg p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <p className="text-xs font-semibold text-[#9ca3af] uppercase tracking-wider">Overall Compliance</p>
+              <p className="text-3xl font-bold text-white mt-1">{combinedCompliance}%</p>
+            </div>
+            <div className="relative w-16 h-16">
+              <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
+                <circle cx="50" cy="50" r="36" fill="none" stroke="#1e2130" strokeWidth="8" />
+                <circle cx="50" cy="50" r="36" fill="none" stroke="#6CEEAD" strokeWidth="8"
+                  strokeDasharray={`${combinedCompliance / 100 * C} ${C}`}
+                  strokeLinecap="round" />
+              </svg>
+              <Shield className="absolute inset-0 m-auto w-5 h-5 text-[#6CEEAD]" />
+            </div>
+          </div>
+          <div className="flex items-center gap-2 text-xs">
+            <TrendingUp className="w-3.5 h-3.5 text-[#00B935]" />
+            <span className="text-[#00B935]">+3.2%</span>
+            <span className="text-[#4b5563]">vs last month</span>
+          </div>
+        </div>
+
+        {/* AI Governance Health */}
+        <div className="bg-[#13151f] border border-[#1e2130] rounded-lg p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-8 h-8 rounded-lg bg-[#6CEEAD]/10 flex items-center justify-center">
+              <Brain className="w-4 h-4 text-[#6CEEAD]" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-[#9ca3af]">AI Governance</p>
+              <p className="text-lg font-bold text-white">{programHealthStats.aiGovernance.compliant}%</p>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between text-[10px]">
+              <span className="text-[#9ca3af]">Compliant</span>
+              <span className="text-[#00B935]">{programHealthStats.aiGovernance.compliant}%</span>
+            </div>
+            <div className="h-1.5 bg-[#1e2130] rounded-full overflow-hidden">
+              <div className="h-full bg-[#00B935] rounded-full" style={{ width: `${programHealthStats.aiGovernance.compliant}%` }} />
+            </div>
+            <div className="flex items-center justify-between text-[10px] pt-1">
+              <span className="text-[#f59e0b]">{programHealthStats.aiGovernance.inProgress}% in progress</span>
+              <span className="text-[#ef4444]">{programHealthStats.aiGovernance.atRisk}% at risk</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Privacy Health */}
+        <div className="bg-[#13151f] border border-[#1e2130] rounded-lg p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-8 h-8 rounded-lg bg-[#0788F7]/10 flex items-center justify-center">
+              <Lock className="w-4 h-4 text-[#0788F7]" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-[#9ca3af]">Privacy Management</p>
+              <p className="text-lg font-bold text-white">{programHealthStats.privacy.compliant}%</p>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between text-[10px]">
+              <span className="text-[#9ca3af]">Compliant</span>
+              <span className="text-[#00B935]">{programHealthStats.privacy.compliant}%</span>
+            </div>
+            <div className="h-1.5 bg-[#1e2130] rounded-full overflow-hidden">
+              <div className="h-full bg-[#00B935] rounded-full" style={{ width: `${programHealthStats.privacy.compliant}%` }} />
+            </div>
+            <div className="flex items-center justify-between text-[10px] pt-1">
+              <span className="text-[#f59e0b]">{programHealthStats.privacy.inProgress}% in progress</span>
+              <span className="text-[#ef4444]">{programHealthStats.privacy.atRisk}% at risk</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Stats */}
+        <div className="bg-[#13151f] border border-[#1e2130] rounded-lg p-5">
+          <p className="text-xs font-semibold text-[#9ca3af] uppercase tracking-wider mb-3">Key Metrics</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <p className="text-xl font-bold text-white">47</p>
+              <p className="text-[10px] text-[#9ca3af]">AI Systems</p>
+            </div>
+            <div>
+              <p className="text-xl font-bold text-white">342</p>
+              <p className="text-[10px] text-[#9ca3af]">Data Records</p>
+            </div>
+            <div>
+              <p className="text-xl font-bold text-[#ef4444]">20</p>
+              <p className="text-[10px] text-[#9ca3af]">Open Risks</p>
+            </div>
+            <div>
+              <p className="text-xl font-bold text-[#f59e0b]">23</p>
+              <p className="text-[10px] text-[#9ca3af]">Pending Items</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Content */}
+        {/* Main Content - 2 columns */}
         <div className="lg:col-span-2 space-y-6">
-          {/* My Actions */}
-          <div className="bg-[#13151f] border border-[#1e2130] rounded-lg">
-            <div className="p-4 border-b border-[#1e2130] flex items-center justify-between">
-              <h2 className="text-lg font-medium tracking-[-0.01em] text-white">My Actions</h2>
-              <span className="text-sm text-[#9ca3af]">{actions.length} items</span>
+          {/* Module Stats Grid */}
+          <div className="space-y-4">
+            {/* AI Governance Stats */}
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+                  <Brain className="w-4 h-4 text-[#6CEEAD]" />
+                  AI Governance
+                </h3>
+                <button 
+                  onClick={() => setCurrentView('ai-governance')}
+                  className="text-[10px] text-[#6CEEAD] hover:underline"
+                >
+                  View module →
+                </button>
+              </div>
+              <div className="grid grid-cols-4 gap-3">
+                {aiGovStats.map((stat) => {
+                  const Icon = stat.icon
+                  return (
+                    <div key={stat.label} className="bg-[#13151f] border border-[#1e2130] rounded-lg p-3 hover:border-[#2a2d3a] transition-colors cursor-pointer">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="p-1.5 rounded-md" style={{ background: `${stat.accent}15` }}>
+                          <Icon className="w-3.5 h-3.5" style={{ color: stat.accent }} />
+                        </div>
+                      </div>
+                      <p className="text-xl font-bold text-white">{stat.value}</p>
+                      <p className="text-[10px] font-medium text-[#9ca3af] mt-0.5">{stat.label}</p>
+                      <p className="text-[9px] text-[#4b5563] mt-0.5">{stat.sub}</p>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Privacy Management Stats */}
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+                  <Lock className="w-4 h-4 text-[#0788F7]" />
+                  Privacy Management
+                </h3>
+                <button 
+                  onClick={() => setCurrentView('privacy-management')}
+                  className="text-[10px] text-[#0788F7] hover:underline"
+                >
+                  View module →
+                </button>
+              </div>
+              <div className="grid grid-cols-4 gap-3">
+                {privacyStats.map((stat) => {
+                  const Icon = stat.icon
+                  return (
+                    <div key={stat.label} className="bg-[#13151f] border border-[#1e2130] rounded-lg p-3 hover:border-[#2a2d3a] transition-colors cursor-pointer">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="p-1.5 rounded-md" style={{ background: `${stat.accent}15` }}>
+                          <Icon className="w-3.5 h-3.5" style={{ color: stat.accent }} />
+                        </div>
+                      </div>
+                      <p className="text-xl font-bold text-white">{stat.value}</p>
+                      <p className="text-[10px] font-medium text-[#9ca3af] mt-0.5">{stat.label}</p>
+                      <p className="text-[9px] text-[#4b5563] mt-0.5">{stat.sub}</p>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Top Risks Across Programs */}
+          <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+            <div className="px-4 py-3 bg-[#0f1117] border-b border-[#1e2130] flex items-center justify-between">
+              <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 text-[#ef4444]" />
+                Top Risks Across Programs
+              </h3>
+              <span className="text-[10px] text-[#ef4444] font-medium">{riskItems.length} items requiring attention</span>
             </div>
             <div className="divide-y divide-[#1e2130]">
-              {actions.map((action) => (
-                <div
-                  key={action.id}
-                  className="p-4 flex items-center justify-between hover:bg-[#1a1d2a] transition-colors cursor-pointer"
-                >
-                  <div className="flex items-center gap-3">
-                    {action.status === 'overdue' ? (
-                      <AlertCircle className="w-5 h-5 text-[#ef4444]" />
-                    ) : (
-                      <Clock className="w-5 h-5 text-[#9ca3af]" />
-                    )}
-                    <div>
-                      <p className="text-sm text-white">{action.title}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className={cn("text-xs px-2 py-0.5 rounded", typeColors[action.type])}>
-                          {action.type}
-                        </span>
-                        <span className={cn("text-xs", statusColors[action.status])}>
-                          {action.dueDate}
-                        </span>
-                      </div>
+              {riskItems.map((item, i) => (
+                <div key={i} className="px-4 py-3 flex items-center justify-between hover:bg-[#1a1d2a] transition-colors cursor-pointer">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className={cn(
+                      "w-2 h-2 rounded-full shrink-0",
+                      item.risk === 'Critical' ? 'bg-[#ef4444] animate-pulse' : 
+                      item.risk === 'High' ? 'bg-[#ef4444]' : 'bg-[#f59e0b]'
+                    )} />
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-white truncate">{item.name}</p>
+                      <p className="text-[10px] text-[#9ca3af] truncate">{item.issue}</p>
                     </div>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-[#4b5563]" />
+                  <div className="flex items-center gap-3 shrink-0">
+                    <span className={cn(
+                      "text-[10px] px-2 py-0.5 rounded-full font-medium",
+                      item.module === 'AI Governance' ? 'bg-[#6CEEAD]/10 text-[#6CEEAD]' : 'bg-[#0788F7]/10 text-[#0788F7]'
+                    )}>
+                      {item.module}
+                    </span>
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded" style={{ color: item.riskColor, background: `${item.riskColor}1a` }}>
+                      {item.risk}
+                    </span>
+                    <span className="text-[10px] text-[#4b5563]">{item.daysOpen}d open</span>
+                    <ChevronRight className="w-4 h-4 text-[#4b5563]" />
+                  </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Quick Access */}
+          {/* Quick Access Modules */}
           <div>
-            <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-4">Quick Access</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-              {quickAccessItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setCurrentView(item.id)}
-                  className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg hover:border-[#2a2d3a] hover:bg-[#1a1d2a] transition-colors text-left"
-                >
-                  <div className="text-[#9ca3af] mb-2">{item.icon}</div>
-                  <p className="text-sm font-medium text-white">{item.label}</p>
-                  <p className="text-xs text-[#9ca3af] mt-1">{item.count} items</p>
-                </button>
+            <h3 className="text-sm font-semibold text-white mb-3">Quick Access</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                onClick={() => setCurrentView('ai-governance')}
+                className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg hover:border-[#6CEEAD]/50 hover:bg-[#1a1d2a] transition-all text-left group"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-lg bg-[#6CEEAD]/10 flex items-center justify-center group-hover:bg-[#6CEEAD]/20 transition-colors">
+                    <Brain className="w-5 h-5 text-[#6CEEAD]" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white">AI Governance</p>
+                    <p className="text-[10px] text-[#9ca3af]">Manage AI systems and compliance</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#00B935]" />
+                    <span className="text-[#9ca3af]">4 Governance Packs</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#ef4444]" />
+                    <span className="text-[#9ca3af]">12 High Risk</span>
+                  </div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => setCurrentView('privacy-management')}
+                className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg hover:border-[#0788F7]/50 hover:bg-[#1a1d2a] transition-all text-left group"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-lg bg-[#0788F7]/10 flex items-center justify-center group-hover:bg-[#0788F7]/20 transition-colors">
+                    <Lock className="w-5 h-5 text-[#0788F7]" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white">Privacy Management</p>
+                    <p className="text-[10px] text-[#9ca3af]">PIAs, incidents, and data mapping</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#ef4444]" />
+                    <span className="text-[#9ca3af]">8 Open Incidents</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#0788F7]" />
+                    <span className="text-[#9ca3af]">24 Active PIAs</span>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Sidebar - Right column */}
+        <div className="space-y-6">
+          {/* Upcoming Deadlines */}
+          <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+            <div className="px-4 py-3 border-b border-[#1e2130] flex items-center gap-2">
+              <Clock className="w-4 h-4 text-[#f59e0b]" />
+              <h3 className="text-sm font-semibold text-white">Upcoming Deadlines</h3>
+            </div>
+            <div className="divide-y divide-[#1e2130]">
+              {upcomingDeadlines.map((item, i) => (
+                <div key={i} className="px-4 py-3 hover:bg-[#1a1d2a] transition-colors cursor-pointer">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-white truncate">{item.title}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className={cn(
+                          "text-[10px] px-1.5 py-0.5 rounded",
+                          item.module === 'AI Governance' ? 'bg-[#6CEEAD]/10 text-[#6CEEAD]' : 'bg-[#0788F7]/10 text-[#0788F7]'
+                        )}>
+                          {item.module}
+                        </span>
+                      </div>
+                    </div>
+                    <span className={cn(
+                      "text-[10px] font-medium whitespace-nowrap",
+                      item.status === 'critical' ? 'text-[#ef4444]' :
+                      item.status === 'warning' ? 'text-[#f59e0b]' : 'text-[#9ca3af]'
+                    )}>
+                      {item.dueDate}
+                    </span>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
 
-          {/* Module Cards - Only if subscribed */}
-          {tier !== 'lite' && (
-            <div>
-              <h2 className="text-lg font-medium tracking-[-0.01em] text-white mb-4">Your Modules</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <button
-                  onClick={() => setCurrentView('ai-governance')}
-                  className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg hover:border-[#6CEEAD]/50 hover:bg-[#1a1d2a] transition-colors text-left group"
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-lg bg-[#6CEEAD]/10 flex items-center justify-center">
-                      <Brain className="w-5 h-5 text-[#6CEEAD]" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-white">AI Governance</p>
-                      <p className="text-xs text-[#9ca3af]">Manage AI systems and compliance</p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-3 gap-3 text-center">
-                    <div>
-                      <p className="text-lg font-semibold text-white">6</p>
-                      <p className="text-xs text-[#9ca3af]">AI Systems</p>
-                    </div>
-                    <div>
-                      <p className="text-lg font-semibold text-[#ef4444]">3</p>
-                      <p className="text-xs text-[#9ca3af]">High Risk</p>
-                    </div>
-                    <div>
-                      <p className="text-lg font-semibold text-white">4</p>
-                      <p className="text-xs text-[#9ca3af]">Models</p>
-                    </div>
-                  </div>
-                </button>
-
-                {tier === 'premium' && (
-                  <>
-                    <div className="p-4 bg-[#13151f] border border-[#1e2130] rounded-lg">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 rounded-lg bg-[#3b82f6]/10 flex items-center justify-center">
-                          <ClipboardCheck className="w-5 h-5 text-[#3b82f6]" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-white">Privacy</p>
-                          <p className="text-xs text-[#9ca3af]">Data privacy management</p>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-3 gap-3 text-center">
-                        <div>
-                          <p className="text-lg font-semibold text-white">12</p>
-                          <p className="text-xs text-[#9ca3af]">DSARs</p>
-                        </div>
-                        <div>
-                          <p className="text-lg font-semibold text-white">8</p>
-                          <p className="text-xs text-[#9ca3af]">Consents</p>
-                        </div>
-                        <div>
-                          <p className="text-lg font-semibold text-white">5</p>
-                          <p className="text-xs text-[#9ca3af]">PIAs</p>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Sidebar - Recent Activity */}
-        <div className="space-y-6">
-          <div className="bg-[#13151f] border border-[#1e2130] rounded-lg">
-            <div className="p-4 border-b border-[#1e2130]">
-              <h2 className="text-lg font-medium tracking-[-0.01em] text-white">Recent Activity</h2>
+          {/* Recent Activity */}
+          <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+            <div className="px-4 py-3 border-b border-[#1e2130] flex items-center gap-2">
+              <Activity className="w-4 h-4 text-[#6CEEAD]" />
+              <h3 className="text-sm font-semibold text-white">Recent Activity</h3>
             </div>
             <div className="divide-y divide-[#1e2130]">
               {recentActivity.map((activity) => (
-                <div key={activity.id} className="p-4">
-                  <p className="text-sm text-white">
+                <div key={activity.id} className="px-4 py-3">
+                  <p className="text-xs text-white">
                     <span className="text-[#9ca3af]">{activity.user}</span>
                     {' '}{activity.action.toLowerCase()}{' '}
                     <span className="text-[#6CEEAD]">{activity.target}</span>
                   </p>
-                  <p className="text-xs text-[#4b5563] mt-1">{activity.time}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className={cn(
+                      "text-[9px] px-1.5 py-0.5 rounded",
+                      activity.module === 'AI Governance' ? 'bg-[#6CEEAD]/10 text-[#6CEEAD]' : 'bg-[#0788F7]/10 text-[#0788F7]'
+                    )}>
+                      {activity.module}
+                    </span>
+                    <span className="text-[10px] text-[#4b5563]">{activity.time}</span>
+                  </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="bg-[#13151f] border border-[#1e2130] rounded-lg overflow-hidden">
+            <div className="px-4 py-3 border-b border-[#1e2130]">
+              <h3 className="text-sm font-semibold text-white">Quick Actions</h3>
+            </div>
+            <div className="p-3 space-y-2">
+              <button 
+                onClick={() => setCurrentView('ai-governance')}
+                className="w-full text-left px-3 py-2.5 rounded-md text-xs font-medium bg-[#6CEEAD]/10 text-[#6CEEAD] transition-opacity hover:opacity-80"
+              >
+                + New AI Assessment
+              </button>
+              <button 
+                onClick={() => setCurrentView('privacy-management')}
+                className="w-full text-left px-3 py-2.5 rounded-md text-xs font-medium bg-[#0788F7]/10 text-[#0788F7] transition-opacity hover:opacity-80"
+              >
+                + New PIA Assessment
+              </button>
+              <button className="w-full text-left px-3 py-2.5 rounded-md text-xs font-medium bg-[#f59e0b]/10 text-[#f59e0b] transition-opacity hover:opacity-80">
+                Run Risk Scan
+              </button>
+              <button className="w-full text-left px-3 py-2.5 rounded-md text-xs font-medium bg-[#1e2130] text-[#9ca3af] transition-opacity hover:opacity-80">
+                Export Reports
+              </button>
             </div>
           </div>
         </div>
