@@ -2041,39 +2041,6 @@ export function AIGovernanceModule() {
                             <div className="flex-1 min-w-0">
                               <h4 className="text-base font-semibold text-white">{policy.title}</h4>
                               <p className="text-sm text-[#9ca3af] mt-1">{policy.description}</p>
-                              {/* Rule Summary Inline */}
-                              <div className="flex flex-wrap items-center gap-1.5 mt-3">
-                                <span className={`px-2 py-1 border rounded text-[10px] font-semibold ${
-                                  policy.outcome === 'Auto-approved' 
-                                    ? 'border-[#6CEEAD]/30 text-[#6CEEAD] bg-[#6CEEAD]/10' 
-                                    : policy.outcome === 'Denied' 
-                                    ? 'border-[#ef4444]/30 text-[#ef4444] bg-[#ef4444]/10'
-                                    : 'border-[#f59e0b]/30 text-[#f59e0b] bg-[#f59e0b]/10'
-                                }`}>
-                                  {policy.outcome === 'Auto-approved' ? 'APPROVE' : policy.outcome === 'Denied' ? 'DENY' : 'REVIEW'}
-                                </span>
-                                <span className="text-xs text-[#4b5563]">IF</span>
-                                {/* Display conditionsList (from advanced rules) or pairings (from simple builder) */}
-                                {(policy.conditionsList || policy.pairings)?.map((condition: { id?: number; field: string; value: string; operator?: string }, index: number) => {
-                                  const conditions = policy.conditionsList || policy.pairings || []
-                                  return (
-                                    <span key={condition.id || index} className="flex items-center gap-1.5">
-                                      <span className="text-xs text-white">{condition.field}</span>
-                                      <span className="text-xs text-[#4b5563]">=</span>
-                                      <span className="text-xs text-[#6CEEAD]">&quot;{condition.value}&quot;</span>
-                                      {index < conditions.length - 1 && condition.operator && (
-                                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-semibold ${
-                                          condition.operator === 'AND' 
-                                            ? 'text-[#6CEEAD] bg-[#6CEEAD]/10' 
-                                            : 'text-[#f59e0b] bg-[#f59e0b]/10'
-                                        }`}>
-                                          {condition.operator}
-                                        </span>
-                                      )}
-                                    </span>
-                                  )
-                                })}
-                              </div>
                             </div>
                             <div className="flex items-center gap-3">
                               <span className="text-xs px-3 py-1 rounded-full border border-[#1e2130] text-[#9ca3af]">
@@ -2192,22 +2159,26 @@ export function AIGovernanceModule() {
                             </span>
                             <span className="text-sm text-[#9ca3af]">as acceptable use</span>
                             <span className="px-3 py-1.5 border border-[#4b5563]/50 rounded text-xs text-[#9ca3af] font-medium bg-[#4b5563]/10">IF</span>
-                            {policy.conditionsList?.map((condition, index) => (
-                              <span key={condition.id} className="flex items-center gap-2">
-                                <span className="text-sm text-white">{condition.field}</span>
-                                <span className="text-sm text-[#9ca3af]">is</span>
-                                <span className="text-sm text-[#9ca3af]">&quot;{condition.value}&quot;</span>
-                                {index < (policy.conditionsList?.length || 0) - 1 && (
-                                  <span className={`px-3 py-1.5 border rounded text-xs font-medium ${
-                                    condition.operator === 'AND' 
-                                      ? 'border-[#6CEEAD]/30 text-[#6CEEAD] bg-[#6CEEAD]/10' 
-                                      : 'border-[#f59e0b]/30 text-[#f59e0b] bg-[#f59e0b]/10'
-                                  }`}>
-                                    {condition.operator}
-                                  </span>
-                                )}
-                              </span>
-                            ))}
+                            {/* Display conditionsList (from advanced rules) or pairings (from simple builder) */}
+                            {(policy.conditionsList || policy.pairings)?.map((condition: { id?: number; field: string; value: string; operator?: string }, index: number) => {
+                              const conditions = policy.conditionsList || policy.pairings || []
+                              return (
+                                <span key={condition.id || index} className="flex items-center gap-2">
+                                  <span className="text-sm text-white">{condition.field}</span>
+                                  <span className="text-sm text-[#9ca3af]">is</span>
+                                  <span className="text-sm text-[#9ca3af]">&quot;{condition.value}&quot;</span>
+                                  {index < conditions.length - 1 && condition.operator && (
+                                    <span className={`px-3 py-1.5 border rounded text-xs font-medium ${
+                                      condition.operator === 'AND' 
+                                        ? 'border-[#6CEEAD]/30 text-[#6CEEAD] bg-[#6CEEAD]/10' 
+                                        : 'border-[#f59e0b]/30 text-[#f59e0b] bg-[#f59e0b]/10'
+                                    }`}>
+                                      {condition.operator}
+                                    </span>
+                                  )}
+                                </span>
+                              )
+                            })}
                           </div>
                         </div>
 
