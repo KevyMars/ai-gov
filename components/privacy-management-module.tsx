@@ -55,7 +55,7 @@ const privacyRightsTertiaryTabs: { id: PrivacyRightsTertiaryTab; label: string }
 type DataMappingTertiaryTab = 'pending' | 'processing' | 'assets' | 'entities' | 'projects' | 'asset-map' | 'cross-border' | 'data-lineage' | 'reports'
 const dataMappingTertiaryTabs: { id: DataMappingTertiaryTab; label: string; icon: React.ReactNode }[] = [
   { id: 'pending',      label: 'Pending Inventory',     icon: <Inbox className="w-4 h-4" /> },
-  { id: 'processing',   label: 'Processing Activities', icon: <Activity className="w-4 h-4" /> },
+  { id: 'processing',   label: 'Processing Activi...',  icon: <Activity className="w-4 h-4" /> },
   { id: 'assets',       label: 'Assets',                icon: <Database className="w-4 h-4" /> },
   { id: 'entities',     label: 'Entities',              icon: <Building2 className="w-4 h-4" /> },
   { id: 'projects',     label: 'Projects',              icon: <FolderKanban className="w-4 h-4" /> },
