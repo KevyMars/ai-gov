@@ -3,25 +3,16 @@
 import { useSubscription, tierLabels } from '@/lib/subscription-context'
 import { useNavigation, NavigationView } from '@/lib/navigation-context'
 import {
-  Building2,
   ClipboardCheck,
   AlertTriangle,
-  Server,
-  FileText,
   Brain,
   ChevronRight,
   Clock,
   AlertCircle,
-  Shield,
   Activity,
-  BarChart3,
   TrendingUp,
-  TrendingDown,
   Users,
-  Globe,
   Lock,
-  Eye,
-  Zap,
   Package,
   Database,
   FileSearch,
@@ -80,15 +71,9 @@ const upcomingDeadlines = [
   { title: 'Governance Pack Update', dueDate: 'Due in 7 days', status: 'normal', module: 'AI Governance' },
 ]
 
-const C = 2 * Math.PI * 36
-
 export function HomeDashboard() {
   const { tier } = useSubscription()
   const { setCurrentView } = useNavigation()
-
-  const combinedCompliance = Math.round(
-    (programHealthStats.aiGovernance.compliant + programHealthStats.privacy.compliant) / 2
-  )
 
   return (
     <div className="p-6 max-w-[1600px] mx-auto overflow-y-auto">
@@ -103,32 +88,8 @@ export function HomeDashboard() {
         <p className="text-[#9ca3af] leading-[1.2]">Consolidated view across AI Governance and Privacy Management programs</p>
       </div>
 
-      {/* Overall Program Health */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6">
-        {/* Combined Compliance Score */}
-        <div className="bg-[#13151f] border border-[#1e2130] rounded-lg p-5">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-xs font-semibold text-[#9ca3af] uppercase tracking-wider">Overall Compliance</p>
-              <p className="text-3xl font-bold text-white mt-1">{combinedCompliance}%</p>
-            </div>
-            <div className="relative w-16 h-16">
-              <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
-                <circle cx="50" cy="50" r="36" fill="none" stroke="#1e2130" strokeWidth="8" />
-                <circle cx="50" cy="50" r="36" fill="none" stroke="#6CEEAD" strokeWidth="8"
-                  strokeDasharray={`${combinedCompliance / 100 * C} ${C}`}
-                  strokeLinecap="round" />
-              </svg>
-              <Shield className="absolute inset-0 m-auto w-5 h-5 text-[#6CEEAD]" />
-            </div>
-          </div>
-          <div className="flex items-center gap-2 text-xs">
-            <TrendingUp className="w-3.5 h-3.5 text-[#00B935]" />
-            <span className="text-[#00B935]">+3.2%</span>
-            <span className="text-[#4b5563]">vs last month</span>
-          </div>
-        </div>
-
+      {/* Program Health */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
         {/* AI Governance Health */}
         <div className="bg-[#13151f] border border-[#1e2130] rounded-lg p-5">
           <div className="flex items-center gap-2 mb-3">
@@ -177,29 +138,6 @@ export function HomeDashboard() {
             <div className="flex items-center justify-between text-[10px] pt-1">
               <span className="text-[#f59e0b]">{programHealthStats.privacy.inProgress}% in progress</span>
               <span className="text-[#ef4444]">{programHealthStats.privacy.atRisk}% at risk</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Quick Stats */}
-        <div className="bg-[#13151f] border border-[#1e2130] rounded-lg p-5">
-          <p className="text-xs font-semibold text-[#9ca3af] uppercase tracking-wider mb-3">Key Metrics</p>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <p className="text-xl font-bold text-white">47</p>
-              <p className="text-[10px] text-[#9ca3af]">AI Systems</p>
-            </div>
-            <div>
-              <p className="text-xl font-bold text-white">342</p>
-              <p className="text-[10px] text-[#9ca3af]">Data Records</p>
-            </div>
-            <div>
-              <p className="text-xl font-bold text-[#ef4444]">20</p>
-              <p className="text-[10px] text-[#9ca3af]">Open Risks</p>
-            </div>
-            <div>
-              <p className="text-xl font-bold text-[#f59e0b]">23</p>
-              <p className="text-[10px] text-[#9ca3af]">Pending Items</p>
             </div>
           </div>
         </div>
