@@ -27,7 +27,9 @@ import {
   Globe,
   GitBranch,
   FileBarChart,
+  ChevronDown,
 } from 'lucide-react'
+import { AssetMap, CrossBorderMap } from './interactive-world-map'
 import { cn } from '@/lib/utils'
 
 // ── Secondary Tab config ──────────────────────────────────────────────────────────
@@ -2192,12 +2194,41 @@ export function PrivacyManagementModule() {
                       <p className="text-sm text-[#9ca3af]">Filter by organization group to see the internal and third-party assets hosted in each location.</p>
                     </div>
                   </div>
-                  <div className="rounded-lg overflow-hidden">
-                    <img 
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-9fFJafkUgMqXWmzViy7l2RtIgF2kjp.png" 
-                      alt="Asset Map"
-                      className="w-full h-auto object-contain"
-                    />
+                  <div className="flex gap-6">
+                    <div className="flex-1">
+                      <AssetMap
+                        onLocationClick={(loc) => setSelectedRecordId(loc.name)}
+                        showInternal={true}
+                        show3rdParty={true}
+                      />
+                    </div>
+                    <div className="w-56 bg-[#13151f] border border-[#1e2130] rounded-lg p-4 h-fit">
+                      <h3 className="text-sm font-medium text-white mb-4">Filters</h3>
+                      <div className="mb-4">
+                        <label className="text-xs text-[#9ca3af] mb-2 block">Organization group</label>
+                        <div className="relative">
+                          <select className="w-full bg-[#1e2130] border border-[#2a2d3a] rounded-md px-3 py-2 text-sm text-white appearance-none cursor-pointer">
+                            <option>LKGBTenant3LID40</option>
+                            <option>W.L. GORE & Associates</option>
+                            <option>Incident Manager</option>
+                          </select>
+                          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9ca3af] pointer-events-none" />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-xs text-[#9ca3af] mb-2 block">Internal or 3rd party</label>
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2 text-sm text-white cursor-pointer">
+                            <input type="checkbox" defaultChecked className="w-4 h-4 rounded border-[#2a2d3a] bg-[#1e2130] text-[#6CEEAD] focus:ring-[#6CEEAD] cursor-pointer" />
+                            3rd Party
+                          </label>
+                          <label className="flex items-center gap-2 text-sm text-white cursor-pointer">
+                            <input type="checkbox" defaultChecked className="w-4 h-4 rounded border-[#2a2d3a] bg-[#1e2130] text-[#6CEEAD] focus:ring-[#6CEEAD] cursor-pointer" />
+                            Internal
+                          </label>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </>
               )}
@@ -2220,21 +2251,18 @@ export function PrivacyManagementModule() {
                       <AlertTriangle className="w-4 h-4" />
                       <span>160 Potential relationships</span>
                     </div>
-                    <label className="flex items-center gap-2 text-sm text-white">
-                      <input type="checkbox" defaultChecked className="rounded" />
+                    <label className="flex items-center gap-2 text-sm text-white cursor-pointer">
+                      <input type="checkbox" defaultChecked className="w-4 h-4 rounded border-[#2a2d3a] bg-[#1e2130] text-[#6CEEAD] focus:ring-[#6CEEAD] cursor-pointer" />
                       Show
                     </label>
-                    <button className="p-1 text-[#9ca3af] hover:text-white">
+                    <button className="p-1 text-[#9ca3af] hover:text-white transition-colors">
                       <Filter className="w-4 h-4" />
                     </button>
                   </div>
-                  <div className="rounded-lg overflow-hidden" style={{ minHeight: '500px' }}>
-                    <img 
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-BqVnNp3jPBzs1RLJvAlEoJFlKqoJYY.png" 
-                      alt="Cross-Border Data Transfers"
-                      className="w-full h-auto object-contain"
-                    />
-                  </div>
+                  <CrossBorderMap
+                    onTransferClick={(transfer) => setSelectedRecordId(`Transfer ${transfer.id}`)}
+                    showRelationships={true}
+                  />
                 </>
               )}
 
