@@ -2192,36 +2192,12 @@ export function PrivacyManagementModule() {
                       <p className="text-sm text-[#9ca3af]">Filter by organization group to see the internal and third-party assets hosted in each location.</p>
                     </div>
                   </div>
-                  <div className="flex gap-6">
-                    {/* Map Area */}
-                    <div className="flex-1 bg-[#1a2030] rounded-lg overflow-hidden relative" style={{ minHeight: '500px' }}>
-                      <img 
-                        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-rkiYBuzg6zPeDNS5nHrrqaB1LgQTvp.png" 
-                        alt="Asset Map"
-                        className="w-full h-full object-cover opacity-80"
-                      />
-                    </div>
-                    {/* Filters Panel */}
-                    <div className="w-64 bg-[#13151f] border border-[#1e2130] rounded-lg p-4">
-                      <h3 className="text-sm font-medium text-white mb-4">Filters</h3>
-                      <div className="mb-4">
-                        <label className="text-xs text-[#9ca3af] mb-2 block">Organization group</label>
-                        <select className="w-full bg-[#1e2130] border border-[#2a2d3a] rounded-md px-3 py-2 text-sm text-white">
-                          <option>LKGBTenant3LID40</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="text-xs text-[#9ca3af] mb-2 block">Internal or 3rd party</label>
-                        <div className="space-y-2">
-                          <label className="flex items-center gap-2 text-sm text-white">
-                            <input type="checkbox" defaultChecked className="rounded" /> 3rd Party
-                          </label>
-                          <label className="flex items-center gap-2 text-sm text-white">
-                            <input type="checkbox" defaultChecked className="rounded" /> Internal
-                          </label>
-                        </div>
-                      </div>
-                    </div>
+                  <div className="rounded-lg overflow-hidden">
+                    <img 
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-9fFJafkUgMqXWmzViy7l2RtIgF2kjp.png" 
+                      alt="Asset Map"
+                      className="w-full h-auto object-contain"
+                    />
                   </div>
                 </>
               )}
